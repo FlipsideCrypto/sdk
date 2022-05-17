@@ -4,6 +4,7 @@ import {
   QueryRunRateLimitError,
   QueryRunTimeoutError,
   ServerError,
+  UserError,
   UnexpectedSDKError,
 } from "../errors";
 import { QueryRunStats } from "./query-run-stats.type";
@@ -24,6 +25,7 @@ export interface QueryResultSet {
     | QueryRunTimeoutError
     | QueryRunExecutionError
     | ServerError
+    | UserError
     | UnexpectedSDKError
     | null;
 }

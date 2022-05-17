@@ -3,6 +3,7 @@ import {
   QueryRunRateLimitError,
   QueryRunTimeoutError,
   ServerError,
+  UserError,
   UnexpectedSDKError,
 } from "../../errors";
 import {
@@ -29,6 +30,7 @@ export class QueryResultSet implements QueryResultSetInterface {
     | QueryRunTimeoutError
     | QueryRunExecutionError
     | ServerError
+    | UserError
     | UnexpectedSDKError
     | null;
 

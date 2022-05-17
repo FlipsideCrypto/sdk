@@ -17,6 +17,7 @@ import {
   QueryRunRateLimitError,
   QueryRunTimeoutError,
   ServerError,
+  UserError,
   UnexpectedSDKError,
 } from "../../errors";
 import { QueryResultSet } from "./query-result-set";
@@ -89,7 +90,10 @@ export class QueryIntegration {
     query: Query,
     attempts: number = 0
   ): Promise<
-    [CreateQueryJson | null, QueryRunRateLimitError | ServerError | null]
+    [
+      CreateQueryJson | null,
+      QueryRunRateLimitError | ServerError | UserError | null
+    ]
   > {
     const resp = await this.#api.createQuery(query);
     if (resp.status <= 299) {
@@ -98,6 +102,14 @@ export class QueryIntegration {
     }
 
     if (resp.status !== 429) {
+      if (resp.status >= 400 && resp.status <= 499) {
+        const createQueryJson = await resp.json();
+        let errorMsg = "user input error";
+        if (createQueryJson.errors) {
+          errorMsg = createQueryJson.errors;
+        }
+        return [null, new UserError(resp.status, errorMsg)];
+      }
       return [null, new ServerError(resp.status, resp.statusText)];
     }
 
@@ -117,10 +129,21 @@ export class QueryIntegration {
     queryID: string,
     attempts: number = 0
   ): Promise<
-    [QueryResultJson | null, QueryRunTimeoutError | ServerError | null]
+    [
+      QueryResultJson | null,
+      QueryRunTimeoutError | ServerError | UserError | null
+    ]
   > {
     const resp = await this.#api.getQueryResult(queryID);
     if (resp.status > 299) {
+      if (resp.status >= 400 && resp.status <= 499) {
+        const respJson = await resp.json();
+        let errorMsg = "user input error";
+        if (respJson.errors) {
+          errorMsg = respJson.errors;
+        }
+        return [null, new UserError(resp.status, errorMsg)];
+      }
       return [null, new ServerError(resp.status, resp.statusText)];
     }
 
@@ -140,12 +163,12 @@ export class QueryIntegration {
     });
 
     if (!shouldContinue) {
-      const elapsedMinutes = getElapsedLinearSeconds({
+      const elapsedSeconds = getElapsedLinearSeconds({
         attempts,
         timeoutMinutes: DEFAULTS.timeoutMinutes,
         intervalSeconds: GET_RESULTS_INTERVAL_SECONDS,
       });
-      return [null, new QueryRunTimeoutError(elapsedMinutes)];
+      return [null, new QueryRunTimeoutError(elapsedSeconds * 60)];
     }
 
     return this.#getQueryResult(queryID, attempts + 1);

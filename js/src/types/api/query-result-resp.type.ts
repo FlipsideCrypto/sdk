@@ -10,7 +10,7 @@ export type QueryResultJson = {
   columnLabels: string[];
   columnTypes: string[];
   message?: string;
-  errors?: Record<string, string>;
+  errors?: string | null;
 };
 
 export interface QueryResultResp extends Response {

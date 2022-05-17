@@ -1,11 +1,11 @@
 import { BaseError } from "./base-error";
 import { ERROR_TYPES } from "./error-types";
 
-export class ServerError extends BaseError {
+export class UserError extends BaseError {
   constructor(statusCode: number, message: string) {
-    const errorType = ERROR_TYPES.server_error;
+    const errorType = ERROR_TYPES.user_error;
     super(
-      `${errorType}: an unexpected server error occured with statusCode: ${statusCode} and msg: '${message}'
+      `${errorType}: user error occured with statusCode: ${statusCode} and msg: '${message}'
       `
     );
     this.errorType = errorType;

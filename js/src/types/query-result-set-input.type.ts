@@ -3,6 +3,7 @@ import {
   QueryRunRateLimitError,
   QueryRunTimeoutError,
   ServerError,
+  UserError,
   UnexpectedSDKError,
 } from "../errors";
 import { QueryResultJson } from "./api/query-result-resp.type";
@@ -14,6 +15,7 @@ export type QueryResultSetInput = {
     | QueryRunRateLimitError
     | QueryRunTimeoutError
     | ServerError
+    | UserError
     | UnexpectedSDKError
     | null;
 };

@@ -1,0 +1,13 @@
+dist/
+js/dist
+js/dist/
+node_modules/
+js/node_modules
+*.DS_STORE
+.DS_STORE
+__pycache__
+*.pyc
+*.pem
+*.crt
+play
+play/

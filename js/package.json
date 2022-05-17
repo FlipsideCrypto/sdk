@@ -1,0 +1,15 @@
+{
+  "name": "flipside",
+  "version": "1.0.0",
+  "description": "The official Flipside SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "keywords": [],
+  "author": "dev@flipsidecrypto.com",
+  "license": "ISC"
+}

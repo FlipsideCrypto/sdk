@@ -1,4 +1,3 @@
-import { QueryResultJson } from "./api";
 import {
   QueryRunExecutionError,
   QueryRunRateLimitError,
@@ -6,16 +5,15 @@ import {
   ServerError,
   UnexpectedSDKError,
 } from "../errors";
+import { QueryResultJson } from "./api/query-result-resp.type";
 
-export interface QueryResultInterface {
-  data: QueryResultJson | null;
+export type QueryResultSetInput = {
+  queryResultJson: QueryResultJson | null;
   error:
+    | QueryRunExecutionError
     | QueryRunRateLimitError
     | QueryRunTimeoutError
-    | QueryRunExecutionError
     | ServerError
     | UnexpectedSDKError
     | null;
-
-  all(): Record<string, string | number | null | boolean>[] | null;
-}
+};

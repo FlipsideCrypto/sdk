@@ -1,4 +1,4 @@
-import { QueryRun, CreateQueryResp, QueryResultResp } from "./types";
+import { Query, CreateQueryResp, QueryResultResp } from "./types";
 
 export class API {
   #apiKey: string;
@@ -19,14 +19,14 @@ export class API {
     return `${this.#baseUrl}/${path}`;
   }
 
-  async createQuery(queryRun: QueryRun): Promise<CreateQueryResp> {
+  async createQuery(query: Query): Promise<CreateQueryResp> {
     return await fetch(this.getUrl("queries"), {
       method: "POST",
       headers: this.#headers,
       body: JSON.stringify({
-        sql: queryRun.sql,
-        ttl_minutes: queryRun.ttlMinutes,
-        cached: queryRun.cached,
+        sql: query.sql,
+        ttl_minutes: query.ttlMinutes,
+        cached: query.cached,
       }),
     });
   }

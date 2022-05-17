@@ -1,59 +1,62 @@
-import { API } from "../api";
+import { API } from "../../api";
 import {
-  QueryRun,
-  CreateQueryResp,
-  QueryResultResp,
+  Query,
+  QueryDefaults,
   QueryStatusFinished,
   QueryStatusError,
-  QueryRunDefaults,
   QueryResultJson,
   CreateQueryJson,
-} from "../types";
+} from "../../types";
 import {
   expBackOff,
   getElapsedLinearSeconds,
   linearBackOff,
-} from "../utils/sleep";
+} from "../../utils/sleep";
 import {
   QueryRunExecutionError,
   QueryRunRateLimitError,
   QueryRunTimeoutError,
   ServerError,
   UnexpectedSDKError,
-} from "../errors";
-import { QueryResultInterface } from "../types/query-result.type";
+} from "../../errors";
+import { QueryResultSet } from "./query-result-set";
 
 const GET_RESULTS_INTERVAL_SECONDS = 0.5;
-const DEFAULTS: QueryRunDefaults = {
+const DEFAULTS: QueryDefaults = {
   ttlMinutes: 60,
   cached: true,
   timeoutMinutes: 20,
 };
 
-export class Query {
+export class QueryIntegration {
   #api: API;
 
   constructor(api: API) {
     this.#api = api;
   }
 
-  #setQueryRunDefaults(queryRun: QueryRun): QueryRun {
-    return { ...DEFAULTS, ...queryRun };
+  #setQueryDefaults(query: Query): Query {
+    return { ...DEFAULTS, ...query };
   }
 
-  async run(queryRun: QueryRun): Promise<QueryResult> {
-    queryRun = this.#setQueryRunDefaults(queryRun);
+  async run(query: Query): Promise<QueryResultSet> {
+    query = this.#setQueryDefaults(query);
 
-    const [createQueryJson, createQueryErr] = await this.#createQuery(queryRun);
+    const [createQueryJson, createQueryErr] = await this.#createQuery(query);
     if (createQueryErr) {
-      return new QueryResult(null, createQueryErr);
+      return new QueryResultSet({
+        queryResultJson: null,
+        error: createQueryErr,
+      });
     }
 
     if (!createQueryJson) {
-      return new QueryResult(
-        null,
-        new UnexpectedSDKError("expected a `createQueryJson` but got null")
-      );
+      return new QueryResultSet({
+        queryResultJson: null,
+        error: new UnexpectedSDKError(
+          "expected a `createQueryJson` but got null"
+        ),
+      });
     }
 
     const [getQueryResultJson, getQueryErr] = await this.#getQueryResult(
@@ -61,26 +64,34 @@ export class Query {
     );
 
     if (getQueryErr) {
-      return new QueryResult(null, getQueryErr);
+      return new QueryResultSet({
+        queryResultJson: null,
+        error: getQueryErr,
+      });
     }
 
     if (!getQueryResultJson) {
-      return new QueryResult(
-        null,
-        new UnexpectedSDKError("expected a `getQueryResultJson` but got null")
-      );
+      return new QueryResultSet({
+        queryResultJson: null,
+        error: new UnexpectedSDKError(
+          "expected a `getQueryResultJson` but got null"
+        ),
+      });
     }
 
-    return new QueryResult(getQueryResultJson, null);
+    return new QueryResultSet({
+      queryResultJson: getQueryResultJson,
+      error: null,
+    });
   }
 
   async #createQuery(
-    queryRun: QueryRun,
+    query: Query,
     attempts: number = 0
   ): Promise<
     [CreateQueryJson | null, QueryRunRateLimitError | ServerError | null]
   > {
-    const resp = await this.#api.createQuery(queryRun);
+    const resp = await this.#api.createQuery(query);
     if (resp.status <= 299) {
       const createQueryJson = await resp.json();
       return [createQueryJson, null];
@@ -99,7 +110,7 @@ export class Query {
       return [null, new QueryRunRateLimitError()];
     }
 
-    return this.#createQuery(queryRun, attempts + 1);
+    return this.#createQuery(query, attempts + 1);
   }
 
   async #getQueryResult(
@@ -114,11 +125,6 @@ export class Query {
     }
 
     let result = await resp.json();
-    console.log("result", result);
-    console.log(
-      "result.status === QueryStatusFinished",
-      result.status === QueryStatusFinished
-    );
     if (result.status === QueryStatusFinished) {
       return [result, null];
     }
@@ -143,40 +149,5 @@ export class Query {
     }
 
     return this.#getQueryResult(queryID, attempts + 1);
-  }
-}
-
-export class QueryResult implements QueryResultInterface {
-  data: QueryResultJson | null;
-  error:
-    | QueryRunRateLimitError
-    | QueryRunTimeoutError
-    | QueryRunExecutionError
-    | ServerError
-    | UnexpectedSDKError
-    | null;
-
-  constructor(data: QueryResultJson | null, error: any) {
-    this.data = data;
-    this.error = error;
-  }
-
-  all(): Record<string, string | number | null | boolean>[] | null {
-    if (!this.data) {
-      return null;
-    }
-
-    let columnLabels = this.data.columnLabels;
-    if (!columnLabels) {
-      return null;
-    }
-
-    return this.data.results.map((result) => {
-      let row: Record<string, string | number | null | boolean> = {};
-      result.forEach((value, index) => {
-        row[columnLabels[index]] = value;
-      });
-      return row;
-    });
   }
 }

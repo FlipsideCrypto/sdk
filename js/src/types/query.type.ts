@@ -1,4 +1,4 @@
-export type QueryRun = {
+export type Query = {
   sql: string;
   ttlMinutes?: number;
   cached?: boolean;

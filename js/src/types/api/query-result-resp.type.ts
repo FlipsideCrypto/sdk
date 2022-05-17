@@ -1,8 +1,9 @@
 import { QueryStatus } from "../query-status.type";
 
+export type Row = (string | number | boolean | null)[];
 export type QueryResultJson = {
   status: QueryStatus;
-  results: (string | number | boolean)[];
+  results: Row[];
   startedAt: string;
   columnLabels: string[];
   columnTypes: string[];

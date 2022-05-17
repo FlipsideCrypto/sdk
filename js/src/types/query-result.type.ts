@@ -7,7 +7,7 @@ import {
   UnexpectedSDKError,
 } from "../errors";
 
-export type QueryResult = {
+export interface QueryResultInterface {
   data: QueryResultJson | null;
   error:
     | QueryRunRateLimitError
@@ -16,4 +16,6 @@ export type QueryResult = {
     | ServerError
     | UnexpectedSDKError
     | null;
-};
+
+  all(): Record<string, string | number | null | boolean>[] | null;
+}

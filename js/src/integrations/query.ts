@@ -21,7 +21,7 @@ import {
   ServerError,
   UnexpectedSDKError,
 } from "../errors";
-import { QueryResult } from "../types/query-result.type";
+import { QueryResultInterface } from "../types/query-result.type";
 
 const GET_RESULTS_INTERVAL_SECONDS = 0.5;
 const DEFAULTS: QueryRunDefaults = {
@@ -46,16 +46,14 @@ export class Query {
 
     const [createQueryJson, createQueryErr] = await this.#createQuery(queryRun);
     if (createQueryErr) {
-      return { data: null, error: createQueryErr };
+      return new QueryResult(null, createQueryErr);
     }
 
     if (!createQueryJson) {
-      return {
-        data: null,
-        error: new UnexpectedSDKError(
-          "expected a `createQueryJson` but got null"
-        ),
-      };
+      return new QueryResult(
+        null,
+        new UnexpectedSDKError("expected a `createQueryJson` but got null")
+      );
     }
 
     const [getQueryResultJson, getQueryErr] = await this.#getQueryResult(
@@ -63,19 +61,17 @@ export class Query {
     );
 
     if (getQueryErr) {
-      return { data: null, error: getQueryErr };
+      return new QueryResult(null, getQueryErr);
     }
 
     if (!getQueryResultJson) {
-      return {
-        data: null,
-        error: new UnexpectedSDKError(
-          "expected a `getQueryResultJson` but got null"
-        ),
-      };
+      return new QueryResult(
+        null,
+        new UnexpectedSDKError("expected a `getQueryResultJson` but got null")
+      );
     }
 
-    return { data: getQueryResultJson, error: null };
+    return new QueryResult(getQueryResultJson, null);
   }
 
   async #createQuery(
@@ -147,5 +143,40 @@ export class Query {
     }
 
     return this.#getQueryResult(queryID, attempts + 1);
+  }
+}
+
+export class QueryResult implements QueryResultInterface {
+  data: QueryResultJson | null;
+  error:
+    | QueryRunRateLimitError
+    | QueryRunTimeoutError
+    | QueryRunExecutionError
+    | ServerError
+    | UnexpectedSDKError
+    | null;
+
+  constructor(data: QueryResultJson | null, error: any) {
+    this.data = data;
+    this.error = error;
+  }
+
+  all(): Record<string, string | number | null | boolean>[] | null {
+    if (!this.data) {
+      return null;
+    }
+
+    let columnLabels = this.data.columnLabels;
+    if (!columnLabels) {
+      return null;
+    }
+
+    return this.data.results.map((result) => {
+      let row: Record<string, string | number | null | boolean> = {};
+      result.forEach((value, index) => {
+        row[columnLabels[index]] = value;
+      });
+      return row;
+    });
   }
 }

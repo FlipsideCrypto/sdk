@@ -23,7 +23,7 @@ import {
 } from "../errors";
 import { QueryResult } from "../types/query-result.type";
 
-const GET_RESULTS_INTERVAL_SECONDS = 2;
+const GET_RESULTS_INTERVAL_SECONDS = 0.5;
 const DEFAULTS: QueryRunDefaults = {
   ttlMinutes: 60,
   cached: true,

@@ -31,20 +31,20 @@ const DEFAULTS: QueryRunDefaults = {
 };
 
 export class Query {
-  private declare _api: API;
+  #api: API;
 
   constructor(api: API) {
-    this._api = api;
+    this.#api = api;
   }
 
-  private _setQueryRunDefaults(queryRun: QueryRun): QueryRun {
+  #setQueryRunDefaults(queryRun: QueryRun): QueryRun {
     return { ...DEFAULTS, ...queryRun };
   }
 
-  public async run(queryRun: QueryRun): Promise<QueryResult> {
-    queryRun = this._setQueryRunDefaults(queryRun);
+  async run(queryRun: QueryRun): Promise<QueryResult> {
+    queryRun = this.#setQueryRunDefaults(queryRun);
 
-    const [createQueryJson, createQueryErr] = await this._createQuery(queryRun);
+    const [createQueryJson, createQueryErr] = await this.#createQuery(queryRun);
     if (createQueryErr) {
       return { data: null, error: createQueryErr };
     }
@@ -58,7 +58,7 @@ export class Query {
       };
     }
 
-    const [getQueryResultJson, getQueryErr] = await this._getQueryResult(
+    const [getQueryResultJson, getQueryErr] = await this.#getQueryResult(
       createQueryJson.token
     );
 
@@ -78,13 +78,13 @@ export class Query {
     return { data: getQueryResultJson, error: null };
   }
 
-  private async _createQuery(
+  async #createQuery(
     queryRun: QueryRun,
     attempts: number = 0
   ): Promise<
     [CreateQueryJson | null, QueryRunRateLimitError | ServerError | null]
   > {
-    const resp = await this._api.createQuery(queryRun);
+    const resp = await this.#api.createQuery(queryRun);
     if (resp.status <= 299) {
       const createQueryJson = await resp.json();
       return [createQueryJson, null];
@@ -103,16 +103,16 @@ export class Query {
       return [null, new QueryRunRateLimitError()];
     }
 
-    return this._createQuery(queryRun, attempts + 1);
+    return this.#createQuery(queryRun, attempts + 1);
   }
 
-  private async _getQueryResult(
+  async #getQueryResult(
     queryID: string,
     attempts: number = 0
   ): Promise<
     [QueryResultJson | null, QueryRunTimeoutError | ServerError | null]
   > {
-    const resp = await this._api.getQueryResult(queryID);
+    const resp = await this.#api.getQueryResult(queryID);
     if (resp.status > 299) {
       return [null, new ServerError(resp.status, resp.statusText)];
     }
@@ -146,6 +146,6 @@ export class Query {
       return [null, new QueryRunTimeoutError(elapsedMinutes)];
     }
 
-    return this._getQueryResult(queryID, attempts + 1);
+    return this.#getQueryResult(queryID, attempts + 1);
   }
 }

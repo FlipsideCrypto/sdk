@@ -17,3 +17,5 @@ export class Flipside {
 
 export * from "./types";
 export * from "./errors";
+import { QueryResultSet } from "./types";
+export { QueryResultSet };

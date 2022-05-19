@@ -1,4 +1,4 @@
-import { QueryResultJson, Row } from "./api";
+import { Row } from "./api";
 import {
   QueryRunExecutionError,
   QueryRunRateLimitError,

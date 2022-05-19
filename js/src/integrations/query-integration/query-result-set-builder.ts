@@ -8,15 +8,15 @@ import {
 } from "../../errors";
 import {
   QueryResultJson,
-  QueryResultSet as QueryResultSetInterface,
+  QueryResultSet,
   Row,
   QueryResultRecord,
   QueryRunStats,
   QueryStatus,
 } from "../../types";
-import { QueryResultSetInput } from "../../types/query-result-set-input.type";
+import { QueryResultSetBuilderInput } from "../../types/query-result-set-input.type";
 
-export class QueryResultSet implements QueryResultSetInterface {
+export class QueryResultSetBuilder implements QueryResultSet {
   queryId: string | null;
   status: QueryStatus | null;
   columns: string[] | null;
@@ -34,7 +34,7 @@ export class QueryResultSet implements QueryResultSetInterface {
     | UnexpectedSDKError
     | null;
 
-  constructor(data: QueryResultSetInput) {
+  constructor(data: QueryResultSetBuilderInput) {
     this.error = data.error;
     const queryResultJson = data.queryResultJson;
     if (!queryResultJson) {

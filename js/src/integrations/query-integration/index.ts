@@ -6,6 +6,7 @@ import {
   QueryResultJson,
   CreateQueryJson,
   ApiClient,
+  QueryResultSet,
 } from "../../types";
 import {
   expBackOff,
@@ -20,7 +21,7 @@ import {
   UserError,
   UnexpectedSDKError,
 } from "../../errors";
-import { QueryResultSet } from "./query-result-set";
+import { QueryResultSetBuilder } from "./query-result-set-builder";
 
 const DEFAULTS: QueryDefaults = {
   ttlMinutes: 60,
@@ -47,14 +48,14 @@ export class QueryIntegration {
 
     const [createQueryJson, createQueryErr] = await this.#createQuery(query);
     if (createQueryErr) {
-      return new QueryResultSet({
+      return new QueryResultSetBuilder({
         queryResultJson: null,
         error: createQueryErr,
       });
     }
 
     if (!createQueryJson) {
-      return new QueryResultSet({
+      return new QueryResultSetBuilder({
         queryResultJson: null,
         error: new UnexpectedSDKError(
           "expected a `createQueryJson` but got null"
@@ -67,14 +68,14 @@ export class QueryIntegration {
     );
 
     if (getQueryErr) {
-      return new QueryResultSet({
+      return new QueryResultSetBuilder({
         queryResultJson: null,
         error: getQueryErr,
       });
     }
 
     if (!getQueryResultJson) {
-      return new QueryResultSet({
+      return new QueryResultSetBuilder({
         queryResultJson: null,
         error: new UnexpectedSDKError(
           "expected a `getQueryResultJson` but got null"
@@ -82,7 +83,7 @@ export class QueryIntegration {
       });
     }
 
-    return new QueryResultSet({
+    return new QueryResultSetBuilder({
       queryResultJson: getQueryResultJson,
       error: null,
     });

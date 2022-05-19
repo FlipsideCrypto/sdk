@@ -1,7 +1,7 @@
 {
-  "name": "flipside",
-  "version": "1.0.0",
-  "description": "The official Flipside SDK",
+  "name": "@flipside/core",
+  "version": "0.1.0",
+  "description": "The official Flipside Core SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "dev@flipsidecrypto.com",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.27.2"
   }

@@ -8,7 +8,7 @@ import {
 } from "../errors";
 import { QueryResultJson } from "./api/query-result-resp.type";
 
-export type QueryResultSetInput = {
+export type QueryResultSetBuilderInput = {
   queryResultJson: QueryResultJson | null;
   error:
     | QueryRunExecutionError

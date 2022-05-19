@@ -1,14 +1,16 @@
 import { assert, describe, it } from "vitest";
-import { QueryResultSet } from "../integrations/query-integration/query-result-set";
+import { QueryResultSetBuilder } from "../integrations/query-integration/query-result-set-builder";
 import {
-  QueryResultSetInput,
+  QueryResultSetBuilderInput,
   QueryStatus,
   QueryStatusError,
   QueryStatusFinished,
   QueryStatusPending,
 } from "../types";
 
-function getQueryResultSet(status: QueryStatus): QueryResultSetInput {
+function getQueryResultSetBuilder(
+  status: QueryStatus
+): QueryResultSetBuilderInput {
   return {
     queryResultJson: {
       queryId: "test",
@@ -37,8 +39,8 @@ function getQueryResultSet(status: QueryStatus): QueryResultSetInput {
 }
 
 describe("runStats", () => {
-  const queryResultSet = new QueryResultSet(
-    getQueryResultSet(QueryStatusFinished)
+  const queryResultSet = new QueryResultSetBuilder(
+    getQueryResultSetBuilder(QueryStatusFinished)
   );
   it("runStats startedAt is Date type", async () => {
     assert.typeOf(queryResultSet.runStats?.startedAt, "Date");
@@ -58,8 +60,8 @@ describe("runStats", () => {
 });
 
 describe("records", () => {
-  const queryResultSet = new QueryResultSet(
-    getQueryResultSet(QueryStatusFinished)
+  const queryResultSet = new QueryResultSetBuilder(
+    getQueryResultSetBuilder(QueryStatusFinished)
   );
   it("records length = rows length", async () => {
     assert.equal(queryResultSet.records?.length, queryResultSet.rows?.length);
@@ -91,11 +93,15 @@ describe("records", () => {
       cells.forEach((cellValue, colIndex) => {
         let columns = queryResultSet?.columns;
         if (!columns) {
-          throw new Error("queryResultSet columns cannot be null for tests");
+          throw new Error(
+            "QueryResultSetBuilder columns cannot be null for tests"
+          );
         }
         let column = columns[colIndex];
         if (records === null) {
-          throw new Error("queryResultSet records cannot be null for tests");
+          throw new Error(
+            "QueryResultSetBuilder records cannot be null for tests"
+          );
         }
         let record = records[rowIndex];
         let recordValue = record[column];
@@ -108,20 +114,20 @@ describe("records", () => {
 
 describe("status", () => {
   it("isFinished", async () => {
-    const queryResultSet = new QueryResultSet(
-      getQueryResultSet(QueryStatusFinished)
+    const queryResultSet = new QueryResultSetBuilder(
+      getQueryResultSetBuilder(QueryStatusFinished)
     );
     assert.equal(queryResultSet?.status, QueryStatusFinished);
   });
   it("isPending", async () => {
-    const queryResultSet = new QueryResultSet(
-      getQueryResultSet(QueryStatusPending)
+    const queryResultSet = new QueryResultSetBuilder(
+      getQueryResultSetBuilder(QueryStatusPending)
     );
     assert.equal(queryResultSet?.status, QueryStatusPending);
   });
   it("isError", async () => {
-    const queryResultSet = new QueryResultSet(
-      getQueryResultSet(QueryStatusError)
+    const queryResultSet = new QueryResultSetBuilder(
+      getQueryResultSetBuilder(QueryStatusError)
     );
     assert.equal(queryResultSet?.status, QueryStatusError);
   });
@@ -129,14 +135,14 @@ describe("status", () => {
 
 describe("queryID", () => {
   it("queryId is set", async () => {
-    const queryResultSet = new QueryResultSet(
-      getQueryResultSet(QueryStatusFinished)
+    const queryResultSet = new QueryResultSetBuilder(
+      getQueryResultSetBuilder(QueryStatusFinished)
     );
     assert.notEqual(queryResultSet?.queryId, null);
   });
   it("queryId is test", async () => {
-    const queryResultSet = new QueryResultSet(
-      getQueryResultSet(QueryStatusFinished)
+    const queryResultSet = new QueryResultSetBuilder(
+      getQueryResultSetBuilder(QueryStatusFinished)
     );
     assert.equal(queryResultSet?.queryId, "test");
   });

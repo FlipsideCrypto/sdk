@@ -35,16 +35,29 @@ npm install @flipsidecrypto/core
 ```typescript
 import { Flipside, Query, QueryResultSet } from "flipside";
 
+# Initiate the API with your API key
 const flipside = new Flipside(
   "YOUR_API_KEY",
   "https://node-api.flipsidecrypto.com"
 );
 
+# Parameter can be passed into SQL statements via simple string interpolation
 const myAddress = "0x....";
+
+# Create a query object for the query.run function to execute
 const query: Query = {
   sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   ttlMinutes: 10,
 };
 
-const result = await flipside.query.run(query);
+# Send query to Flipside's query engine and await the results
+const result: QueryResultSet = await flipside.query.run(query);
+
+# Iterate over the results
+result.records.map((record) => {
+  const nftAddress = record.nft_address
+  const mintPriceEth = record.mint_price_eth
+  const mintPriceUSD = = record.mint_price_usd
+  console.log(`address ${nftAddress} minted at a price of ${mintPrice} ETH or $${mintPriceUSD} USD`);
+});
 ```

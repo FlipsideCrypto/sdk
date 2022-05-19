@@ -1,31 +1,21 @@
-# Flipside SDKs
+# Flipside Crypto Core SDKs
 
-The Flipside SDK repo
+gm frens, you've found yourself at the Flipside Crypto Core SDK repo
+<br>
+<br>
+We're making all the query awesomeness found at [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically accessible. Any data found in [Velocity](https://app.flipsidecrypto.com) you can query with our suite of SDKs.
+<br>
+<br>
+We're starting with a Javascript / Typescript SDK, which can be found [here](./js/)
+<br>
+<br>
+Prepare for a world of queryable fun 🥳
+<br>
+<br>
 
-## Javascript SDK
+## SDKs
 
-### Setup
-
-```
-yarn build
-
-```
-
-### Example Usage
-
-```javascript
-import type { QueryResult, QueryRun } from "flipside";
-import { Flipside } from "flipside";
-
-const flipside = new Flipside(
-  "YOUR_API_KEY",
-  "https://node-api.flipsidecrypto.com"
-);
-
-const queryRun: QueryRun = {
-  sql: `select * from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('0x4a9318f375937b56045e5a548e7e66aea61dd610')`,
-  ttlMinutes: 10,
-};
-
-const result = await flipside.query.run(queryRun);
-```
+| Language         | Version       | Status            |
+| ---------------- | ------------- | ----------------- |
+| ✅ JS/TypeScript | 1.0.0-alpha.0 | Alpha Release     |
+| 🏗 Python         | NA            | Not Yet Available |

@@ -20,13 +20,13 @@ Fill out this form. Tell us about something awesome you're going. Then we'll get
 
 ## 💾 Install the SDK
 
-```
+```bash
 yarn add @flipsidecrypto/core
 ```
 
 or if using npm
 
-```
+```bash
 npm install @flipsidecrypto/core
 ```
 

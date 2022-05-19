@@ -13,6 +13,14 @@ Prepare for a world of queryable fun 🥳
 <br>
 <br>
 
+## 🗝 Want early access? Grab an API Key
+
+Our [JS/Typescript SDK](./js/) is currently in Alpha. We're accepting a limited number of users.
+<br>
+<br>
+Fill out this [form](). Tell us about something awesome you're going to build.
+<br>
+
 ## SDKs
 
 | Language         | Version       | Status            |

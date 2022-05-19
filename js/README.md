@@ -10,12 +10,12 @@ Prepare for a world of queryable fun 🥳
 <br>
 <br>
 
-## 🗝 Grab an API Key
+## 🗝 Want early access? Grab an API Key
 
-This product is currently in Alpha. We're accepting a limited number of users at this time.
+Our [JS/Typescript SDK](./js/) is currently in Alpha. We're accepting a limited number of users.
 <br>
 <br>
-Fill out this form. Tell us about something awesome you're going. Then we'll get you access.
+Fill out this [form](). Tell us about something awesome you're going to build.
 <br>
 
 ## 💾 Install the SDK

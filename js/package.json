@@ -1,9 +1,17 @@
 {
   "name": "@flipside/core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "The official Flipside Core SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flipsidecrypto/sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/flipsidecrypto/sdk/issues"
+  },
+  "homepage": "https://github.com/flipsidecrypto/sdk",
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -19,8 +27,8 @@
     "vitest": "latest"
   },
   "keywords": [],
-  "author": "dev@flipsidecrypto.com",
-  "license": "MIT",
+  "author": "jim@flipsidecrypto.com",
+  "license": "IST",
   "dependencies": {
     "axios": "^0.27.2"
   }

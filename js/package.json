@@ -5,11 +5,23 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage --no-watch",
+    "test:run": "vitest run",
     "build": "tsc",
     "prepare": "npm run build"
   },
+  "devDependencies": {
+    "@vitest/ui": "latest",
+    "c8": "^7.11.3",
+    "vite": "^2.9.5",
+    "vitest": "latest"
+  },
   "keywords": [],
   "author": "dev@flipsidecrypto.com",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
 }

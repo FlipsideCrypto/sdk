@@ -1,4 +1,3 @@
-import { API } from "../../api";
 import {
   Query,
   QueryDefaults,
@@ -6,6 +5,7 @@ import {
   QueryStatusError,
   QueryResultJson,
   CreateQueryJson,
+  ApiClient,
 } from "../../types";
 import {
   expBackOff,
@@ -22,22 +22,24 @@ import {
 } from "../../errors";
 import { QueryResultSet } from "./query-result-set";
 
-const GET_RESULTS_INTERVAL_SECONDS = 0.5;
 const DEFAULTS: QueryDefaults = {
   ttlMinutes: 60,
   cached: true,
   timeoutMinutes: 20,
+  retryIntervalSeconds: 0.5,
 };
 
 export class QueryIntegration {
-  #api: API;
+  #api: ApiClient;
+  #defaults: QueryDefaults;
 
-  constructor(api: API) {
+  constructor(api: ApiClient, defaults: QueryDefaults = DEFAULTS) {
     this.#api = api;
+    this.#defaults = defaults;
   }
 
   #setQueryDefaults(query: Query): Query {
-    return { ...DEFAULTS, ...query };
+    return { ...this.#defaults, ...query };
   }
 
   async run(query: Query): Promise<QueryResultSet> {
@@ -96,26 +98,28 @@ export class QueryIntegration {
     ]
   > {
     const resp = await this.#api.createQuery(query);
-    if (resp.status <= 299) {
-      const createQueryJson = await resp.json();
-      return [createQueryJson, null];
+    if (resp.statusCode <= 299) {
+      return [resp.data, null];
     }
 
-    if (resp.status !== 429) {
-      if (resp.status >= 400 && resp.status <= 499) {
-        const createQueryJson = await resp.json();
-        let errorMsg = "user input error";
-        if (createQueryJson.errors) {
-          errorMsg = createQueryJson.errors;
+    if (resp.statusCode !== 429) {
+      if (resp.statusCode >= 400 && resp.statusCode <= 499) {
+        let errorMsg = resp.statusMsg || "user error";
+        if (resp.errorMsg) {
+          errorMsg = resp.errorMsg;
         }
-        return [null, new UserError(resp.status, errorMsg)];
+        return [null, new UserError(resp.statusCode, errorMsg)];
       }
-      return [null, new ServerError(resp.status, resp.statusText)];
+      return [
+        null,
+        new ServerError(resp.statusCode, resp.statusMsg || "server error"),
+      ];
     }
 
     let shouldContinue = await expBackOff({
       attempts,
-      timeoutMinutes: DEFAULTS.timeoutMinutes,
+      timeoutMinutes: this.#defaults.timeoutMinutes,
+      intervalSeconds: this.#defaults.retryIntervalSeconds,
     });
 
     if (!shouldContinue) {
@@ -135,38 +139,45 @@ export class QueryIntegration {
     ]
   > {
     const resp = await this.#api.getQueryResult(queryID);
-    if (resp.status > 299) {
-      if (resp.status >= 400 && resp.status <= 499) {
-        const respJson = await resp.json();
-        let errorMsg = "user input error";
-        if (respJson.errors) {
-          errorMsg = respJson.errors;
+    if (resp.statusCode > 299) {
+      if (resp.statusCode >= 400 && resp.statusCode <= 499) {
+        let errorMsg = resp.statusMsg || "user input error";
+        if (resp.errorMsg) {
+          errorMsg = resp.errorMsg;
         }
-        return [null, new UserError(resp.status, errorMsg)];
+        return [null, new UserError(resp.statusCode, errorMsg)];
       }
-      return [null, new ServerError(resp.status, resp.statusText)];
+      return [
+        null,
+        new ServerError(resp.statusCode, resp.statusMsg || "server error"),
+      ];
     }
 
-    let result = await resp.json();
-    if (result.status === QueryStatusFinished) {
-      return [result, null];
+    if (!resp.data) {
+      throw new Error(
+        "valid status msg returned from server but no data exists in the response"
+      );
     }
 
-    if (result.status === QueryStatusError) {
+    if (resp.data.status === QueryStatusFinished) {
+      return [resp.data, null];
+    }
+
+    if (resp.data.status === QueryStatusError) {
       return [null, new QueryRunExecutionError()];
     }
 
     let shouldContinue = await linearBackOff({
       attempts,
-      timeoutMinutes: DEFAULTS.timeoutMinutes,
-      intervalSeconds: GET_RESULTS_INTERVAL_SECONDS,
+      timeoutMinutes: this.#defaults.timeoutMinutes,
+      intervalSeconds: this.#defaults.retryIntervalSeconds,
     });
 
     if (!shouldContinue) {
       const elapsedSeconds = getElapsedLinearSeconds({
         attempts,
-        timeoutMinutes: DEFAULTS.timeoutMinutes,
-        intervalSeconds: GET_RESULTS_INTERVAL_SECONDS,
+        timeoutMinutes: this.#defaults.timeoutMinutes,
+        intervalSeconds: this.#defaults.retryIntervalSeconds,
       });
       return [null, new QueryRunTimeoutError(elapsedSeconds * 60)];
     }

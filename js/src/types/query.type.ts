@@ -3,4 +3,5 @@ export type Query = {
   ttlMinutes?: number;
   cached?: boolean;
   timeoutMinutes?: number;
+  retryIntervalSeconds?: number;
 };

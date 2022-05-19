@@ -1,4 +1,5 @@
 import { QueryStatus } from "../query-status.type";
+import { ApiResponse } from "./api-response.type";
 
 export type Row = (string | number | boolean | null)[];
 export type QueryResultJson = {
@@ -13,6 +14,6 @@ export type QueryResultJson = {
   errors?: string | null;
 };
 
-export interface QueryResultResp extends Response {
-  json(): Promise<QueryResultJson>;
+export interface QueryResultResp extends ApiResponse {
+  data: QueryResultJson | null;
 }

@@ -13,11 +13,23 @@ function getLinearBackOffSeconds(attempts: number, intervalSeconds: number) {
   return (attempts + 1) * intervalSeconds;
 }
 
-export async function expBackOff(config: SleepConfig): Promise<boolean> {
+export function getElapsedExpSeconds(config: SleepConfig) {
+  if (!config.intervalSeconds) {
+    throw new Error("intervalSeconds is required for getElapsedLinearTime");
+  }
   let elapsedSeconds = 0;
   for (let i = 0; i < config.attempts; i++) {
     elapsedSeconds += getExpBackOffSeconds(i);
   }
+  return elapsedSeconds;
+}
+
+export async function expBackOff(config: SleepConfig): Promise<boolean> {
+  if (!config.intervalSeconds) {
+    throw new Error("intervalSeconds is required for getElapsedLinearTime");
+  }
+
+  let elapsedSeconds = getElapsedExpSeconds(config);
 
   let shouldContinueBackoff = true;
   if (elapsedSeconds / 60 > config.timeoutMinutes) {
@@ -25,7 +37,11 @@ export async function expBackOff(config: SleepConfig): Promise<boolean> {
     return shouldContinueBackoff;
   }
 
-  const msToSleep = secToMs(getExpBackOffSeconds(config.attempts));
+  const msToSleep = secToMs(
+    getExpBackOffSeconds(config.attempts * config.intervalSeconds)
+  );
+  console.log(getExpBackOffSeconds(config.attempts * config.intervalSeconds));
+  console.log("msToSleep: ", msToSleep);
   await sleep(msToSleep);
 
   return shouldContinueBackoff;

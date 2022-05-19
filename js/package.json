@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/flipsidecrypto/sdk/issues"
   },
-  "homepage": "https://github.com/flipsidecrypto/sdk",
+  "homepage": "https://github.com/flipsidecrypto/sdk/js/README.md",
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",

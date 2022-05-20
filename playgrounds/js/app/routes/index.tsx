@@ -10,11 +10,11 @@ export default function Index() {
       <div className="min-h-screen w-screen bg-[#F9FAFB] flex flex-col items-center justify-center min-h-screen">
         <FlipsideLogo width={60} height={60} className="mb-4" />
         <h1 className="text-2xl flex flex-row font-mono text-emerald-500">
-          Flipside SDK
+          FlipsideCrypto SDK
         </h1>
         <div className="flex flex-row items-center">
           <code className="font-mono text-sm bg-gray-200 rounded-lg p-4 my-2 flex flex-row items-center">
-            yarn install @flipsidecrypto/sdk
+            yarn add @flipsidecrypto/sdk
             <a
               href="https://github.com/FlipsideCrypto/sdk/blob/main/js/README.md"
               target="_blank"

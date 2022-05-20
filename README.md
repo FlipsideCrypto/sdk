@@ -18,7 +18,7 @@ Prepare for a world of queryable fun 🥳
 Our [JS/Typescript SDK](./js/) is currently in Alpha. We're accepting a limited number of users.
 <br>
 <br>
-Fill out this [form](). Tell us about something awesome you're going to build.
+Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8). Tell us about something awesome you're going to build.
 <br>
 
 ## SDKs

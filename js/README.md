@@ -6,16 +6,16 @@
 GM frens, you've found yourself at the Flipside Crypto Velocity JS/typescript sdk.
 <br>
 <br>
-This SDK let's you access all the query awesomeness of [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in the [Velocity UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
+This SDK let's you access all the query awesomeness of [Flipside Crypto's Velocity product](https://app.flipsidecrypto.com), programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in the [Velocity UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
 <br>
 <br>
-The Data Flows in Your Environment 🥳
+The Data Flows in your Environment 🥳
 <br>
 <br>
 
 ## 🗝 Want early access? Grab an API Key
 
-Our [JS/Typescript SDK](./js/) is currently in private alpha. We're accepting a limited number of users that want to test out the SDK and provide feedback.
+Our [JS/Typescript SDK](./js/) is currently in private alpha. We're accepting a limited number of users to test out the SDK and provide feedback.
 <br>
 <br>
 Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in early access.
@@ -24,13 +24,13 @@ Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in 
 ## 💾 Install the SDK
 
 ```bash
-yarn add @flipsidecrypto/core
+yarn add @flipsidecrypto/velocity
 ```
 
 or if using npm
 
 ```bash
-npm install @flipsidecrypto/core
+npm install @flipsidecrypto/velocity
 ```
 
 ## 🦾 Getting Started
@@ -38,22 +38,22 @@ npm install @flipsidecrypto/core
 ```typescript
 import { Flipside, Query, QueryResultSet } from "@flipsidecrypto/velocity";
 
-# Initiate the API with your API key
+# Initialize `Flipside` with your API key
 const flipside = new Flipside(
-  "YOUR_API_KEY",
+  "<YOUR_API_KEY>",
   "https://node-api.flipsidecrypto.com"
 );
 
-# Parameter can be passed into SQL statements via simple string interpolation
+# Parameters can be passed into SQL statements via simple & native string interpolation
 const myAddress = "0x....";
 
-# Create a query object for the query.run function to execute
+# Create a query object for the `query.run` function to execute
 const query: Query = {
   sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   ttlMinutes: 10,
 };
 
-# Send query to Flipside's query engine and await the results
+# Send the `Query` to Flipside's query engine and await the results
 const result: QueryResultSet = await flipside.query.run(query);
 
 # Iterate over the results
@@ -75,11 +75,15 @@ The `Query` object contains both the sql and configuration you can send to the q
 type Query = {
   // SQL query to execute
   sql: string;
+
   // The number of minutes to cache the query results
   ttlMinutes?: number;
-  // An override on the cahce. A value of false will re-execute the query.
+
+  // An override on the query result cahce.
+  // A value of false will re-execute the query.
   cached?: boolean;
-  // The number of minutes until your query time out
+
+  // The number of minutes until your query run times out
   timeoutMinutes?: number;
 };
 ```
@@ -102,6 +106,8 @@ Now let's execute the query and retrieve the results.
 ```typescript
 const result: QueryResultSet = await flipside.query.run(query);
 ```
+
+The results of this query will be cached for 60 minutes, given the `ttlMinutes` parameter.
 
 ### The `QueryResultSet` Object
 
@@ -142,7 +148,7 @@ interface QueryResultSet {
 }
 ```
 
-Let's iterate over the results from our previous query.
+Let's iterate over the results from our query above.
 <br>
 <br>
 Our query selected `nft_address`, `mint_price_eth`, and `mint_price_usd`. We can access the returned data via the `records` parameter. The column names in our query are assigned as keys in each record object.
@@ -171,4 +177,4 @@ Rate limits can be adjust per key/use-case.
 
 ### Client Side Request Requirements
 
-All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding host will fail.
+All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding hostname will fail.

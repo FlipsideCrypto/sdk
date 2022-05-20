@@ -37,8 +37,10 @@ export default function Index() {
           </a>
         </h3>
 
-        <h3 className="text-md underline "></h3>
-        <ol className="list-decimal mt-8 font-mono">
+        <h4 className="text-sm mt-8 font-bold font-mono">
+          👇👇👇 try it! 👇👇👇
+        </h4>
+        <ol className="list-decimal mt-2 font-mono">
           <li style={{ borderTop: "1px dotted #aaa" }} className="py-6">
             <Link to="/nft-mints" className="hover:underline text-xl">
               NFT Mints

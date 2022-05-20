@@ -30,7 +30,7 @@ export async function loader({ request }: { request: Request }) {
 export default function App() {
   const data = useLoaderData<{ ENV: Record<string, string> }>();
   return (
-    <Document env={data.ENV}>
+    <Document env={data.ENV} title="Playground - JS">
       <Outlet />
     </Document>
   );

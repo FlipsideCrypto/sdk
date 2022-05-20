@@ -64,7 +64,7 @@ export default function Index() {
             >
               Thorchain Impermanent Loss Calculator
               <p className="text-sm italic">
-                calculate your position's most recent IL after a liquidity add?
+                calculate your position's most recent IL after a liquidity add
               </p>
             </Link>
           </li>

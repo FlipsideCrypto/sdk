@@ -12,7 +12,7 @@ export function PageTitle({ title }: Props) {
         <FlipsideLogo width={60} height={60} className="mr-4 mb-4" />
       </Link>
       <div>
-        <Link to="/" className="text-xs text-emerald-500 ">
+        <Link to="/" className="text-xs text-emerald-500 hover:text-blue-500">
           [back]
         </Link>
         <h1 className="text-2xl mb-4 font-mono">{title}</h1>

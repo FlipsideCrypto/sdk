@@ -1,6 +1,6 @@
-# Flipside Crypto Core JS SDK
+# Flipside Crypto Velocity JS SDK
 
-gm frens, you've found yourself at the Flipside Crypto core javascript/typescript sdk.
+gm frens, you've found yourself at the Flipside Crypto Velocity javascript/typescript sdk.
 <br>
 <br>
 This SDK let's you access all the query awesomeness of [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically. Any data found in [Velocity](https://app.flipsidecrypto.com) you can query with this SDK.
@@ -33,7 +33,7 @@ npm install @flipsidecrypto/core
 ## 🦾 Getting Started
 
 ```typescript
-import { Flipside, Query, QueryResultSet } from "flipside";
+import { Flipside, Query, QueryResultSet } from "@flipsidecrypto/velocity";
 
 # Initiate the API with your API key
 const flipside = new Flipside(

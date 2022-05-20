@@ -8,5 +8,5 @@ module.exports = {
       mono: ["Simplon Mono", "monospace"],
     },
   },
-  plugins: [],
+  plugins: []
 };

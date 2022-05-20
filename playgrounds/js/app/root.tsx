@@ -12,7 +12,7 @@ import styles from "./tailwind.css";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "Flipside SDK -- Playground",
   viewport: "width=device-width,initial-scale=1",
 });
 
@@ -65,7 +65,7 @@ function Document({
         <Links />
       </head>
 
-      <body className="antialiased">
+      <body className="antialiased min-h-screen">
         {children}
         <ScrollRestoration />
         <Scripts />

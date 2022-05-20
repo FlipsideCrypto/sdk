@@ -470,14 +470,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@flipside/core@link:../../js":
-  version "0.0.0"
-  uid ""
-
-"@flipsidecrypto/core@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@flipsidecrypto/core/-/core-1.0.0.tgz#d3b5f8c145a15d6892ab2031a5dd98e31f0170eb"
-  integrity sha512-mYT9Tr52Z5kx/WizHkzS68vXA/hMKG12p8B1DniZ7r4/s5sFMv4msuTe/QfrziVpz8YotrnE5JfaiGE5aRE40Q==
+"@flipsidecrypto/velocity@1.0.0-alpha.1":
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@flipsidecrypto/velocity/-/velocity-1.0.0-alpha.1.tgz#b98a27657bd6af142bbb94141040b2afe0078ee2"
+  integrity sha512-0xATzczb+pYmSn3JoSdFK6FwjzwRKd1928hDxMQxRsTS+0ugGORjXs6sCIV3Dn6bDa8MimS75DBhHTuDuAEvhQ==
   dependencies:
     axios "^0.27.2"
 
@@ -2985,10 +2981,6 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.5.tgz#76c8584f4fc843db64702a6bd04ab7a8bd666da3"
   integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
 
-"flipside@link:../../js":
-  version "0.0.0"
-  uid ""
-
 flow-parser@0.*:
   version "0.176.3"
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.176.3.tgz#a12d9c79ff1e857b70c9574c3e88be06d2f96181"
@@ -5432,6 +5424,11 @@ react-dom@^17.0.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
+
+react-icons@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
+  integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
 
 react-is@^16.13.1:
   version "16.13.1"

@@ -33,7 +33,11 @@ export default function Index() {
     const nextAddress = addr;
     setLoading(true);
     const query: Query = {
-      sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${nextAddress}')`,
+      sql: `SELECT contract_name, count(1) as event_count 
+            FROM flipside_prod_db.ethereum_core.fact_event_logs 
+            WHERE ORIGIN_FROM_ADDRESS = LOWER('${nextAddress}')
+            GROUP BY 1 
+            ORDER BY 2 desc`,
       ttlMinutes: 10,
     };
 
@@ -64,18 +68,18 @@ export default function Index() {
   return (
     <>
       <div className="p-6 bg-[#F9FAFB] min-h-screen w-screen">
-        <PageTitle title="NFT Address Mint History" />
+        <PageTitle title="Top Contracts" />
         <QueryPreview>
           SELECT
-          <br /> nft_address,
-          <br /> mint_price_eth,
+          <br /> contract_name,
+          <br /> count(1) as event_count,
           <br /> mint_price_usd
           <br />
           FROM
-          <br /> flipside_prod_db.ethereum_core.ez_nft_mints
+          <br /> flipside_prod_db.ethereum_core.fact_event_logs
           <br />
           WHERE
-          <br /> nft_to_address=
+          <br /> origin_from_address =
           <span style={{ color: "purple" }}>LOWER('{address}')</span>
         </QueryPreview>
         <div className="mt-6">

@@ -1,21 +1,21 @@
 # Flipside Crypto Velocity JS SDK
 
-gm frens, you've found yourself at the Flipside Crypto Velocity javascript/typescript sdk.
+GM frens, you've found yourself at the Flipside Crypto Velocity JS/typescript sdk.
 <br>
 <br>
-This SDK let's you access all the query awesomeness of [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically. Any data found in [Velocity](https://app.flipsidecrypto.com) you can query with this SDK.
+This SDK let's you access all the query awesomeness of [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in the [Velocity UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
 <br>
 <br>
-Prepare for a world of queryable fun 🥳
+The Data Flows in Your Environment 🥳
 <br>
 <br>
 
 ## 🗝 Want early access? Grab an API Key
 
-Our [JS/Typescript SDK](./js/) is currently in Alpha. We're accepting a limited number of users.
+Our [JS/Typescript SDK](./js/) is currently in private alpha. We're accepting a limited number of users that want to test out the SDK and provide feedback.
 <br>
 <br>
-Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8). Tell us about something awesome you're going to build.
+Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in early access.
 <br>
 
 ## 💾 Install the SDK
@@ -61,3 +61,111 @@ result.records.map((record) => {
   console.log(`address ${nftAddress} minted at a price of ${mintPrice} ETH or $${mintPriceUSD} USD`);
 });
 ```
+
+## The Details
+
+### The `Query` Object
+
+The `Query` object contains both the sql and configuration you can send to the query engine for execution.
+
+```typescript
+type Query = {
+  // SQL query to execute
+  sql: string;
+  // The number of minutes to cache the query results
+  ttlMinutes?: number;
+  // An override on the cahce. A value of false will re-execute the query.
+  cached?: boolean;
+  // The number of minutes until your query time out
+  timeoutMinutes?: number;
+};
+```
+
+Let's create a query to retrieve all NFTs minted by an address:
+
+```typescript
+const yourAddress = "<your_ethereum_address>";
+
+const query: Query = {
+  sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
+  ttlMinutes: 60,
+  cached: true,
+  timeoutMinutes: 15,
+};
+```
+
+Now let's execute the query and retrieve the results.
+
+```typescript
+const result: QueryResultSet = await flipside.query.run(query);
+```
+
+### The `QueryResultSet` Object
+
+After executing a query the results are stored in a `QueryResultSet` object.
+
+```typescript
+interface QueryResultSet {
+  // The server id of the query
+  queryId: string | null;
+
+  // The status of the query (`PENDING`, `FINISHED`, `ERROR`)
+  status: QueryStatus | null;
+
+  // The names of the columns in the result set
+  columns: string[] | null;
+
+  // The type of the columns in the result set
+  columnTypes: string[] | null;
+
+  // The results of the query
+  rows: Row[] | null;
+
+  // Summary stats on the query run (i.e. the number of rows returned, the elapsed time, etc)
+  runStats: QueryRunStats | null;
+
+  // The results of the query transformed as an array of objects
+  records: QueryResultRecord[] | null;
+
+  // If the query failed, this will contain the error
+  error:
+    | QueryRunRateLimitError
+    | QueryRunTimeoutError
+    | QueryRunExecutionError
+    | ServerError
+    | UserError
+    | UnexpectedSDKError
+    | null;
+}
+```
+
+Let's iterate over the results from our previous query.
+<br>
+<br>
+Our query selected `nft_address`, `mint_price_eth`, and `mint_price_usd`. We can access the returned data via the `records` parameter. The column names in our query are assigned as keys in each record object.
+
+```typescript
+result.records.map((record) => {
+  const nftAddress = record.nft_address
+  const mintPriceEth = record.mint_price_eth
+  const mintPriceUSD = = record.mint_price_usd
+  console.log(`address ${nftAddress} minted at a price of ${mintPrice} ETH or $${mintPriceUSD} USD`);
+});
+```
+
+### Rate Limits
+
+Every API key is subject to a rate limit over a moving 5 minute window, as well as an aggregate daily limit.
+<br>
+<br>
+If the limit is reach in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeoutMinutes` parameter set on the `Query` object.
+<br>
+<br>
+This feature is quite useful if leveraging the SDK client side and your web application sees a large spike in traffic. Rather than using up your daily limit all at once, requests will be smoothed out over the day.
+<br>
+<br>
+Rate limits can be adjust per key/use-case.
+
+### Client Side Request Requirements
+
+All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding host will fail.

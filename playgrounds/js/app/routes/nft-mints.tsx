@@ -17,7 +17,7 @@ export async function loader({ request }: { request: Request }) {
   return {
     FLIPSIDE_API_KEY: process.env.FLIPSIDE_API_KEY,
     FLIPSIDE_BASE_URL: process.env.FLIPSIDE_BASE_URL,
-    urlAddress: address,
+    urlAddress: address || "0x90f11bcf68f44a7edc142186fced2314da35655d",
   };
 }
 
@@ -34,7 +34,7 @@ export default function Index() {
     setLoading(true);
     const query: Query = {
       sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${nextAddress}')`,
-      ttlMinutes: 10,
+      ttlMinutes: 120,
     };
 
     const result = await flipside.query.run(query);

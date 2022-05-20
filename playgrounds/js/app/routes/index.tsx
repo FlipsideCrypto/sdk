@@ -57,6 +57,17 @@ export default function Index() {
               </p>
             </Link>
           </li>
+          <li style={{ borderTop: "1px dotted #aaa" }} className="py-6">
+            <Link
+              to="/thorchain-tx-impermanent-loss"
+              className="hover:underline text-xl"
+            >
+              Thorchain Impermanent Loss Calculator
+              <p className="text-sm italic">
+                calculate your position's most recent IL after a liquidity add?
+              </p>
+            </Link>
+          </li>
         </ol>
       </div>
       <AppFooter />

@@ -10,8 +10,10 @@ export function QueryPreview({ children }: Props) {
         color: "#4895BD",
         padding: "15px",
         borderRadius: "10px",
-        width: "600px",
+        width: "700px",
         height: "auto",
+        maxHeight: "550px",
+        overflow: "scroll",
       }}
     >
       {children}

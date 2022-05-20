@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Flipside, QueryResultSet, Query } from "@flipsidecrypto/core";
+import { Flipside, QueryResultSet, Query } from "@flipsidecrypto/velocity";
 import { Button } from "~/components/button";
 import { ErrorMsg } from "~/components/error-msg";
 import { Input } from "~/components/input";

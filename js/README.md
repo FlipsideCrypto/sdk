@@ -9,7 +9,7 @@ GM frens, you've found yourself at the Flipside Crypto Velocity JS/typescript sd
 This SDK let's you access all the query awesomeness of [Flipside Crypto's Velocity product](https://app.flipsidecrypto.com), programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in the [Velocity UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
 <br>
 <br>
-The Data Flows in your Environment 🥳
+Data Where You Want It 🥳
 <br>
 <br>
 

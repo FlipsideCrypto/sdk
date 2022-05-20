@@ -6,7 +6,7 @@ GM frens, you've found yourself at the Flipside Crypto Velocity SDK repository.
 We're making all the query awesomeness found at [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically accessible. Any data found in [Velocity](https://app.flipsidecrypto.com) you can query with our suite of SDKs.
 <br>
 <br>
-The Data Flows in Your Environment 🥳
+Data Where You Want It 🥳
 
 ## 🗝 Want early access? Grab an API Key
 

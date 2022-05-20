@@ -4,10 +4,10 @@ Blockchain Data Where You Want It 🥳
 <br>
 <br>
 
-GM frens, you've found yourself at the Flipside Crypto Velocity SDK repository.
+GM frens, you've found yourself at the FlipsideCrypto SDK repository.
 <br>
 <br>
-We're making all the query awesomeness found at [FlipsideCrypto's Velocity product](https://app.flipsidecrypto.com) programmatically accessible. Any data found in [Velocity](https://app.flipsidecrypto.com) you can query with our suite of SDKs.
+We're making all the query awesomeness found at [Flipside's Query product](https://app.flipsidecrypto.com) programmatically accessible. Any data found at [Flipside](https://app.flipsidecrypto.com) you can query with our suite of SDKs.
 <br>
 <br>
 Data Where You Want It 🥳
@@ -24,5 +24,5 @@ Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in 
 
 | Language                 | Version       | Status                                                                             |
 | ------------------------ | ------------- | ---------------------------------------------------------------------------------- |
-| ✅ [JS/TypeScript](./js) | 1.0.0-alpha.2 | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
+| ✅ [JS/TypeScript](./js) | 1.0.0-alpha.0 | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
 | 🏗 [Python](./python/)    | NA            | Not Yet Available                                                                  |

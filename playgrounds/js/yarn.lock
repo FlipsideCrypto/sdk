@@ -470,9 +470,9 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@flipsidecrypto/velocity@1.0.0-alpha.1":
+"@flipsidecrypto/sdk@1.0.0-alpha.1":
   version "1.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@flipsidecrypto/velocity/-/velocity-1.0.0-alpha.1.tgz#b98a27657bd6af142bbb94141040b2afe0078ee2"
+  resolved "https://registry.yarnpkg.com/@flipsidecrypto/sdk/-/velocity-1.0.0-alpha.1.tgz#b98a27657bd6af142bbb94141040b2afe0078ee2"
   integrity sha512-0xATzczb+pYmSn3JoSdFK6FwjzwRKd1928hDxMQxRsTS+0ugGORjXs6sCIV3Dn6bDa8MimS75DBhHTuDuAEvhQ==
   dependencies:
     axios "^0.27.2"

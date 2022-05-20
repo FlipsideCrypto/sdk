@@ -1,4 +1,4 @@
-# Flipside Crypto Velocity JS SDK
+# Flipside Crypto JS SDK
 
 Blockchain Data Where You Want It 🥳
 <br>
@@ -7,10 +7,10 @@ Blockchain Data Where You Want It 🥳
 ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg)
 <br>
 <br>
-GM frens, you've found yourself at the Flipside Crypto Velocity JS/typescript sdk.
+GM frens, you've found yourself at the Flipside Crypto JS/typescript sdk.
 <br>
 <br>
-This SDK let's you access all the query awesomeness of [Flipside Crypto's Velocity product](https://app.flipsidecrypto.com), programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in the [Velocity UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
+This SDK let's you access all the query awesomeness of [Flipside's product](https://app.flipsidecrypto.com), programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in [Flipside's Query UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
 
 ## 🗝 Want early access? Grab an API Key
 
@@ -23,19 +23,19 @@ Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in 
 ## 💾 Install the SDK
 
 ```bash
-yarn add @flipsidecrypto/velocity
+yarn add @flipsidecrypto/sdk
 ```
 
 or if using npm
 
 ```bash
-npm install @flipsidecrypto/velocity
+npm install @flipsidecrypto/sdk
 ```
 
 ## 🦾 Getting Started
 
 ```typescript
-import { Flipside, Query, QueryResultSet } from "@flipsidecrypto/velocity";
+import { Flipside, Query, QueryResultSet } from "@flipsidecrypto/sdk";
 
 // Initialize `Flipside` with your API key
 const flipside = new Flipside(

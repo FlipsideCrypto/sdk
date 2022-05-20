@@ -14,7 +14,7 @@
     "generate:css": "yarn tailwindcss -o ./app/tailwind.css"
   },
   "dependencies": {
-    "@flipsidecrypto/velocity": "1.0.0-alpha.2",
+    "@flipsidecrypto/sdk": "1.0.0-alpha.0",
     "@remix-run/node": "^1.4.1",
     "@remix-run/react": "^1.4.1",
     "@remix-run/vercel": "^1.4.1",

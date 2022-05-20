@@ -1,4 +1,3 @@
-import { GradientButton } from "./button";
 import { AiFillGithub } from "react-icons/ai";
 import { GiPartyPopper } from "react-icons/gi";
 import { FlipsideLogo } from "./logo";

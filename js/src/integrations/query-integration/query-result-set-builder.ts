@@ -90,7 +90,7 @@ export class QueryResultSetBuilder implements QueryResultSet {
     return queryResultJson.results.map((result) => {
       let record: QueryResultRecord = {};
       result.forEach((value, index) => {
-        record[columnLabels[index]] = value;
+        record[columnLabels[index].toLowerCase()] = value;
       });
       return record;
     });

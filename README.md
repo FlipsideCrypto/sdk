@@ -20,5 +20,5 @@ Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in 
 
 | Language                 | Version       | Status                                                                             |
 | ------------------------ | ------------- | ---------------------------------------------------------------------------------- |
-| ✅ [JS/TypeScript](./js) | 1.0.0-alpha.0 | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
+| ✅ [JS/TypeScript](./js) | 1.0.0-alpha.1 | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
 | 🏗 [Python](./python/)    | NA            | Not Yet Available                                                                  |

@@ -11,7 +11,7 @@ import {
 import styles from "./tailwind.css";
 
 const description = "Flipside SDK. Blockchain Data Where You Want It.";
-const image = "https://sdk.flipsidecrypto.xyz/sdk-site-preview.png";
+const image = "https://sdk.flipsidecrypto.xyz/sdk-site-preview-zoomed.png";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

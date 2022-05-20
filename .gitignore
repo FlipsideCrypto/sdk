@@ -22,8 +22,4 @@ node_modules
 /public/build
 /api/index.js
 
-playgrounds/
-playgrounds
-playgrounds/js
-playgrounds/js/
 js/coverage

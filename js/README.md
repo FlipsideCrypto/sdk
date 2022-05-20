@@ -1,5 +1,9 @@
 # Flipside Crypto Velocity JS SDK
 
+Blockchain Data Where You Want It 🥳
+<br>
+<br>
+
 ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg)
 <br>
 <br>
@@ -7,11 +11,6 @@ GM frens, you've found yourself at the Flipside Crypto Velocity JS/typescript sd
 <br>
 <br>
 This SDK let's you access all the query awesomeness of [Flipside Crypto's Velocity product](https://app.flipsidecrypto.com), programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in the [Velocity UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
-<br>
-<br>
-Data Where You Want It 🥳
-<br>
-<br>
 
 ## 🗝 Want early access? Grab an API Key
 

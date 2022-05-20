@@ -1,5 +1,9 @@
 # Flipside Crypto Core SDKs
 
+Blockchain Data Where You Want It 🥳
+<br>
+<br>
+
 GM frens, you've found yourself at the Flipside Crypto Velocity SDK repository.
 <br>
 <br>

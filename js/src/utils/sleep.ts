@@ -40,8 +40,7 @@ export async function expBackOff(config: SleepConfig): Promise<boolean> {
   const msToSleep = secToMs(
     getExpBackOffSeconds(config.attempts * config.intervalSeconds)
   );
-  console.log(getExpBackOffSeconds(config.attempts * config.intervalSeconds));
-  console.log("msToSleep: ", msToSleep);
+
   await sleep(msToSleep);
 
   return shouldContinueBackoff;

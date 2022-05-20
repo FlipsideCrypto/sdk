@@ -7,7 +7,7 @@ Blockchain Data Where You Want It 🥳
 GM frens, you've found yourself at the FlipsideCrypto SDK repository.
 <br>
 <br>
-We're making all the query awesomeness found at [Flipside's Query product](https://app.flipsidecrypto.com) programmatically accessible. Any data found at [Flipside](https://app.flipsidecrypto.com) you can query with our suite of SDKs.
+We're making all the query awesomeness found at [Flipside's Query product](https://app.flipsidecrypto.com) programmatically accessible. Any data found at [Flipside](https://app.flipsidecrypto.com) you can now query with our suite of SDKs.
 <br>
 <br>
 Data Where You Want It 🥳

@@ -17,7 +17,7 @@ export async function loader({ request }: { request: Request }) {
   return {
     FLIPSIDE_API_KEY: process.env.FLIPSIDE_API_KEY,
     FLIPSIDE_BASE_URL: process.env.FLIPSIDE_BASE_URL,
-    urlAddress: address,
+    urlAddress: address || "0x90f11bcf68f44a7edc142186fced2314da35655d",
   };
 }
 

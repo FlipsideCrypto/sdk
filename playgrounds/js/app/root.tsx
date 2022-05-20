@@ -94,6 +94,25 @@ function Document({
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        {process.env.NODE_ENV === "development" ||
+        !env?.GA_TRACKING_ID ? null : (
+          <>
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${env.GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+              }}
+            />
+          </>
+        )}
       </body>
     </html>
   );

@@ -1,5 +1,8 @@
 # Flipside Crypto Velocity JS SDK
 
+![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg)
+<br>
+<br>
 GM frens, you've found yourself at the Flipside Crypto Velocity JS/typescript sdk.
 <br>
 <br>

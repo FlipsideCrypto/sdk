@@ -18,7 +18,7 @@ Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in 
 
 ## SDKs
 
-| Language         | Version       | Status            |
-| ---------------- | ------------- | ----------------- |
-| ✅ JS/TypeScript | 1.0.0-alpha.0 | Alpha Release     |
-| 🏗 Python         | NA            | Not Yet Available |
+| Language         | Version       | Status                                                                             |
+| ---------------- | ------------- | ---------------------------------------------------------------------------------- |
+| ✅ JS/TypeScript | 1.0.0-alpha.0 | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
+| 🏗 Python         | NA            | Not Yet Available                                                                  |

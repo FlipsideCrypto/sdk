@@ -1,6 +1,6 @@
 {
   "name": "@flipsidecrypto/velocity",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "The official Flipside Crypto Velocity SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -28,6 +28,8 @@ const DEFAULTS: QueryDefaults = {
   cached: true,
   timeoutMinutes: 20,
   retryIntervalSeconds: 0.5,
+  pageSize: 100000,
+  pageNumber: 1,
 };
 
 export class QueryIntegration {
@@ -64,7 +66,9 @@ export class QueryIntegration {
     }
 
     const [getQueryResultJson, getQueryErr] = await this.#getQueryResult(
-      createQueryJson.token
+      createQueryJson.token,
+      query.pageNumber || 1,
+      query.pageSize || 100000,
     );
 
     if (getQueryErr) {
@@ -73,6 +77,7 @@ export class QueryIntegration {
         error: getQueryErr,
       });
     }
+
 
     if (!getQueryResultJson) {
       return new QueryResultSetBuilder({
@@ -132,6 +137,8 @@ export class QueryIntegration {
 
   async #getQueryResult(
     queryID: string,
+    pageNumber: number,
+    pageSize: number,
     attempts: number = 0
   ): Promise<
     [
@@ -139,7 +146,7 @@ export class QueryIntegration {
       QueryRunTimeoutError | ServerError | UserError | null
     ]
   > {
-    const resp = await this.#api.getQueryResult(queryID);
+    const resp = await this.#api.getQueryResult(queryID, pageNumber, pageSize);
     if (resp.statusCode > 299) {
       if (resp.statusCode >= 400 && resp.statusCode <= 499) {
         let errorMsg = resp.statusMsg || "user input error";
@@ -183,6 +190,6 @@ export class QueryIntegration {
       return [null, new QueryRunTimeoutError(elapsedSeconds * 60)];
     }
 
-    return this.#getQueryResult(queryID, attempts + 1);
+    return this.#getQueryResult(queryID, pageNumber, pageSize, attempts + 1);
   }
 }

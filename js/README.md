@@ -84,6 +84,12 @@ type Query = {
 
   // The number of minutes until your query run times out
   timeoutMinutes?: number;
+
+  // The number of records to return, defaults to 100000
+  pageSize?: number;
+
+  // The page number to return, defaults to 1
+  pageNumber?: number;
 };
 ```
 
@@ -97,6 +103,8 @@ const query: Query = {
   ttlMinutes: 60,
   cached: true,
   timeoutMinutes: 15,
+  pageNumber: 1,
+  pageSize: 10,
 };
 ```
 
@@ -135,6 +143,12 @@ interface QueryResultSet {
   // The results of the query transformed as an array of objects
   records: QueryResultRecord[] | null;
 
+  // The number of records to return
+  pageSize: number;
+
+  // The page number to return
+  pageNumber: number;
+
   // If the query failed, this will contain the error
   error:
     | QueryRunRateLimitError
@@ -154,10 +168,12 @@ Our query selected `nft_address`, `mint_price_eth`, and `mint_price_usd`. We can
 
 ```typescript
 result.records.map((record) => {
-  const nftAddress = record.nft_address
-  const mintPriceEth = record.mint_price_eth
-  const mintPriceUSD = = record.mint_price_usd
-  console.log(`address ${nftAddress} minted at a price of ${mintPrice} ETH or $${mintPriceUSD} USD`);
+  const nftAddress = record.nft_address;
+  const mintPriceEth = record.mint_price_eth;
+  const mintPriceUSD = record.mint_price_usd;
+  console.log(
+    `address ${nftAddress} minted at a price of ${mintPriceEth} ETH or $${mintPriceUSD} USD`
+  );
 });
 ```
 

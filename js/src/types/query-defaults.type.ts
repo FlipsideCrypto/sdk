@@ -3,4 +3,6 @@ export type QueryDefaults = {
   cached: boolean;
   timeoutMinutes: number;
   retryIntervalSeconds: number;
+  pageSize: number;
+  pageNumber: number;
 };

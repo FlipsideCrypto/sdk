@@ -58,6 +58,8 @@ function generateQueryResultData(status: QueryStatus) {
     columnTypes: ["string", "string"],
     message: "",
     errors: "invalid sql",
+    pageNumber: 1,
+    pageSize: 100,
   };
 }
 
@@ -173,6 +175,8 @@ describe("run: timeout_error", () => {
       cached: false,
       timeoutMinutes: 0.01,
       retryIntervalSeconds: 0.001,
+      pageNumber: 1,
+      pageSize: 100,
     });
     const result = await queryIntegration.run(defaultQueryData);
     assert.equal(result.error?.errorType, ERROR_TYPES.query_run_timeout_error);
@@ -190,6 +194,8 @@ describe("run: timeout_error", () => {
       cached: false,
       timeoutMinutes: 0.01,
       retryIntervalSeconds: 0.001,
+      pageNumber: 1,
+      pageSize: 100,
     });
     const result = await queryIntegration.run(defaultQueryData);
     assert.equal(

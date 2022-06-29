@@ -12,6 +12,8 @@ export type QueryResultJson = {
   columnTypes: string[];
   message?: string;
   errors?: string | null;
+  pageNumber: number;
+  pageSize: number;
 };
 
 export interface QueryResultResp extends ApiResponse {

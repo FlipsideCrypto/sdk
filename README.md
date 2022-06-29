@@ -1,10 +1,10 @@
-# Flipside Crypto Core SDKs
+# ShroomDK (SDK)
 
-Blockchain Data Where You Want It 🥳
+Programmatic access to the most comprehensive blockchain data in Web3, for free. 🥳
 <br>
 <br>
 
-GM frens, you've found yourself at the FlipsideCrypto SDK repository.
+GM frens, you've found yourself at the FlipsideCrypto ShroomDK (SDK) repository.
 <br>
 <br>
 We're making all the query awesomeness found at [Flipside's Query product](https://app.flipsidecrypto.com) programmatically accessible. Any data found at [Flipside](https://app.flipsidecrypto.com) you can now query with our suite of SDKs.
@@ -12,17 +12,14 @@ We're making all the query awesomeness found at [Flipside's Query product](https
 <br>
 Data Where You Want It 🥳
 
-## 🗝 Want early access? Grab an API Key
+## 🗝 Want access? Mint a ShroomDK NFT to Generate an API Key
 
-Our [JS/Typescript SDK](./js/) is currently in private alpha. We're accepting a limited number of users that want to test out the SDK and provide feedback.
-<br>
-<br>
-Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in early access.
+More Details at [ShroomDK](https://sdk.flipsidecrypto.xyz)
 <br>
 
 ## SDKs
 
-| Language                 | Version       | Status                                                                             |
-| ------------------------ | ------------- | ---------------------------------------------------------------------------------- |
-| ✅ [JS/TypeScript](./js) | 1.0.0-alpha.0 | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
-| 🏗 [Python](./python/)    | NA            | Not Yet Available                                                                  |
+| Language                 | Version | Status                                                                             |
+| ------------------------ | ------- | ---------------------------------------------------------------------------------- |
+| ✅ [JS/TypeScript](./js) | 1.0.0   | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
+| 🏗 [Python](./python/)    | NA      | Not Yet Available                                                                  |

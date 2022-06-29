@@ -1,6 +1,6 @@
 # Flipside Crypto JS SDK
 
-Blockchain Data Where You Want It 🥳
+Programmatic access to the most comprehensive blockchain data in Web3, for free. 🥳
 <br>
 <br>
 
@@ -9,15 +9,6 @@ Blockchain Data Where You Want It 🥳
 <br>
 GM frens, you've found yourself at the Flipside Crypto JS/typescript sdk.
 <br>
-<br>
-This SDK let's you access all the query awesomeness of [Flipside's product](https://app.flipsidecrypto.com), programmatically. The SDK can be run both in the browser and on the server. All blockchain data found in [Flipside's Query UI](https://app.flipsidecrypto.com) can be programmatically queried via the SDK.
-
-## 🗝 Want early access? Grab an API Key
-
-Our [JS/Typescript SDK](./js/) is currently in private alpha. We're accepting a limited number of users to test out the SDK and provide feedback.
-<br>
-<br>
-Fill out this [form](https://forms.gle/Hii64SznA9B9dhLJ8) if your interested in early access.
 <br>
 
 ## 💾 Install the SDK

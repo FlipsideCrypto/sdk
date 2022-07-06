@@ -64,10 +64,11 @@ export class API implements ApiClient {
     };
   }
 
-  async getQueryResult(queryID: string): Promise<QueryResultResp> {
+  async getQueryResult(queryID: string, pageNumber: number, pageSize: number): Promise<QueryResultResp> {
     let result;
     try {
       result = await axios.get(this.getUrl(`queries/${queryID}`), {
+        params: { pageNumber: pageNumber, pageSize: pageSize },
         method: "GET",
         headers: this.#headers,
       });

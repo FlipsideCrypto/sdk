@@ -33,6 +33,8 @@ function getQueryResultSetBuilder(
       columnTypes: ["number", "string", "string", "boolean", "number"],
       message: "",
       errors: null,
+      pageSize: 100,
+      pageNumber: 0,
     },
     error: null,
   };

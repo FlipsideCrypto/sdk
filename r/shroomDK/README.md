@@ -70,8 +70,8 @@ Documentation can be viewed within RStudio with ```?clean_query``` for new packa
 | Description | Cleans Query to be in Data Frame format |
 | Usage  | clean_query(request, try_simplify = TRUE)|
 | `request`	| The request output from `get_query_from_token()` |
-|try_simplify	 | because requests can return JSON and/or may not have the same length across values, they may not be data frame compliant (all columns having the same number of rows). A key example would be TX_JSON in EVM FACT_TRANSACTION tables which include 50+ extra details from transaction logs. But other examples like NULLs TO_ADDRESS can have similar issues. Default TRUE. |
-| Value | Always returns a data frame. If 'try_simplify' is `FALSE` OR if 'try_simplify' `TRUE` fails (columns having different rows) then the data frame is comprised of lists, where each column must be coerced to a desired class (e.g., with `as.numeric()`) to ensure each column has the same number of rows.|
+|try_simplify	 | because requests can return JSON and/or may not have the same length across values, they may not be data frame compliant (all columns having the same number of rows). A key example would be TX_JSON in EVM FACT_TRANSACTION tables which include 50+ extra details from transaction logs. But other examples like `NULL` values in TO_ADDRESS can have similar issues. Default `TRUE`. |
+| Value | Always returns a data frame. If 'try_simplify' is `FALSE` OR if `try_simplify = TRUE` fails (columns having different number of rows) then the data frame is comprised of lists, where each column must be coerced to a desired class (e.g., with `as.numeric()`) to ensure each column has the same number of rows.|
 
 Note: The vast majority (95%+) of queries will return a simple data frame with the classes coerced intelligently (e.g., Block_Number being numeric). But check the warnings and check your column classes, if the class is a list then try_simplify failed (i.e., not all columns have the same number of rows when coerced).
 

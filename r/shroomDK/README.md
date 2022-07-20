@@ -74,3 +74,10 @@ Documentation can be viewed within RStudio with ```?clean_query``` for new packa
 | Value | Always returns a data frame. If 'try_simplify' is `FALSE` OR if 'try_simplify' `TRUE` fails (columns having different rows) then the data frame is comprised of lists, where each column must be coerced to a desired class (e.g., with `as.numeric()`) to ensure each column has the same number of rows.|
 
 Note: The vast majority (95%+) of queries will return a simple data frame with the classes coerced intelligently (e.g., Block_Number being numeric). But check the warnings and check your column classes, if the class is a list then try_simplify failed (i.e., not all columns have the same number of rows when coerced).
+
+```
+#example
+query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000", api_key)
+request = get_query_from_token(query$token, api_key, 1, 10000)
+clean_query(request, try_simplify = FALSE) # returns data frame of lists()
+```

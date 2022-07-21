@@ -1,5 +1,5 @@
-from typing import Optional, List, Any
-from pydantic import BaseModel, Field, UUID4, PrivateAttr
+from typing import Optional, List, Any, Union
+from pydantic import BaseModel, Field
 
 from .api_response import ApiResponse
 
@@ -19,4 +19,4 @@ class QueryResultJson(BaseModel):
 
 
 class QueryResultResp(ApiResponse):
-  data: QueryResultJson | None = Field(False, description="The data payload result after attempting to retrieve the query results.")
+  data: Union[QueryResultJson, None] = Field(False, description="The data payload result after attempting to retrieve the query results.")

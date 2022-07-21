@@ -6,7 +6,6 @@ import { Input } from "../components/input";
 import { RetroButton } from "../components/retro-buttons";
 import RetroLoader from "../components/retro-loader";
 import { QueryStats } from "../components/query-stats";
-import { ErrorMsg } from "../components/error-msg";
 import { QueryResultTable } from "../components/query-result-table";
 import { getEnsAddr } from "../queries/ens-queries";
 import { getNFTMints } from "../queries/nft-queries";
@@ -82,14 +81,12 @@ export function NftMints() {
   }, [address, pageNumber]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("here!");
     e.preventDefault();
     setLoading(true);
     // @ts-ignore
     const nextAddress = e.currentTarget.elements.address.value;
     setAddress(nextAddress);
     setPageNumber(1);
-    // await onQuery(nextAddress, 1);
   };
 
   return (
@@ -108,7 +105,6 @@ export function NftMints() {
                 let newRelativePathQuery =
                   window.location.pathname + "?" + searchParams.toString();
                 window.history.pushState(null, "", newRelativePathQuery);
-                setAddress(val);
               }}
             />
             <RetroButton color={"green"} size={"sm"}>
@@ -122,7 +118,6 @@ export function NftMints() {
             <div className="mt-6 p-4">
               <QueryStats queryResultSet={queryResult} />
             </div>
-            {/* <ErrorMsg queryResultSet={queryResult} /> */}
             <div className="mt-6 p-4">
               <QueryResultTable
                 queryResultSet={queryResult}

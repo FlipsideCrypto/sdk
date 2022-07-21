@@ -8,6 +8,7 @@ export async function getEnsAddr(
 ): Promise<[string | null, Error | null]> {
   if (!SHROOMDK_API_KEY) throw new Error("no api key");
 
+  // Create an instance of the SDK
   const flipside = new Flipside(SHROOMDK_API_KEY, API_BASE_URL);
 
   // Create the query object

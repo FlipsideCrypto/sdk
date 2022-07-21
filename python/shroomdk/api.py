@@ -32,15 +32,16 @@ class API(object):
             headers=self.headers,
         )
 
-        data = None
-        if result.status_code >= 200 and result.status_code < 300:
+        try:
             data = result.json()
-  
+        except json.decoder.JSONDecodeError:
+            data = None
+
         return CreateQueryResp(
             status_code=result.status_code,
             status_msg=result.reason,
             error_msg=data.get('errors') if data else None,
-            data=CreateQueryJson(**data) if data else None,
+            data=CreateQueryJson(**data) if data and data.get('errors') is None else None,
         )
 
     def get_query_result(self, query_id: str, page_number: int, page_size: int) -> QueryResultResp:
@@ -50,13 +51,14 @@ class API(object):
             headers=self.headers,
         )
 
-        data = None
-        if result.status_code >= 200 and result.status_code < 300:
+        try:
             data = result.json()
+        except json.decoder.JSONDecodeError:
+            data = None
 
         return QueryResultResp(
             status_code=result.status_code,
             status_msg=result.reason,
             error_msg=data.get('errors') if data else None,
-            data=QueryResultJson(**data) if data else None,
+            data=QueryResultJson(**data) if data and data.get('errors') is None else None,
         )

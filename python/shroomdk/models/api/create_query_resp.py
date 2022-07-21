@@ -7,6 +7,7 @@ from .api_response import ApiResponse
 class CreateQueryJson(BaseModel):
     token: str = Field(None, description="The server-side token of the query being executed.")
     errors: Optional[str] | None = Field(False, description="Error that occured when creating the query.")
+    cached: Optional[bool] = Field(False, description="Whether the query is cached or not.")
 
 
 class CreateQueryResp(ApiResponse):

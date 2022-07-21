@@ -12,7 +12,7 @@ def get_exp_backoff_seconds(attempts: int | float):
 
 
 def get_linear_backoff_seconds(attempts: int | float, interval_seconds: int | float):
-    return (attempts + 1) * interval_seconds
+    return (attempts +1) * interval_seconds
 
 
 def get_elapsed_exp_seconds(config: SleepConfig):
@@ -35,7 +35,7 @@ def exp_backoff(config: SleepConfig):
     if elapsed_seconds / 60 > config.timeout_minutes:
         should_continue = False
         return should_continue
-    
+
     time.sleep(get_exp_backoff_seconds(config.attempts * config.interval_seconds))
     
     return should_continue

@@ -4,7 +4,7 @@ from .integrations import (
     QueryIntegration
 )
 
-API_BASE_URL = "https://node-api.flipsidecrypto.com"
+API_BASE_URL = "https://api.flipsidecrypto.com"
 
 
 class ShroomDK(object):
@@ -19,6 +19,7 @@ class ShroomDK(object):
             sql=sql,
             ttl_minutes=ttl_minutes,
             timeout_minutes=timeout_minutes,
+            retry_interval_seconds=retry_interval_seconds,
             page_size=page_size,
             page_number=page_number,
             cached=cached

@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Union
 from datetime import datetime
 
 from shroomdk.models.api import QueryResultJson
@@ -44,7 +44,7 @@ class QueryResultSetBuilder(object):
             record_count=len(data.results) if data.results else 0
         )
     
-    def create_records(self, data: QueryResultJson) -> List[dict] | None:
+    def create_records(self, data: QueryResultJson) -> Union[List[dict], None]:
         if not data or not data.results:
             return None
 

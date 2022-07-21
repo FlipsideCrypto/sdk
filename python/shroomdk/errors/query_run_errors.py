@@ -1,4 +1,4 @@
-
+from typing import Union
 from .base_error import BaseError
 
 
@@ -17,7 +17,7 @@ class QueryRunTimeoutError(BaseError):
     Base class for all QueryRunTimeoutError errors.
     """
     
-    def __init__(self, timeoutMinutes: int | float):
+    def __init__(self, timeoutMinutes: Union[int, float]):
         self.message = f"QUERY_RUN_TIMEOUT_ERROR: your query has timed out after {timeoutMinutes} minutes."
         super().__init__(self.message)
 

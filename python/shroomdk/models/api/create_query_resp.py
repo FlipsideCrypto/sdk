@@ -18,6 +18,4 @@ class CreateQueryJson(BaseModel):
 
 
 class CreateQueryResp(ApiResponse):
-    data: Union[CreateQueryJson, None] = Field(
-        False, description="The data payload result after attempting to create a query."
-    )
+    data: Union[CreateQueryJson, None]

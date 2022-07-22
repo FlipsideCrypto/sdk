@@ -16,7 +16,7 @@ class Query(BaseModel):
     )
     cached: Optional[bool] = Field(
         None,
-        description="An override on the cahce. A value of true will reexecute the query.",
+        description="An override on the cache. A value of true will Re-Execute the query.",
     )
     page_size: int = Field(None, description="The number of results to return per page")
     page_number: int = Field(None, description="The page number to return")

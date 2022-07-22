@@ -1,4 +1,5 @@
 from typing import Any, List, Union
+
 from pydantic import BaseModel, Field
 
 from .query_run_stats import QueryRunStats

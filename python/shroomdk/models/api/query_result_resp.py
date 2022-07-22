@@ -1,12 +1,12 @@
 from typing import Any, List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from .api_response import ApiResponse
 
 
 class QueryResultJson(BaseModel):
-    queryId: Optional[str] = Field(None, description="The id of the query.")
+    queryId: Optional[str]
     status: str
     results: Optional[List[Any]]
     startedAt: Optional[str]
@@ -20,7 +20,4 @@ class QueryResultJson(BaseModel):
 
 
 class QueryResultResp(ApiResponse):
-    data: Union[QueryResultJson, None] = Field(
-        False,
-        description="The data payload result after attempting to retrieve the query results.",
-    )
+    data: Union[QueryResultJson, None]

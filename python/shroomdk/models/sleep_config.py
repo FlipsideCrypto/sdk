@@ -1,8 +1,9 @@
-from typing import Optional
-from pydantic import BaseModel, Field
+from typing import Optional, Union
+
+from pydantic import BaseModel
 
 
 class SleepConfig(BaseModel):
     attempts: int
-    timeout_minutes: int
+    timeout_minutes: Union[int, float]
     interval_seconds: Optional[float]

@@ -1,12 +1,9 @@
 import json
+
 from shroomdk.api import API
-from shroomdk.models import (
-    Query,
-    QueryStatus
-)
-from shroomdk.models.api import (
-   QueryResultJson,
-)
+from shroomdk.models import Query, QueryStatus
+from shroomdk.models.api import QueryResultJson
+
 
 def test_create_query_success(requests_mock):
     api = API("https://api.flipsidecrypto.xyz", "api_key")
@@ -15,17 +12,16 @@ def test_create_query_success(requests_mock):
         api.get_url("queries"),
         text=json.dumps({"token": "mytoken", "cached": False}),
         status_code=200,
-        reason="OK"
+        reason="OK",
     )
 
-    q = Query(
-        sql="SELECT * FROM mytable",
-        ttl_minutes=5
-    )
+    q = Query(sql="SELECT * FROM mytable", ttl_minutes=5)  # type: ignore
 
     result = api.create_query(q)
+
+    assert result.data is not None
     assert result.data.token == "mytoken"
-    assert result.data.cached == False
+    assert result.data.cached is False
     assert result.status_code == 200
 
 
@@ -36,13 +32,10 @@ def test_create_query_user_error(requests_mock):
         api.get_url("queries"),
         text=json.dumps({"errors": "user_error"}),
         status_code=400,
-        reason="User Error"
+        reason="User Error",
     )
 
-    q = Query(
-        sql="SELECT * FROM mytable",
-        ttl_minutes=5
-    )
+    q = Query(sql="SELECT * FROM mytable", ttl_minutes=5)  # type: ignore
 
     result = api.create_query(q)
     assert result.data is None
@@ -55,18 +48,16 @@ def test_create_query_server_error(requests_mock):
     api = API("https://api.flipsidecrypto.xyz", "api_key")
 
     result = requests_mock.post(
-        api.get_url("queries"),
-        status_code=500,
-        reason="Server Error"
+        api.get_url("queries"), status_code=500, reason="Server Error"
     )
 
-    q = Query(sql="SELECT * FROM mytable", ttl_minutes=5)
+    q = Query(sql="SELECT * FROM mytable", ttl_minutes=5)  # type: ignore
 
     result = api.create_query(q)
     assert result.data is None
     assert result.status_msg == "Server Error"
     assert result.status_code == 500
-    assert result.error_msg == None
+    assert result.error_msg is None
 
 
 def getQueryResultSetData(status: str) -> QueryResultJson:
@@ -92,7 +83,7 @@ def getQueryResultSetData(status: str) -> QueryResultJson:
         message="",
         errors=None,
         pageSize=100,
-        pageNumber=0
+        pageNumber=0,
     )
 
 
@@ -108,11 +99,11 @@ def test_get_query_result(requests_mock):
         api.get_url(f"queries/{query_id}"),
         text=json.dumps(query_result_json),
         status_code=200,
-        reason="OK"
+        reason="OK",
     )
 
     result = api.get_query_result(query_id, page_number, page_size)
-    assert result.data != None
+    assert result.data is not None
     assert result.status_code == 200
 
 
@@ -126,11 +117,11 @@ def test_get_query_result_user_error(requests_mock):
         api.get_url(f"queries/{query_id}"),
         text=json.dumps({"errors": "user_error"}),
         status_code=400,
-        reason="User Error"
+        reason="User Error",
     )
 
     result = api.get_query_result(query_id, page_number, page_size)
-    assert result.data == None
+    assert result.data is None
     assert result.status_msg == "User Error"
     assert result.status_code == 400
     assert result.error_msg == "user_error"
@@ -143,13 +134,11 @@ def test_get_query_result_server_error(requests_mock):
     page_size = 10
 
     result = requests_mock.get(
-        api.get_url(f"queries/{query_id}"),
-        status_code=500,
-        reason="Server Error"
+        api.get_url(f"queries/{query_id}"), status_code=500, reason="Server Error"
     )
 
     result = api.get_query_result(query_id, page_number, page_size)
-    assert result.data == None
+    assert result.data is None
     assert result.status_msg == "Server Error"
     assert result.status_code == 500
     assert result.error_msg is None

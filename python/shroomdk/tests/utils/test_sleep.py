@@ -1,12 +1,12 @@
 from shroomdk.models.sleep_config import SleepConfig
 from shroomdk.utils.sleep import (
-    sec_to_ms,
+    exp_backoff,
+    get_elapsed_exp_seconds,
+    get_elapsed_linear_seconds,
     get_exp_backoff_seconds,
     get_linear_backoff_seconds,
-    get_elapsed_exp_seconds,
-    exp_backoff,
-    get_elapsed_linear_seconds,
-    linear_backoff
+    linear_backoff,
+    sec_to_ms,
 )
 
 
@@ -45,6 +45,7 @@ def test_exp_backoff():
     sc = SleepConfig(attempts=1, interval_seconds=0.1, timeout_minutes=0.0001)
     should_continue = exp_backoff(sc)
     assert should_continue is False
+
 
 def test_get_elapsed_linear_seconds():
     sc = SleepConfig(attempts=0, interval_seconds=5, timeout_minutes=5)

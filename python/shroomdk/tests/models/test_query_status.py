@@ -1,8 +1,8 @@
 from shroomdk.models.query_status import (
+    QueryStatus,
+    QueryStatusError,
     QueryStatusFinished,
     QueryStatusPending,
-    QueryStatusError,
-    QueryStatus
 )
 
 

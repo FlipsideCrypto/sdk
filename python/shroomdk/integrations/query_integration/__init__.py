@@ -1,1 +1,2 @@
-from .query_integration import QueryIntegration, QueryDefaults
+# trunk-ignore(flake8/F401)
+from .query_integration import QueryDefaults, QueryIntegration

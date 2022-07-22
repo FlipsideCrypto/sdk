@@ -1,9 +1,10 @@
-from shroomdk.integrations.query_integration.query_result_set_builder import QueryResultSetBuilder
-from shroomdk.models.api import (
-    QueryResultJson
-)
-from shroomdk.models.query_status import QueryStatus
 from datetime import datetime
+
+from shroomdk.integrations.query_integration.query_result_set_builder import (
+    QueryResultSetBuilder,
+)
+from shroomdk.models.api import QueryResultJson
+from shroomdk.models.query_status import QueryStatus
 
 
 def getQueryResultSetData(status: str) -> QueryResultJson:
@@ -29,7 +30,7 @@ def getQueryResultSetData(status: str) -> QueryResultJson:
         message="",
         errors=None,
         pageSize=100,
-        pageNumber=0
+        pageNumber=0,
     )
 
 
@@ -51,10 +52,15 @@ def test_records():
     qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Finished))
 
     # Records Length Matches Row Length?
+    assert qr.records is not None
+    assert qr.rows is not None
+    assert qr.columns is not None
     assert len(qr.records) == len(qr.rows)
 
     # Column Length Matches Records Key Length
     for record in qr.records:
+        assert record is not None
+
         assert len(record.keys()) == len(qr.columns)
 
     # Columns = Record Keys

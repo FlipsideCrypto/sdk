@@ -95,7 +95,43 @@ def test_run_failed_to_create_query(requests_mock):
         assert type(e) == SDKError
 
 
-def test_get_query_results(requests_mock):
+def test_get_query_result_server_errors(requests_mock):
+    api = get_api()
+    qi = QueryIntegration(api)
+
+    api = API("https://api.flipsidecrypto.xyz", "api_key")
+    query_id = "test_query_id"
+
+    # User Error
+    requests_mock.get(
+        api.get_url(f"queries/{query_id}"), status_code=400, reason="user_error"
+    )
+
+    try:
+        qi._get_query_results("test_query_id")
+    except UserError as e:
+        assert type(e) == UserError
+
+    # Server Error
+    requests_mock.get(
+        api.get_url(f"queries/{query_id}"), status_code=500, reason="server error"
+    )
+
+    try:
+        qi._get_query_results("test_query_id")
+    except ServerError as e:
+        assert type(e) == ServerError
+
+    # SDK Error
+    requests_mock.get(api.get_url(f"queries/{query_id}"), status_code=200, reason="ok")
+
+    try:
+        qi._get_query_results("test_query_id")
+    except SDKError as e:
+        assert type(e) == SDKError
+
+
+def test_get_query_result_query_errors(requests_mock):
     api = get_api()
     qi = QueryIntegration(api)
 
@@ -184,36 +220,6 @@ def test_get_query_results(requests_mock):
         )
     except QueryRunTimeoutError as e:
         assert type(e) == QueryRunTimeoutError
-
-    # User Error
-    result = requests_mock.get(
-        api.get_url(f"queries/{query_id}"), status_code=400, reason="user_error"
-    )
-
-    try:
-        result = qi._get_query_results("test_query_id")
-    except UserError as e:
-        assert type(e) == UserError
-
-    # Server Error
-    result = requests_mock.get(
-        api.get_url(f"queries/{query_id}"), status_code=500, reason="server error"
-    )
-
-    try:
-        result = qi._get_query_results("test_query_id")
-    except ServerError as e:
-        assert type(e) == ServerError
-
-    # SDK Error
-    result = requests_mock.get(
-        api.get_url(f"queries/{query_id}"), status_code=200, reason="ok"
-    )
-
-    try:
-        result = qi._get_query_results("test_query_id")
-    except SDKError as e:
-        assert type(e) == SDKError
 
 
 def getQueryResultSetData(status: str) -> QueryResultJson:

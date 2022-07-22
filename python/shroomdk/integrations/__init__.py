@@ -1,2 +1,1 @@
-# trunk-ignore(flake8/F401)
-from .query_integration import QueryIntegration
+from .query_integration import QueryIntegration  # noqa: F401

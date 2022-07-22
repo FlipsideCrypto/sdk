@@ -1,5 +1,2 @@
-# trunk-ignore(flake8/F401)
-from .api import API
-
-# trunk-ignore(flake8/F401)
-from .shroomdk import ShroomDK
+from .api import API  # noqa: F401
+from .shroomdk import ShroomDK  # noqa: F401

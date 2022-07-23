@@ -1,6 +1,3 @@
-library(jsonlite)
-library(httr)
-
 #' Get Query From Token
 #'
 #' Uses Flipside ShroomDK to access a Query Token. Query tokens are cached up to `ttl` minutes

@@ -11,7 +11,6 @@
 #' @param page_size Default 100,000. Paginate via page_number.
 #' @return returns a request of length 8: `results`, `columnLabels`,
 #'  `columnTypes`, `startedAt`, `endedAt`, `pageNumber`, `pageSize`, `status`
-#' @import jsonlite, httr
 #' @export
 #'
 #' @examples

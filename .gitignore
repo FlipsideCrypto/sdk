@@ -17,6 +17,8 @@ node_modules
 .env
 .vercel
 .output
+build/
+*.egg-info/
 
 /build/
 /public/build

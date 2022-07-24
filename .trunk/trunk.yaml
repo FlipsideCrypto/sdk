@@ -1,0 +1,13 @@
+version: 0.1
+cli:
+  version: 0.15.0-beta
+lint:
+  enabled:
+    - actionlint@1.6.15
+    - black@22.6.0
+    - flake8@4.0.1
+    - git-diff-check@SYSTEM
+    - gitleaks@8.8.12
+    - isort@5.10.1
+    - markdownlint@0.32.0
+    - prettier@2.7.1

@@ -52,6 +52,11 @@ for record in query_result_set.records:
     print(f"${nft_address} minted for {mint_price_eth}ETH (${mint_price_usd})")
 ```
 
+## The Data
+Flipside Crypto's analytics team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's (Visual Query Editor/Dashboard Builder)[https://flipside.new] product can be queried programmatically with ShroomDK. 
+
+![blockchains](https://sdk.flipsidecrypto.xyz/media/shroomdk/blockchains.png)
+
 ## The Details
 
 ### Executing a Query
@@ -165,3 +170,4 @@ Every API key is subject to a rate limit over a moving 5 minute window, as well 
 <br>
 <br>
 If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeoutMinutes` parameter set on the `Query` object.
+

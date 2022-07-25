@@ -3,7 +3,7 @@
 all: clean local_env build_wheel push_wheel
 
 clean: clean-build clean-pyc clean-test
-deploy: clean build test upload
+deploy: test clean build upload
 
 clean-build:
 	rm -fr build/

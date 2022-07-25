@@ -1,4 +1,4 @@
-# ShroomDK Python SDK by Flipside Crypto
+# Python SDK for ShroomDK by Flipside Crypto
 
 Programmatic access to the most comprehensive blockchain data in Web3, for free. 🥳
 <br>

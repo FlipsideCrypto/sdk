@@ -36,11 +36,12 @@ Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with
 
 
 ## 💾 Install the SDK
+<strong>Python 3.7 and above, is required to use this SDK</strong>
+
 <em>If you don't already have an API Key mint one [here](https://sdk.flipsidecrypto.xyz).</em>
 ```bash
 pip install shroomdk
 ```
-<strong>Python 3.7 and above, is required to use this SDK</strong>
 
 ## 🦾 Getting Started
 ```python

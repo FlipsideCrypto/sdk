@@ -162,5 +162,5 @@ print(f"This query took ${elapsed_seconds} seconds to run and returned {record_c
 Every API key is subject to a rate limit over a moving 5 minute window, as well as an aggregate daily limit.
 <br>
 <br>
-If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeoutMinutes` parameter set on the `Query` object.
+If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeout_minutes` parameter set when calling the `query` method.
 

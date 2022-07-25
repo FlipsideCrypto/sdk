@@ -4,7 +4,7 @@ Programmatic access to the most comprehensive blockchain data in Web3, for free.
 <br>
 <br>
 
-![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg)
+![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci_js.yml/badge.svg)
 <br>
 <br>
 GM frens, you've found yourself at the Flipside Crypto JS/typescript sdk.

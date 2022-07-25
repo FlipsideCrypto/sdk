@@ -1,0 +1,11 @@
+Package: shroomDK
+Type: Package
+Title: Accessing the Flipside Crypto ShroomDK REST API within R.
+Version: 0.1.0
+Author: Carlos Mercado
+Maintainer: Carlos Mercado <carlos.mercado@flipsidecrypto.com>
+Description: Contains 3 functions to access the REST API. create_query_token passes a SQL query to the API to generate a query token. get_query_from_token passes the query token to the Flipside's Snowflake to grab the query result. clean_query converts the resulting JSON into a data frame, potentially of lists() if the result does not have the same number of elements in each object (i.e., not same number of rows in each column). Coerce columns accordingly.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.0

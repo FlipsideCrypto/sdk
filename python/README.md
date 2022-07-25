@@ -220,7 +220,7 @@ except QueryRunTimeoutError:
 ##### `QueryRunExecutionError`
 Occurs when your query fails to compile/run due to malformed SQL statements. Example:
 ```python
-from shroomdk.errors import QueryRunTimeoutError
+from shroomdk.errors import QueryRunExecutionError
 
 try:
     sdk.query(sql)

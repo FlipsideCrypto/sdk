@@ -1,8 +1,6 @@
 # Python SDK for ShroomDK, by Flipside Crypto
 
 Programmatic access to the most comprehensive blockchain data in Web3, for free. More details on ShroomDK [here](https://sdk.flipsidecrypto.xyz).🥳
-<br>
-<br>
 
 [![Python Continuous Testing](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml)
 <br>

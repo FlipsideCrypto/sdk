@@ -114,8 +114,6 @@ query_result_set = sdk.query(
 
 All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can returned in a single page. 
 
-<br/>
-
 Now Let's examine the query result object that's returned.
 
 ### The `QueryResultSet` Object

@@ -4,13 +4,15 @@ Programmatic access to the most comprehensive blockchain data in Web3, for free.
 <br>
 <br>
 
-GM frens, you've found yourself at the FlipsideCrypto ShroomDK (SDK) repository.
+GM frens, you've found yourself at the FlipsideCrypto ShroomDK (SDK) repository, the official SDK to programmatically query all of Flipside Crypto's data, for free.
 <br>
 <br>
-We're making all the query awesomeness found at [Flipside's Query product](https://app.flipsidecrypto.com) programmatically accessible. Any data found at [Flipside](https://app.flipsidecrypto.com) you can now query with our suite of SDKs.
-<br>
-<br>
-Data Where You Want It 🥳
+
+## The Data
+Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Visual Query Editor/Dashboard Builder](https://flipside.new) product can be queried programmatically using ShroomDK's suite of SDKs. 
+
+## 📖 Official Docs
+[https://docs.flipsidecrypto.com/shroomdk-sdk/getting-started](https://docs.flipsidecrypto.com/shroomdk-sdk/getting-started)
 
 ## 🗝 Want access? Mint a ShroomDK NFT to Generate an API Key
 

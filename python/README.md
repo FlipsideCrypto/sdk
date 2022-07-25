@@ -16,7 +16,7 @@ Contents:
 [🚦 Rate Limits](https://github.com/FlipsideCrypto/sdk/tree/main/python#rate-limits)
 [🙈 Error Handling](https://github.com/FlipsideCrypto/sdk/tree/main/python#-getting-started)
 
----
+--
 <br/>
 
 ## 📖 Official Docs

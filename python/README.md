@@ -12,7 +12,7 @@ GM frens, you've found yourself at the Python SDK for ShroomDK by Flipside Crypt
 ## 📖 Official Docs
 [https://docs.flipsidecrypto.com/shroomdk-sdk/getting-started](https://docs.flipsidecrypto.com/shroomdk-sdk/getting-started)
 
-## The Data
+## 🧩 The Data
 Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Visual Query Editor/Dashboard Builder](https://flipside.new) product can be queried programmatically using ShroomDK. 
 
 ![blockchains available to query](https://sdk.flipsidecrypto.xyz/media/shroomdk/blockchains.png)

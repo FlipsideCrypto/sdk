@@ -1,4 +1,4 @@
-# Python SDK
+# ShroomDK Python SDK by Flipside Crypto
 
 Programmatic access to the most comprehensive blockchain data in Web3, for free. 🥳
 <br>
@@ -7,11 +7,15 @@ Programmatic access to the most comprehensive blockchain data in Web3, for free.
 [![Python Continuous Testing](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml)
 <br>
 <br>
-GM frens, you've found yourself at the Python SDK for ShroomDK.
+GM frens, you've found yourself at the Python SDK for ShroomDK by Flipside Crypto.
 <br>
 <br>
 
+## Official Docs
+[📖 https://docs.flipsidecrypto.com/shroomdk-sdk/getting-started](https://docs.flipsidecrypto.com/shroomdk-sdk/getting-started)
+
 ## 💾 Install the SDK
+<em>If you don't already have an API Key mint one [here](https://sdk.flipsidecrypto.com).</em>
 ```bash
 pip install shroomdk
 ```
@@ -61,7 +65,7 @@ When executing a query the following parameters can be passed in / overriden to 
 | ttl_minutes            | The number of minutes to cache the query results                                   | 60              |
 | cached                 | An override on the query result cache. A value of false will re-execute the query. | True            |
 | timeout_minutes        | The number of minutes until your query run times out                               | 20              |
-| retry_interval_seconds | The number of second to wait between polls to the server                           | 1               |
+| retry_interval_seconds | The number of seconds to wait between polls to the server                           | 1               |
 | page_size              | The number of rows/records to return                                               | 100,000         |
 | page_number            | The page number to return (starts at 1)                                            | 1               |
 

@@ -94,10 +94,10 @@ query_result_set = sdk.query(
 )
 ```
 
-### Caching
+#### Caching
 The results of this query will be cached for 60 minutes, given the `ttl_minutes` parameter is set to 60. 
 
-### Pagination 
+#### Pagination 
 If we wanted to retrieve the next 5 rows of the query result set simply increment the `page_number` to 2 and run:
 ```python
 query_result_set = sdk.query(
@@ -114,7 +114,6 @@ query_result_set = sdk.query(
 
 All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can returned in a single page. 
 
-<br/>
 <br/>
 
 Now Let's examine the query result object that's returned.

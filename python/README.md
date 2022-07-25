@@ -4,7 +4,7 @@
 
 ShroomDK (SDK), by Flipside Crypto gives you programmatic query access to the most comprehensive blockchain data sets in Web3, for free. More details on ShroomDK [here](https://sdk.flipsidecrypto.xyz).🥳
 
-## Contents:
+### Contents:
 
 [📖 Official Docs](https://github.com/FlipsideCrypto/sdk/tree/main/python#-official-docs)
 

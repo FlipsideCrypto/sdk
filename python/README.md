@@ -164,3 +164,80 @@ Every API key is subject to a rate limit over a moving 5 minute window, as well 
 <br>
 If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeout_minutes` parameter set when calling the `query` method.
 
+### Error Handling
+The sdk implements the following errors that can be handled when calling the `query` method:
+
+#### Query Run Time Errors
+
+##### `QueryRunRateLimitError`
+Occurs when you have exceeded the rate limit for creating/running new queries. Example:
+```python
+from shroomdk.errors import QueryRunRateLimitError
+
+try:
+    sdk.query(sql)
+except QueryRunRateLimitError:
+    print("you have been rate limited")
+
+```
+
+##### `QueryRunTimeoutError`
+Occurs when your query has exceed the `timeout_minutes` parameter passed into the `query` method. Example:
+```python
+from shroomdk.errors import QueryRunTimeoutError
+
+try:
+    sdk.query(sql, timeout_minutes=10)
+except QueryRunTimeoutError:
+    print("your query has taken longer than 10 minutes to run")
+```
+
+
+##### `QueryRunExecutionError`
+Occurs when your query fails to compile/run due to malformed SQL statements. Example:
+```python
+from shroomdk.errors import QueryRunTimeoutError
+
+try:
+    sdk.query(sql)
+except QueryRunExecutionError as e:
+    print(f"your sql is malformed: {e.message}")
+```
+
+#### Server Error
+`ServerError` - occurs when there is a server-side error that cannot be resolved. This typically indicates an issue with Flipside Crypto's query engine API.
+
+```python
+from shroomdk.errors import ServerError
+
+try:
+    sdk.query(sql)
+except ServerError as e:
+    print(f"a server side error has occured: {e.message}")
+```
+
+#### User Error
+`UserError` - occurs when you, the user, submit a bad request to the API. This often occurs when an invalid API Key is used and the SDK is unable to authenticate.
+
+
+```python
+from shroomdk.errors import UserError
+
+try:
+    sdk.query(sql)
+except UserError as e:
+    print(f"a user error has occured: {e.message}")
+```
+
+#### SDK Error
+`SDKError` - this error is raised when a generic client-side error occurs that cannot be accounted for by the other errors. SDK level errors should be reported (https://github.com/FlipsideCrypto/sdk/issues)[here] as a Github Issue with a full stack-trace and detailed steps to reproduce.
+
+
+```python
+from shroomdk.errors import SDKError
+
+try:
+    sdk.query(sql)
+except SDKError as e:
+    print(f"a client-side SDK error has occured: {e.message}")
+```

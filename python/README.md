@@ -4,6 +4,21 @@
 
 ShroomDK (SDK), by Flipside Crypto gives you programmatic query access to the most comprehensive blockchain data sets in Web3, for free. More details on ShroomDK [here](https://sdk.flipsidecrypto.xyz).🥳
 
+<br/>
+Contents:
+
+[📖 Official Docs](https://github.com/FlipsideCrypto/sdk/tree/main/python#-official-docs)
+[🧩 The Data](https://github.com/FlipsideCrypto/sdk/tree/main/python#-the-data)
+[💾 Install the SDK](https://github.com/FlipsideCrypto/sdk/tree/main/python#-install-the-sdk)
+[🦾 Getting Started](https://github.com/FlipsideCrypto/sdk/tree/main/python#-getting-started)
+[🧐 Detailed Example](https://github.com/FlipsideCrypto/sdk/tree/main/python#the-details)
+[📄 Pagination](https://github.com/FlipsideCrypto/sdk/tree/main/python#pagination)
+[🚦 Rate Limits](https://github.com/FlipsideCrypto/sdk/tree/main/python#rate-limits)
+[🙈 Error Handling](https://github.com/FlipsideCrypto/sdk/tree/main/python#-getting-started)
+
+---
+<br/>
+
 ## 📖 Official Docs
 [https://docs.flipsidecrypto.com/shroomdk-sdk/sdks/python](https://docs.flipsidecrypto.com/shroomdk-sdk/sdks/python)
 
@@ -97,7 +112,7 @@ query_result_set = sdk.query(
 #### Caching
 The results of this query will be cached for 60 minutes, given the `ttl_minutes` parameter is set to 60. 
 
-#### Pagination 
+#### 📄 Pagination 
 If we wanted to retrieve the next 5 rows of the query result set simply increment the `page_number` to 2 and run:
 ```python
 query_result_set = sdk.query(
@@ -113,6 +128,8 @@ query_result_set = sdk.query(
 <em>Note! This will not use up your daily query quota since the query results are cached (in accordance with the TTL) and we're not re-running the SQL just retrieving a slice of the overall result set.</em>
 
 All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can returned in a single page. 
+
+More details on pagination can be found [here](https://docs.flipsidecrypto.com/shroomdk-sdk/query-pagination).
 
 Now let's examine the query result object that's returned.
 
@@ -157,17 +174,17 @@ record_count = query_result_set.run_stats.record_count
 print(f"This query took ${elapsed_seconds} seconds to run and returned {record_count} records from the database.")
 ```
 
-### Rate Limits
+## 🚦 Rate Limits
 
 Every API key is subject to a rate limit over a moving 5 minute window, as well as an aggregate daily limit.
 <br>
 <br>
 If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeout_minutes` parameter set when calling the `query` method.
 
-### Error Handling
+## 🙈 Error Handling
 The sdk implements the following errors that can be handled when calling the `query` method:
 
-#### Query Run Time Errors
+### Query Run Time Errors
 
 ##### `QueryRunRateLimitError`
 Occurs when you have exceeded the rate limit for creating/running new queries. Example:
@@ -204,7 +221,7 @@ except QueryRunExecutionError as e:
     print(f"your sql is malformed: {e.message}")
 ```
 
-#### Server Error
+### Server Error
 `ServerError` - occurs when there is a server-side error that cannot be resolved. This typically indicates an issue with Flipside Crypto's query engine API.
 
 ```python
@@ -216,7 +233,7 @@ except ServerError as e:
     print(f"a server side error has occured: {e.message}")
 ```
 
-#### User Error
+### User Error
 `UserError` - occurs when you, the user, submit a bad request to the API. This often occurs when an invalid API Key is used and the SDK is unable to authenticate.
 
 
@@ -229,7 +246,7 @@ except UserError as e:
     print(f"a user error has occured: {e.message}")
 ```
 
-#### SDK Error
+### SDK Error
 `SDKError` - this error is raised when a generic client-side error occurs that cannot be accounted for by the other errors. SDK level errors should be reported (https://github.com/FlipsideCrypto/sdk/issues)[here] as a Github Issue with a full stack-trace and detailed steps to reproduce.
 
 

@@ -114,7 +114,7 @@ query_result_set = sdk.query(
 
 All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can returned in a single page. 
 
-Now Let's examine the query result object that's returned.
+Now let's examine the query result object that's returned.
 
 ### The `QueryResultSet` Object
 After executing a query the results are stored in a `QueryResultSet` object:
@@ -154,7 +154,7 @@ ended_at = query_result_set.run_stats.ended_at
 elapsed_seconds = query_result_set.run_stats.elapsed_seconds
 record_count = query_result_set.run_stats.record_count
 
-print(f"This query took ${elapsed_seconds} seconds to run and returned {record_count} records from the database."")
+print(f"This query took ${elapsed_seconds} seconds to run and returned {record_count} records from the database.")
 ```
 
 ### Rate Limits

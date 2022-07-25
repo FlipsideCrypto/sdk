@@ -80,7 +80,7 @@ sql = f"""
 """
 ```
 
-Now let's execute the query and retrieve the first 5 rows of the result set. Note we will set `page_size` to 5 and `page_number` to 1 to retrieve those first 5 rows. 
+Now let's execute the query and retrieve the first 5 rows of the result set. Note we will set `page_size` to 5 and `page_number` to 1 to retrieve just the first 5 rows. 
 
 ```python
 query_result_set = sdk.query(
@@ -93,7 +93,31 @@ query_result_set = sdk.query(
     page_number=1
 )
 ```
-The results of this query will be cached for 60 minutes, given the `ttl_minutes` parameter is set to 60. Let's examine the query result object that's returned.
+
+### Caching
+The results of this query will be cached for 60 minutes, given the `ttl_minutes` parameter is set to 60. 
+
+### Pagination 
+If we wanted to retrieve the next 5 rows of the query result set simply increment the `page_number` to 2 and run:
+```python
+query_result_set = sdk.query(
+    sql,
+    ttl_minutes=60,
+    cached=True,
+    timeout_minutes=20,
+    retry_interval_seconds=1,
+    page_size=5,
+    page_number=2
+)
+```
+<em>Note! This will not use up your daily query quota since the query results are cached (in accordance with the TTL) and we're not re-running the SQL just retrieving a slice of the overall result set.</em>
+
+All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can returned in a single page. 
+
+<br/>
+<br/>
+
+Now Let's examine the query result object that's returned.
 
 ### The `QueryResultSet` Object
 After executing a query the results are stored in a `QueryResultSet` object:

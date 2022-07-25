@@ -5,9 +5,9 @@ name: Python Continuous Testing
 
 on:
   push:
-    branches: [python-sdk]
+    branches: [main]
   pull_request:
-    branches: [python-sdk]
+    branches: [main]
 
 jobs:
   build:

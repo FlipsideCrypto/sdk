@@ -20,9 +20,11 @@ ShroomDK (SDK), by Flipside Crypto gives you programmatic query access to the mo
 
 [🚦 Rate Limits](https://github.com/FlipsideCrypto/sdk/tree/main/python#rate-limits)
 
-[🙈 Error Handling](https://github.com/FlipsideCrypto/sdk/tree/main/python#-getting-started)
+[🙈 Error Handling](https://github.com/FlipsideCrypto/sdk/tree/main/python#-error-handling)
 
 ---
+<br/>
+<br/>
 
 ## 📖 Official Docs
 [https://docs.flipsidecrypto.com/shroomdk-sdk/sdks/python](https://docs.flipsidecrypto.com/shroomdk-sdk/sdks/python)

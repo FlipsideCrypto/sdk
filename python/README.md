@@ -162,10 +162,4 @@ print(f"This query took ${elapsed_seconds} seconds to run and returned {record_c
 Every API key is subject to a rate limit over a moving 5 minute window, as well as an aggregate daily limit.
 <br>
 <br>
-If the limit is reach in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeoutMinutes` parameter set on the `Query` object.
-<br>
-<br>
-This feature is quite useful if leveraging the SDK client side and your web application sees a large spike in traffic. Rather than using up your daily limit all at once, requests will be smoothed out over the day.
-<br>
-<br>
-Rate limits can be adjust per key/use-case.
+If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeoutMinutes` parameter set on the `Query` object.

@@ -35,7 +35,7 @@ sql = f"""
         mint_price_eth, 
         mint_price_usd 
     FROM ethereum.core.ez_nft_mints 
-    WHERE nft_to_address = LOWER('${my_address}')
+    WHERE nft_to_address = LOWER('{my_address}')
 """
 
 # Run the query against Flipside's query engine 
@@ -47,7 +47,7 @@ for record in query_result_set.records:
     nft_address = record['nft_address']
     mint_price_eth = record['mint_price_eth']
     mint_price_usd = record['mint_price_usd']
-    print(f"${nft_address} minted for {mint_price_eth}E ({mint_price_usd})USD")
+    print(f"${nft_address} minted for {mint_price_eth}ETH (${mint_price_usd})")
 ```
 
 ## The Details
@@ -75,7 +75,7 @@ sql = f"""
         mint_price_eth, 
         mint_price_usd 
     FROM ethereum.core.ez_nft_mints 
-    WHERE nft_to_address = LOWER('${my_address}')
+    WHERE nft_to_address = LOWER('{my_address}')
     LIMIT 100
 """
 ```

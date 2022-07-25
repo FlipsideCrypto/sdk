@@ -77,7 +77,7 @@ for record in query_result_set.records:
 ## The Details
 
 ### Executing a Query
-When executing a query the following parameters can be passed in / overriden to the `query` method on the `ShroomDK` object:
+When executing a query the following parameters can be passed into the `query` method on the `ShroomDK` object:
 
 | Argument               | Description                                                                        | Default Value   |
 |------------------------|------------------------------------------------------------------------------------|-----------------|
@@ -119,7 +119,7 @@ query_result_set = sdk.query(
 ```
 
 #### Caching
-The results of this query will be cached for 60 minutes, given the `ttl_minutes` parameter is set to 60. 
+The results of this query will be cached for 60 minutes since the `ttl_minutes` parameter is set to 60. 
 
 #### 📄 Pagination 
 If we wanted to retrieve the next 5 rows of the query result set simply increment the `page_number` to 2 and run:
@@ -136,7 +136,7 @@ query_result_set = sdk.query(
 ```
 <em>Note! This will not use up your daily query quota since the query results are cached (in accordance with the TTL) and we're not re-running the SQL just retrieving a slice of the overall result set.</em>
 
-All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can returned in a single page. 
+All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can be returned in a single page. 
 
 More details on pagination can be found [here](https://docs.flipsidecrypto.com/shroomdk-sdk/query-pagination).
 
@@ -239,7 +239,7 @@ from shroomdk.errors import ServerError
 try:
     sdk.query(sql)
 except ServerError as e:
-    print(f"a server side error has occured: {e.message}")
+    print(f"a server-side error has occurred: {e.message}")
 ```
 
 ### User Error
@@ -252,11 +252,11 @@ from shroomdk.errors import UserError
 try:
     sdk.query(sql)
 except UserError as e:
-    print(f"a user error has occured: {e.message}")
+    print(f"a user error has occurred: {e.message}")
 ```
 
 ### SDK Error
-`SDKError` - this error is raised when a generic client-side error occurs that cannot be accounted for by the other errors. SDK level errors should be reported (https://github.com/FlipsideCrypto/sdk/issues)[here] as a Github Issue with a full stack-trace and detailed steps to reproduce.
+`SDKError` - this error is raised when a generic client-side error occurs that cannot be accounted for by the other errors. SDK level errors should be reported [here](https://github.com/FlipsideCrypto/sdk/issues) as a Github Issue with a full stack-trace and detailed steps to reproduce.
 
 
 ```python
@@ -265,5 +265,5 @@ from shroomdk.errors import SDKError
 try:
     sdk.query(sql)
 except SDKError as e:
-    print(f"a client-side SDK error has occured: {e.message}")
+    print(f"a client-side SDK error has occurred: {e.message}")
 ```

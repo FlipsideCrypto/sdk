@@ -59,10 +59,14 @@ class API(object):
             status_code=result.status_code,
             status_msg=result.reason,
             error_msg=data.get("errors") if data else None,
-            data=CreateQueryJson(**data) if data and data.get("errors") is None else None,
+            data=CreateQueryJson(**data)
+            if data and data.get("errors") is None
+            else None,
         )
 
-    def get_query_result(self, query_id: str, page_number: int, page_size: int) -> QueryResultResp:
+    def get_query_result(
+        self, query_id: str, page_number: int, page_size: int
+    ) -> QueryResultResp:
         result = self._session.get(
             self.get_url(f"queries/{query_id}"),
             params={"pageNumber": page_number, "pageSize": page_size},
@@ -78,7 +82,9 @@ class API(object):
             status_code=result.status_code,
             status_msg=result.reason,
             error_msg=data.get("errors") if data else None,
-            data=QueryResultJson(**data) if data and data.get("errors") is None else None,
+            data=QueryResultJson(**data)
+            if data and data.get("errors") is None
+            else None,
         )
 
     @property

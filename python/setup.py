@@ -14,11 +14,11 @@ with open("requirements.txt", "r") as fh:
 
 setup(
     install_requires=[req for req in requirements if req[:2] != "# "],
-    name="flipside_shroomdk",
+    name="shroomdk",
     version=version,
     author="dev@flipsidecrypto.com",
     author_email="dev@flipsidecrypto.com",
-    description="ShroomDK by Flipside Crypto: Query the most comprehensive blockchain data in crypto",
+    description="ShroomDK (SDK) by Flipside Crypto: Query the most comprehensive blockchain data in crypto",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/FlipsideCrypto/sdk/python",
@@ -35,5 +35,5 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     dependency_links=[],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
 )

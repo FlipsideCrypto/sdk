@@ -1,6 +1,6 @@
-from .api import API
-from .integrations import QueryIntegration
-from .models import Query
+from shroomdk.api import API
+from shroomdk.integrations import QueryIntegration
+from shroomdk.models import Query
 
 API_BASE_URL = "https://api.flipsidecrypto.com"
 
@@ -15,7 +15,7 @@ class ShroomDK(object):
         ttl_minutes=60,
         cached=True,
         timeout_minutes=20,
-        retry_interval_seconds=0.5,
+        retry_interval_seconds=1,
         page_size=100000,
         page_number=1,
     ):

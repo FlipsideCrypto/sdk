@@ -31,7 +31,7 @@ import { Flipside, Query, QueryResultSet } from "@flipsidecrypto/sdk";
 // Initialize `Flipside` with your API key
 const flipside = new Flipside(
   "<YOUR_API_KEY>",
-  "https://node-api.flipsidecrypto.com"
+  "https://api.flipsidecrypto.com"
 );
 
 // Parameters can be passed into SQL statements via simple & native string interpolation

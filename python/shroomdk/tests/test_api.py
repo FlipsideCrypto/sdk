@@ -47,9 +47,7 @@ def test_create_query_user_error(requests_mock):
 def test_create_query_server_error(requests_mock):
     api = API("https://api.flipsidecrypto.xyz", "api_key")
 
-    result = requests_mock.post(
-        api.get_url("queries"), status_code=500, reason="Server Error"
-    )
+    result = requests_mock.post(api.get_url("queries"), status_code=500, reason="Server Error")
 
     q = Query(sql="SELECT * FROM mytable", ttl_minutes=5)  # type: ignore
 
@@ -133,9 +131,7 @@ def test_get_query_result_server_error(requests_mock):
     page_number = 1
     page_size = 10
 
-    result = requests_mock.get(
-        api.get_url(f"queries/{query_id}"), status_code=500, reason="Server Error"
-    )
+    result = requests_mock.get(api.get_url(f"queries/{query_id}"), status_code=500, reason="Server Error")
 
     result = api.get_query_result(query_id, page_number, page_size)
     assert result.data is None

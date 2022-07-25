@@ -103,9 +103,7 @@ def test_get_query_result_server_errors(requests_mock):
     query_id = "test_query_id"
 
     # User Error
-    requests_mock.get(
-        api.get_url(f"queries/{query_id}"), status_code=400, reason="user_error"
-    )
+    requests_mock.get(api.get_url(f"queries/{query_id}"), status_code=400, reason="user_error")
 
     try:
         qi._get_query_results("test_query_id")
@@ -113,9 +111,7 @@ def test_get_query_result_server_errors(requests_mock):
         assert type(e) == UserError
 
     # Server Error
-    requests_mock.get(
-        api.get_url(f"queries/{query_id}"), status_code=500, reason="server error"
-    )
+    requests_mock.get(api.get_url(f"queries/{query_id}"), status_code=500, reason="server error")
 
     try:
         qi._get_query_results("test_query_id")

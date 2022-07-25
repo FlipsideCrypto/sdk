@@ -10,6 +10,4 @@ class QueryRunStats(BaseModel):
         None,
         description="The number of seconds elapsed between the start and end times.",
     )
-    record_count: int = Field(
-        None, description="The number of records returned by the query."
-    )
+    record_count: int = Field(None, description="The number of records returned by the query.")

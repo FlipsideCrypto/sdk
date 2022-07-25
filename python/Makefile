@@ -30,22 +30,27 @@ build_wheel: clean
 	$(file >VERSION,$(NEXT_VER))
 	python setup.py bdist_wheel --universal
 
-push_wheel: build_wheel
-	echo "building wheel"
+# push_wheel: build_wheel
+# 	echo "building wheel"
 
-build_build_env:
-	docker build -f Dockerfile.build -t engine-build:latest .
+# build_build_env:
+# 	docker build -f Dockerfile.build -t engine-build:latest .
 
-deploy_inside_docker:
-	make build_wheel;
-	make upload_wheel_to_nexus;
+# deploy_inside_docker:
+# 	make build_wheel;
+# 	make upload_wheel_to_nexus;
 
-deploy:
-	make build_build_env
-	docker run engine-build:latest make deploy_inside_docker
+# deploy:
+# 	make build_build_env
+# 	docker run engine-build:latest make deploy_inside_docker
 
 build_docker:
 	docker-compose build shell
 
 shell:
 	docker-compose run shell bash
+
+deploy:
+	make clean
+	python setup.py sdist
+	twine upload dist/* --verbose

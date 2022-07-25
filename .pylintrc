@@ -1,0 +1,16 @@
+[MASTER]
+disable=
+    format, # Handled by Black autoformatter
+    E0401,  # Unable to import X; import errors are highly environment dependant
+    C0114,  # Missing module docstring
+    C0115,  # Missing class docstring
+    C0116,  # Missing function or method docstring
+    C0411,  # Import order handled by isort
+
+[MESSAGES CONTROL]
+disable = C0330, C0326 # Black compatible
+
+[flake8]
+max-line-length = 160
+max-complexity = 15
+exclude = tests/*

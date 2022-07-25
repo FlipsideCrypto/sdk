@@ -40,6 +40,7 @@ Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with
 ```bash
 pip install shroomdk
 ```
+<strong>Python 3.7 and above, is required to use this SDK</strong>
 
 ## 🦾 Getting Started
 ```python
@@ -200,20 +201,20 @@ from shroomdk.errors import QueryRunRateLimitError
 
 try:
     sdk.query(sql)
-except QueryRunRateLimitError:
-    print("you have been rate limited")
+except QueryRunRateLimitError as e:
+    print(f"you have been rate limited: {e.message}")
 
 ```
 
 ##### `QueryRunTimeoutError`
-Occurs when your query has exceed the `timeout_minutes` parameter passed into the `query` method. Example:
+Occurs when your query has exceeded the `timeout_minutes` parameter passed into the `query` method. Example:
 ```python
 from shroomdk.errors import QueryRunTimeoutError
 
 try:
     sdk.query(sql, timeout_minutes=10)
-except QueryRunTimeoutError:
-    print("your query has taken longer than 10 minutes to run")
+except QueryRunTimeoutError as e:
+    print(f"your query has taken longer than 10 minutes to run: {e.message}")
 ```
 
 
@@ -229,7 +230,7 @@ except QueryRunExecutionError as e:
 ```
 
 ### Server Error
-`ServerError` - occurs when there is a server-side error that cannot be resolved. This typically indicates an issue with Flipside Crypto's query engine API.
+`ServerError` - occurs when there is a server-side error that cannot be resolved. This typically indicates an issue with Flipside Crypto's query engine API. If the issue persists please contact support in the Flipside Crypto discord server. 
 
 ```python
 from shroomdk.errors import ServerError

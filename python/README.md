@@ -24,10 +24,7 @@ pip install shroomdk
 from shroomdk import ShroomDK
 
 # Initialize `ShroomDK` with your API Key
-sdk = ShroomDK(
-    "<YOUR_API_KEY>",
-    "https://api.flipsidecrypto.com"
-)
+sdk = ShroomDK("<YOUR_API_KEY>")
 
 # Parameters can be passed into SQL statements 
 # via native string interpolation

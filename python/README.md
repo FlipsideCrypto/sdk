@@ -53,7 +53,7 @@ for record in query_result_set.records:
 ```
 
 ## The Data
-Flipside Crypto's analytics team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's (Visual Query Editor/Dashboard Builder)[https://flipside.new] product can be queried programmatically with ShroomDK. 
+Flipside Crypto's analytics team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Visual Query Editor/Dashboard Builder](https://flipside.new) product can be queried programmatically with ShroomDK. 
 
 ![blockchains](https://sdk.flipsidecrypto.xyz/media/shroomdk/blockchains.png)
 

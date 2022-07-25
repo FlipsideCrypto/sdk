@@ -22,4 +22,6 @@ More Details at [ShroomDK](https://sdk.flipsidecrypto.xyz)
 | Language                 | Version | Status                                                                             |
 | ------------------------ | ------- | ---------------------------------------------------------------------------------- |
 | ✅ [JS/TypeScript](./js) | 1.0.0   | ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci.yml/badge.svg) |
-| 🏗 [Python](./python/)    | NA      | Not Yet Available                                                                  |
+| ✅ [Python](./python/)    | 0.1.0      | 
+[![tests](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml)                                                                  |
+| ✅ [R](./r/shroomDK/) | 1.0.0   | N/A |

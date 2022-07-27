@@ -1,3 +1,6 @@
+library(jsonlite)
+library(httr)
+
 #' Create Query Token
 #'
 #' Uses Flipside ShroomDK to create a Query Token to access Flipside Crypto

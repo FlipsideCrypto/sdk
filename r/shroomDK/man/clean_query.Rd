@@ -21,7 +21,8 @@ the data frame is comprised of lists, where each column must be coerced
 to a desired class (e.g., with `as.numeric()`).
 }
 \description{
-Clean Query
+converts query response to data frame while attempting to coerce classes
+intelligently.
 }
 \examples{
 {

@@ -2,6 +2,9 @@
 
 #' Clean Query
 #'
+#' @description converts query response to data frame while attempting to coerce classes
+#' intelligently.
+#'
 #' @param request The request output from get_query_from_token()
 #' @param try_simplify because requests can return JSON and may not have the same length
 #' across values, they may not be data frame compliant (all columns having the same number of rows).

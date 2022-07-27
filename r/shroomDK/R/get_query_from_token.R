@@ -1,3 +1,6 @@
+library(jsonlite)
+library(httr)
+
 #' Get Query From Token
 #'
 #' Uses Flipside ShroomDK to access a Query Token. Query tokens are cached up to `ttl` minutes
@@ -11,6 +14,7 @@
 #' @param page_size Default 100,000. Paginate via page_number.
 #' @return returns a request of length 8: `results`, `columnLabels`,
 #'  `columnTypes`, `startedAt`, `endedAt`, `pageNumber`, `pageSize`, `status`
+#' @import jsonlite, httr
 #' @export
 #'
 #' @examples

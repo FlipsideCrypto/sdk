@@ -16,7 +16,7 @@ create_query_token(query, api_key, ttl = 10, cache = TRUE)
 \item{cache}{Use cached results; set as FALSE to re-execute.}
 }
 \value{
-list of`token` and `cached` use `token` in `get_query_from_token()`
+list of `token` and `cached` use `token` in `get_query_from_token()`
 }
 \description{
 Uses Flipside ShroomDK to create a Query Token to access Flipside Crypto

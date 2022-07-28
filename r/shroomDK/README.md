@@ -48,7 +48,7 @@ Documentation can be viewed within RStudio with ```?get_query_from_token``` for 
 | ----------- | ----------- |
 | Description | Uses Flipside ShroomDK to access a Query Token. Query tokens are cached up to 'ttl' minutes for each 'query'. This function is for pagination and multiple requests while reducing your use of your daily rate limit. Note: To reduce payload it returns a list of outputs (separating column names from rows).|
 | Usage  | get_query_from_token(query_token, api_key, page_number = 1, page_size = 1e+05)|
-| query_token	| token from 'create_query_token()' |
+| query_token	| token from `create_query_token()` |
 | api_key	| Flipside Crypto ShroomDK API Key |
 | page_number	 |Query tokens are cached and 100k rows max. Get up to 1M rows by going through pages. |
 | page_size | Default 100,000. Paginate via page_number. |
@@ -81,3 +81,18 @@ query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 
 request = get_query_from_token(query$token, api_key, 1, 10000)
 clean_query(request, try_simplify = FALSE) # returns data frame of lists()
 ```
+
+## 1 Support Function
+
+### auto_paginate_query()
+
+Documentation can be viewed within RStudio with ```?auto_paginate_query``` for new packages you may need to restart R to get to the documentation. It is summarized here: 
+
+| Item    | Definition |
+| ----------- | ----------- |
+| Description | Grabs up to `maxrows` in a query by going through each page 100k rows at a time. |
+| Usage  | auto_paginate_query(query, api_key)|
+| query	| Flipside Crypto Snowflake SQL compatible query as a string. |
+| api_key	| Flipside Crypto ShroomDK API Key |
+| maxrows	| Flipside Crypto ShroomDK maximum rows in query, default 1,000,000 |
+| value	| data frame of up to 1M rows, see `?clean_query` for more details on column classes |

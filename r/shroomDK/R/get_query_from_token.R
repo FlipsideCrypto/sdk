@@ -45,8 +45,7 @@ get_query_from_token <- function(query_token, api_key, page_number = 1, page_siz
   request <- content(req, as = 'parsed')
 
   if(is.null(request$status) & !is.null(request$errors)){
-    warning("SQL Error identified please check logs for request$errors")
-    return(request$errors)
+    stop(request$errors)
   }
 
   # if running give it a few seconds

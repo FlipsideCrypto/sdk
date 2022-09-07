@@ -27,3 +27,4 @@ build/
 js/coverage
 run-query-example.py
 examples/python/scratch/*
+.Rproj.user

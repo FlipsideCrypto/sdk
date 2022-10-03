@@ -6,6 +6,7 @@ type Props = {
   pageNumber: number;
   onNextPage(): void;
   onPrevPage(): void;
+  paginationEnabled?: boolean;
 };
 
 export function QueryResultTable({
@@ -13,6 +14,7 @@ export function QueryResultTable({
   pageNumber,
   onNextPage,
   onPrevPage,
+  paginationEnabled = true,
 }: Props) {
   if (!queryResultSet) {
     return <></>;
@@ -70,28 +72,30 @@ export function QueryResultTable({
               );
             })}
         </tbody>
-        <tfoot>
-          <tr className="flex my-8 flex-row justify-between w-full items-center">
-            <td colSpan={3}>
-              <button
-                onClick={onClickPrevPage}
-                disabled={pageNumber === 1 ? true : false}
-              >
-                <FiChevronLeft
-                  className={`font-bold ${
-                    pageNumber === 1 ? "text-gray-400" : ""
-                  }`}
-                />
-              </button>
-            </td>
-            <td className="font-bold">Page: {pageNumber}</td>
-            <td>
-              <button onClick={onClickNextPage}>
-                <FiChevronRight className="font-bold" />
-              </button>
-            </td>
-          </tr>
-        </tfoot>
+        {paginationEnabled && (
+          <tfoot>
+            <tr className="flex my-8 flex-row justify-between w-full items-center">
+              <td colSpan={3}>
+                <button
+                  onClick={onClickPrevPage}
+                  disabled={pageNumber === 1 ? true : false}
+                >
+                  <FiChevronLeft
+                    className={`font-bold ${
+                      pageNumber === 1 ? "text-gray-400" : ""
+                    }`}
+                  />
+                </button>
+              </td>
+              <td className="font-bold">Page: {pageNumber}</td>
+              <td>
+                <button onClick={onClickNextPage}>
+                  <FiChevronRight className="font-bold" />
+                </button>
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
     </>
   );

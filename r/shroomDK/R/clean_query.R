@@ -18,7 +18,8 @@
 #'
 #' @export
 #'
-#' @examples {
+#' @examples
+#' \dontrun{
 #' query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000", api_key)
 #' request = get_query_from_token(query$token, api_key, 1, 10000)
 #' clean_query(request, try_simplify = FALSE)

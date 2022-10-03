@@ -12,7 +12,7 @@ library(httr)
 #' @param ttl time (in minutes) to keep query in cache.
 #' @param cache Use cached results; set as FALSE to re-execute.
 #' @return list of `token` and `cached` use `token` in `get_query_from_token()`
-#' @import jsonlite, httr
+#' @import jsonlite httr
 #' @export
 #'
 #' @examples

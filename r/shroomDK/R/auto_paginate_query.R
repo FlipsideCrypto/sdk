@@ -9,7 +9,12 @@
 #'
 #' @return data frame of up to 1M rows, see ?clean_query for more details on column classes.
 #' @export
-#'
+#' @examples
+#' \dontrun{
+#' pull_data <- auto_paginate_query("
+#' SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000",
+#' api_key = readLines("api_key.txt"))
+#' }
 auto_paginate_query <- function(query, api_key, maxrows = 1000000){
 
   qtoken <- shroomDK::create_query_token(query = query, api_key = api_key)

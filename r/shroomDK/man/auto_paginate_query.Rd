@@ -19,3 +19,10 @@ data frame of up to 1M rows, see ?clean_query for more details on column classes
 \description{
 Grabs up to maxrows in a query by going through each page 100k rows at a time.
 }
+\examples{
+\dontrun{
+pull_data <- auto_paginate_query("
+SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000",
+api_key = readLines("api_key.txt"))
+}
+}

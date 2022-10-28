@@ -49,7 +49,9 @@ create_query_token <- function(query, api_key, ttl = 10, cache = TRUE){
     body = jsonlite::toJSON(
       list("sql" = query,
            "ttlMinutes" = ttl,
-           cache = cache),
+           "cache" = cache,
+           "sdk_package" = "R",
+           "sdk_version" = "0.1.1"),
       auto_unbox = TRUE)
   )
 

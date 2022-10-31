@@ -15,9 +15,13 @@ const PARSE_ERROR_MSG =
 export class API implements ApiClient {
   #baseUrl: string;
   #headers: Record<string, string>;
+  #sdkVersion: string;
+  #sdkPackage: string;
 
-  constructor(baseUrl: string, apiKey: string) {
+  constructor(baseUrl: string, sdkPackage: string, sdkVersion: string, apiKey: string) {
     this.#baseUrl = baseUrl;
+    this.#sdkPackage = sdkPackage;
+    this.#sdkVersion = sdkVersion;
     this.#headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -38,6 +42,8 @@ export class API implements ApiClient {
           sql: query.sql,
           ttl_minutes: query.ttlMinutes,
           cached: query.cached,
+          sdk_package: this.#sdkPackage,
+          sdk_version: this.#sdkVersion,
         },
         { headers: this.#headers }
       );

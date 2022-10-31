@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
 import { QueryResultSet } from "@flipsidecrypto/sdk";
 import { Input } from "../components/input";
 import { RetroButton } from "../components/retro-buttons";

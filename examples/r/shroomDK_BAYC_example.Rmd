@@ -44,7 +44,7 @@ FROM ethereum.core.ez_nft_transfers
  If you haven't installed shroomDK, scroll up to the beginning of the docs to find install instructions.
  shroomDK is in processing to be added to CRAN! So, soon, install.packages('shroomDK') will work within R.
  
-```{r}
+```{r, warning = FALSE, message = FALSE}
  # Get your API key for free at sdk.flipsidecrypto.xyz/shroomdk 
 bayc_transfers <- shroomDK::auto_paginate_query(query = bayc_transfers_query,
 api_key = "2a4caf06-d503-4c96-a30e-a13dc34792d0")  # get your own API Key to avoid rate limits!
@@ -75,7 +75,7 @@ Group by token_id, order by block_number DESCENDING (recent blocks up top), and
 pick the most recent transfer recipient (the person who most recently received token id is by 
 definition the owner of that token id as of our block number).
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 bayc_holders <- bayc_transfers %>% 
     dplyr::mutate(TOKENID = as.numeric(TOKENID)) %>% 
     dplyr::group_by(TOKENID) %>% 
@@ -92,7 +92,7 @@ First, let's template the query and use R to swap in parameters (including large
 addresses in the WHERE clause).
 
 We'll swap: ADRRESSLIST, _MIN_BLOCK_, and _MAX_BLOCK_ using R's gsub function.
-```{r}
+```{r, warning = FALSE, message = FALSE}
 activity_query <- {
     "
 with select_tx AS (
@@ -122,7 +122,7 @@ GROUP BY ADDRESS
 
 Our activity_query is now HUGE. It has 1,000s of addresses in its where clause. But shroomDK doesn't care!
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 bayc_holder_activity <- shroomDK::auto_paginate_query(activity_query, api_key = "2a4caf06-d503-4c96-a30e-a13dc34792d0")
 ```
 

@@ -4,6 +4,9 @@ from shroomdk.models import Query
 
 API_BASE_URL = "https://api.flipsidecrypto.com"
 
+SDK_VERSION = "1.0.2"
+SDK_PACKAGE = "python"
+
 
 class ShroomDK(object):
     def __init__(self, api_key: str, api_base_url: str = API_BASE_URL):
@@ -30,5 +33,7 @@ class ShroomDK(object):
                 page_size=page_size,
                 page_number=page_number,
                 cached=cached,
+                sdk_package=SDK_PACKAGE,
+                sdk_version=SDK_VERSION,
             )
         )

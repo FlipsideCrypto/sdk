@@ -13,6 +13,9 @@ from shroomdk.integrations.query_integration.query_integration import DEFAULTS
 from shroomdk.models import Query, QueryStatus
 from shroomdk.models.api import QueryResultJson
 
+SDK_VERSION = "1.0.2"
+SDK_PACKAGE = "python"
+
 
 def get_api():
     return API("https://api.flipsidecrypto.xyz", "api_key")
@@ -22,17 +25,19 @@ def test_query_defaults():
     qi = QueryIntegration(get_api())
 
     # Test that the defaults are semi-overridden
-    q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10)  # type: ignore
+    q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10, sdk_package=SDK_PACKAGE, sdk_version=SDK_VERSION)  # type: ignore
     next_q = qi._set_query_defaults(q)
 
     assert next_q.page_number == 5
     assert next_q.page_size == 10
     assert next_q.ttl_minutes == 5
+    assert next_q.sdk_package == SDK_PACKAGE
+    assert next_q.sdk_version == SDK_VERSION
     assert next_q.cached == DEFAULTS.cached
     assert next_q.timeout_minutes == DEFAULTS.timeout_minutes
 
     # Test that the defaults are not overridden
-    q = Query(sql="")  # type: ignore
+    q = Query(sql="", sdk_package=SDK_PACKAGE, sdk_version=SDK_VERSION)  # type: ignore
     next_q = qi._set_query_defaults(q)
 
     assert next_q.page_number == DEFAULTS.page_number
@@ -40,6 +45,8 @@ def test_query_defaults():
     assert next_q.ttl_minutes == DEFAULTS.ttl_minutes
     assert next_q.cached == DEFAULTS.cached
     assert next_q.timeout_minutes == DEFAULTS.timeout_minutes
+    assert next_q.sdk_package == SDK_PACKAGE
+    assert next_q.sdk_version == SDK_VERSION
 
 
 def test_run_failed_to_create_query(requests_mock):
@@ -47,7 +54,7 @@ def test_run_failed_to_create_query(requests_mock):
     qi = QueryIntegration(api)
 
     # Test 400 error
-    q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10)  # type: ignore
+    q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10, sdk_package=SDK_PACKAGE, sdk_version=SDK_VERSION)  # type: ignore
     requests_mock.post(
         api.get_url("queries"),
         text=json.dumps({"errors": "user_error"}),
@@ -103,7 +110,9 @@ def test_get_query_result_server_errors(requests_mock):
     query_id = "test_query_id"
 
     # User Error
-    requests_mock.get(api.get_url(f"queries/{query_id}"), status_code=400, reason="user_error")
+    requests_mock.get(
+        api.get_url(f"queries/{query_id}"), status_code=400, reason="user_error"
+    )
 
     try:
         qi._get_query_results("test_query_id")
@@ -111,7 +120,9 @@ def test_get_query_result_server_errors(requests_mock):
         assert type(e) == UserError
 
     # Server Error
-    requests_mock.get(api.get_url(f"queries/{query_id}"), status_code=500, reason="server error")
+    requests_mock.get(
+        api.get_url(f"queries/{query_id}"), status_code=500, reason="server error"
+    )
 
     try:
         qi._get_query_results("test_query_id")

@@ -12,7 +12,7 @@ interface ButtonProps {
 function getBg(color: string) {
   let bgColor = "bg-[#7C7C7C]";
   let bgColorHover = "hover:bg-[#BCBCca]";
-  if (color == "blue") {
+  if (color === "blue") {
     bgColor = "bg-[#2A3492]";
     bgColorHover = "hover:bg-[#2A34ca]";
   } else if (color === "green") {

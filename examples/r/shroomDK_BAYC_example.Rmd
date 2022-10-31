@@ -1,0 +1,147 @@
+---
+title: "shroomDK-Example"
+author: "Charliemarketplace"
+date: '2022-10-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intro to ShroomDK 
+
+The shroomDK package has full access to all the data within Flipside Crypto. You just need your own API-key,
+which is free at: https://sdk.flipsidecrypto.xyz/shroomdk 
+
+For this documentation, you can use this API key to test things out in R. **But it is capped at 10,000 queries a day among all public users**: `2a4caf06-d503-4c96-a30e-a13dc34792d0`
+
+It is highly recommended you get your own key for free at https://sdk.flipsidecrypto.xyz/shroomdk - but just to get you off the ground you can use the shared key at first.
+
+Here is some example code to get you started!
+
+Let's look at Bored Ape Yacht Club NFT transfers over time. First, we'll set a Block_Number 
+maximum to make our analysis reproducible. Let's use Block_Number = 15680000
+
+This query was made within the flipsidecrypto.xyz SQL tool and we can copy this query to use within R 
+by storing the query in a character (i.e., double quotes: "").
+
+Notice that the NFT Address is made lowercase to conform to how Flipside's Snowflake database stores them.
+The EZ_NFT_Transfers table has sales, mints, and other forms of transfer of 1,000s of NFTs!
+
+```{r, warning = FALSE, message = FALSE}
+library(plotly)
+library(dplyr)
+bayc_transfers_query <- "
+SELECT BLOCK_NUMBER, BLOCK_TIMESTAMP, NFT_ADDRESS, PROJECT_NAME, NFT_TO_ADDRESS, TOKENID
+FROM ethereum.core.ez_nft_transfers
+  WHERE BLOCK_NUMBER <= 15680000 AND 
+  NFT_ADDRESS = LOWER('0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D')
+  ORDER BY BLOCK_NUMBER DESC 
+"
+```
+
+ If you haven't installed shroomDK, scroll up to the beginning of the docs to find install instructions.
+ shroomDK is in processing to be added to CRAN! So, soon, install.packages('shroomDK') will work within R.
+ 
+```{r}
+ # Get your API key for free at sdk.flipsidecrypto.xyz/shroomdk 
+bayc_transfers <- shroomDK::auto_paginate_query(query = bayc_transfers_query,
+api_key = "2a4caf06-d503-4c96-a30e-a13dc34792d0")  # get your own API Key to avoid rate limits!
+```
+This query returns over 86,000 historical transfers!
+
+With R you can group by block_timestamp at the day level and plot transfers over time! Here we'll use the 
+dplyr and plotly packages. 
+```{r}
+daily_transfers <- bayc_transfers %>% 
+    dplyr::mutate(day = as.Date(BLOCK_TIMESTAMP)) %>% 
+    dplyr::group_by(day) %>% 
+    dplyr::summarise(num_transfers = n())
+```
+    
+The plot shows that May 1, 2021 was the most popular transfer day (likely the day the public mint went viral); 
+but there are other pockets are many transfers including May 1, 2022, a highly volatile time for all of crypto.
+ 
+```{r}   
+plotly::plot_ly(data = daily_transfers, x = ~day, y = ~num_transfers, mode = 'lines', type = 'scatter') 
+```
+
+What if we were curious who the current holders of each token id are? 
+
+With R it's simple!
+
+Group by token_id, order by block_number DESCENDING (recent blocks up top), and 
+pick the most recent transfer recipient (the person who most recently received token id is by 
+definition the owner of that token id as of our block number).
+
+```{r}
+bayc_holders <- bayc_transfers %>% 
+    dplyr::mutate(TOKENID = as.numeric(TOKENID)) %>% 
+    dplyr::group_by(TOKENID) %>% 
+    dplyr::arrange( desc(BLOCK_NUMBER) ) %>% 
+    dplyr::summarise(current_holder = first(NFT_TO_ADDRESS))
+```
+
+Are there BAYCs being held in "cold storage"? Wallets that hold tokens/NFTs but have never initiated 
+a transaction?
+
+With this bayc_holders list, we can *ask shroomDK* for activity from these addresses!
+
+First, let's template the query and use R to swap in parameters (including large ones like 10,000 
+addresses in the WHERE clause).
+
+We'll swap: ADRRESSLIST, _MIN_BLOCK_, and _MAX_BLOCK_ using R's gsub function.
+```{r}
+activity_query <- {
+    "
+with select_tx AS (
+SELECT BLOCK_TIMESTAMP, TX_HASH, FROM_ADDRESS as ADDRESS FROM ethereum.core.fact_transactions
+WHERE FROM_ADDRESS IN ('ADDRESSLIST') AND
+BLOCK_NUMBER >= _MIN_BLOCK_ AND
+BLOCK_NUMBER <= _MAX_BLOCK_
+ORDER BY BLOCK_NUMBER DESC
+)
+SELECT ADDRESS, COUNT(*) as num_tx,
+count(DISTINCT(date_trunc('DAY', block_timestamp))) as num_days,
+MAX(block_timestamp) as last_tx_date FROM
+select_tx
+GROUP BY ADDRESS
+"
+  }
+
+# paste together the unique addresses from our 10,000 BAYC NFTs to work with SQL. 
+
+  alist <- paste0(tolower(unique(bayc_holders$current_holder)), collapse = "','")
+  
+# swap parameters
+  activity_query <- gsub('ADDRESSLIST', replacement = alist, x = activity_query)
+  activity_query <- gsub('_MIN_BLOCK_', replacement = 0, x = activity_query)
+  activity_query <- gsub('_MAX_BLOCK_', replacement = 15680000, x = activity_query)
+```
+
+Our activity_query is now HUGE. It has 1,000s of addresses in its where clause. But shroomDK doesn't care!
+
+```{r}
+bayc_holder_activity <- shroomDK::auto_paginate_query(activity_query, api_key = "2a4caf06-d503-4c96-a30e-a13dc34792d0")
+```
+
+As of block 15680000, there are 6,079 unique BAYC holders with at least 1 transaction.
+Let's FULL join these tables in R and see if there are any bayc_holders with NA transactions (i.e., they are cold 
+storage addresses that have never initiated a transaction!).
+```{r}
+bayc_holders <- merge(bayc_holders, bayc_holder_activity, 
+all.x = TRUE, all.y = TRUE, by.x = 'current_holder', by.y = 'ADDRESS')
+
+bayc_holders$status <- ifelse(is.na(bayc_holders$NUM_TX), "Cold", "Active")
+```
+Note, some addresses hold multiple tokens, so each row here is only unique at the token level.
+While "Cold Storage" is the terminology used, technically BAYC can be held within contracts (e.g., fractionalized NFTs Vaults or gnosis safes) or be burnt (held by 0x0000....0000dead). 
+
+```{r}
+plotly::plot_ly(bayc_holders, x = ~status, type = 'histogram')
+```
+
+1,024 of the 10,000 BAYC NFTs are held in either contracts or cold storage addresses!
+
+With shroomDK we can query flipside crypto's blockchain data with even advanced queries that ask for information on 1,000s of addresses in a single WHERE clause - and bring it directly into R for advanced plotting. 

@@ -37,7 +37,7 @@ class QueryResultSetBuilder(object):
             started_at=start_time,
             ended_at=end_time,
             elapsed_seconds=(end_time - start_time).seconds,
-            record_count=len(data.results) if data.results else 0,
+            record_count=data.recordCount if data.recordCount else 0,
         )
 
     def create_records(self, data: QueryResultJson) -> Union[List[dict], None]:

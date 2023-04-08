@@ -18,19 +18,11 @@ from shroomdk.models import (
 from shroomdk.models.api import QueryResultJson
 from shroomdk.utils.sleep import get_elapsed_linear_seconds, linear_backoff
 
+from .defaults import DEFAULTS
 from .query_result_set_builder import QueryResultSetBuilder
 
-DEFAULTS: QueryDefaults = QueryDefaults(
-    ttl_minutes=60,
-    cached=True,
-    timeout_minutes=20,
-    retry_interval_seconds=0.5,
-    page_size=100000,
-    page_number=1,
-)
 
-
-class QueryIntegration(object):
+class VelocityQueryIntegration(object):
     def __init__(self, api: API, defaults: QueryDefaults = DEFAULTS):
         self.api = api
         self.defaults = defaults
@@ -102,10 +94,10 @@ class QueryIntegration(object):
 
         query_status = query_run.data.status
 
-        if query_status == QueryStatus.Finished:
+        if query_status == QueryStatus.Success:
             return query_run.data
 
-        if query_status == QueryStatus.Error:
+        if query_status == QueryStatus.Failed:
             raise QueryRunExecutionError()
 
         should_continue = linear_backoff(

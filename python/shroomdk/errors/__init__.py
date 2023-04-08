@@ -1,4 +1,5 @@
 from .query_run_errors import (  # noqa: F401
+    QueryRunCancelledError,
     QueryRunExecutionError,
     QueryRunRateLimitError,
     QueryRunTimeoutError,

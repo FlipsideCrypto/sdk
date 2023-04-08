@@ -17,6 +17,7 @@ class QueryResultJson(BaseModel):
     errors: Optional[str]
     pageNumber: Optional[int]
     pageSize: Optional[int]
+    recordCount: Optional[int]
 
 
 class QueryResultResp(ApiResponse):

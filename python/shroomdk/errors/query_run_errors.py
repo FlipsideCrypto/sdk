@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 from .base_error import BaseError
 
@@ -28,6 +28,26 @@ class QueryRunExecutionError(BaseError):
     Base class for all QueryRunExecutionError errors.
     """
 
-    def __init__(self):
-        self.message = "QUERY_RUN_EXECUTION_ERROR: an error has occured while executing your query."
+    def __init__(
+        self,
+        error_name: Optional[str] = None,
+        error_message: Optional[str] = None,
+        error_data: Optional[str] = None,
+    ):
+        self.message = f"QUERY_RUN_EXECUTION_ERROR: an error has occured while executing your query. errorName={error_name}, errorMessage={error_message}, errorData={error_data}"
+        super().__init__(self.message)
+
+
+class QueryRunCancelledError(BaseError):
+    """
+    Base class for all QueryRunCancelledError errors.
+    """
+
+    def __init__(
+        self,
+        error_name: Optional[str] = None,
+        error_message: Optional[str] = None,
+        error_data: Optional[str] = None,
+    ):
+        self.message = f"QUERY_RUN_CANCELLED_ERROR: your query has been cancelled. errorName={error_name}, errorMessage={error_message}, errorData={error_data}"
         super().__init__(self.message)

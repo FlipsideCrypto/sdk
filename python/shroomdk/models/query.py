@@ -8,6 +8,9 @@ class Query(BaseModel):
     ttl_minutes: Optional[int] = Field(
         None, description="The number of minutes to cache the query results"
     )
+    max_age_minutes: Optional[int] = Field(
+        5, description="The max age of the query results in minutes"
+    )
     timeout_minutes: Optional[int] = Field(
         None, description="The number of minutes to timeout the query"
     )
@@ -25,4 +28,10 @@ class Query(BaseModel):
     )
     sdk_version: Optional[str] = Field(
         None, description="The SDK version used for the query"
+    )
+    data_source: Optional[str] = Field(
+        None, description="The data source to execute the query against"
+    )
+    data_provider: Optional[str] = Field(
+        None, description="The owner of the data source"
     )

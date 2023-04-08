@@ -31,11 +31,12 @@ def getQueryResultSetData(status: str) -> QueryResultJson:
         errors=None,
         pageSize=100,
         pageNumber=0,
+        recordCount=4,
     )
 
 
 def test_run_stats():
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Finished))
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Success))
 
     # Start/end are datetime objects?
     assert type(qr.run_stats.started_at) == datetime
@@ -49,7 +50,7 @@ def test_run_stats():
 
 
 def test_records():
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Finished))
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Success))
 
     # Records Length Matches Row Length?
     assert qr.records is not None
@@ -75,24 +76,36 @@ def test_records():
 
 
 def test_status():
+    # Status is ready?
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Ready))
+    assert qr.status == QueryStatus.Ready
+
+    # Status is running?
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Running))
+    assert qr.status == QueryStatus.Running
+
+    # Status is streaming?
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.StreamingResults))
+    assert qr.status == QueryStatus.StreamingResults
+
+    # Status is cancelled?
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Canceled))
+    assert qr.status == QueryStatus.Canceled
+
     # Status is finished?
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Finished))
-    assert qr.status == QueryStatus.Finished
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Success))
+    assert qr.status == QueryStatus.Success
 
-    # Status is pending?
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Pending))
-    assert qr.status == QueryStatus.Pending
-
-    # Status is error?
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Error))
-    assert qr.status == QueryStatus.Error
+    # Status is failed?
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Failed))
+    assert qr.status == QueryStatus.Failed
 
 
 def test_query_id():
     # Query ID is set?
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Finished))
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Success))
     assert qr.query_id is not None
 
     # Query ID is test
-    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Finished))
+    qr = QueryResultSetBuilder(getQueryResultSetData(QueryStatus.Success))
     assert qr.query_id == "test"

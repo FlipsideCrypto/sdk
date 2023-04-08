@@ -102,12 +102,12 @@ class API(object):
 
         retry_strategy = Retry(
             total=self._MAX_RETRIES,
-            backoff_factor=self._BACKOFF_FACTOR,
+            backoff_factor=int(self._BACKOFF_FACTOR),
             status_forcelist=self._STATUS_FORCE_LIST,
             allowed_methods=self._METHOD_ALLOWLIST,
         )
 
-        adapter = HTTPAdapter(max_retries=retry_strategy)
+        adapter = HTTPAdapter(max_retries=retry_strategy)  # type: ignore
         http = requests.Session()
         http.mount("https://", adapter)
         http.mount("http://", adapter)

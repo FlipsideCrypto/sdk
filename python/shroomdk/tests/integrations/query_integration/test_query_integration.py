@@ -8,8 +8,8 @@ from shroomdk.errors import (
     ServerError,
     UserError,
 )
-from shroomdk.integrations.query_integration import QueryIntegration
-from shroomdk.integrations.query_integration.query_integration import DEFAULTS
+from shroomdk.integrations.query_integration import VelocityQueryIntegration
+from shroomdk.integrations.query_integration.defaults import DEFAULTS
 from shroomdk.models import Query, QueryStatus
 from shroomdk.models.api import QueryResultJson
 
@@ -22,7 +22,7 @@ def get_api():
 
 
 def test_query_defaults():
-    qi = QueryIntegration(get_api())
+    qi = VelocityQueryIntegration(get_api())
 
     # Test that the defaults are semi-overridden
     q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10, sdk_package=SDK_PACKAGE, sdk_version=SDK_VERSION)  # type: ignore
@@ -51,7 +51,7 @@ def test_query_defaults():
 
 def test_run_failed_to_create_query(requests_mock):
     api = get_api()
-    qi = QueryIntegration(api)
+    qi = VelocityQueryIntegration(api)
 
     # Test 400 error
     q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10, sdk_package=SDK_PACKAGE, sdk_version=SDK_VERSION)  # type: ignore
@@ -104,7 +104,7 @@ def test_run_failed_to_create_query(requests_mock):
 
 def test_get_query_result_server_errors(requests_mock):
     api = get_api()
-    qi = QueryIntegration(api)
+    qi = VelocityQueryIntegration(api)
 
     api = API("https://api.flipsidecrypto.xyz", "api_key")
     query_id = "test_query_id"
@@ -140,7 +140,7 @@ def test_get_query_result_server_errors(requests_mock):
 
 def test_get_query_result_query_errors(requests_mock):
     api = get_api()
-    qi = QueryIntegration(api)
+    qi = VelocityQueryIntegration(api)
 
     api = API("https://api.flipsidecrypto.xyz", "api_key")
     query_id = "test_query_id"
@@ -148,7 +148,7 @@ def test_get_query_result_query_errors(requests_mock):
     page_size = 10
 
     # Query Status: Error
-    query_result_json = getQueryResultSetData(QueryStatus.Error).dict()
+    query_result_json = getQueryResultSetData(QueryStatus.Failed).dict()
 
     result = requests_mock.get(
         api.get_url(f"queries/{query_id}"),
@@ -170,7 +170,7 @@ def test_get_query_result_query_errors(requests_mock):
         assert type(e) == QueryRunExecutionError
 
     # Query Status: Finished
-    query_result_json = getQueryResultSetData(QueryStatus.Finished).dict()
+    query_result_json = getQueryResultSetData(QueryStatus.Success).dict()
 
     result = requests_mock.get(
         api.get_url(f"queries/{query_id}"),
@@ -192,7 +192,7 @@ def test_get_query_result_query_errors(requests_mock):
     assert len(result.results) == len(query_result_json["results"])
 
     # Query Execution Error
-    query_result_json = getQueryResultSetData(QueryStatus.Error).dict()
+    query_result_json = getQueryResultSetData(QueryStatus.Failed).dict()
 
     result = requests_mock.get(
         api.get_url(f"queries/{query_id}"),
@@ -207,7 +207,7 @@ def test_get_query_result_query_errors(requests_mock):
         assert type(e) == QueryRunExecutionError
 
     # Query Timeout
-    query_result_json = getQueryResultSetData(QueryStatus.Pending).dict()
+    query_result_json = getQueryResultSetData(QueryStatus.Running).dict()
 
     result = requests_mock.get(
         api.get_url(f"queries/{query_id}"),
@@ -253,4 +253,5 @@ def getQueryResultSetData(status: str) -> QueryResultJson:
         errors=None,
         pageSize=100,
         pageNumber=0,
+        recordCount=4,
     )

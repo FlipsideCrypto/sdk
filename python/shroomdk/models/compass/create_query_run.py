@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from pydantic import BaseModel
 
@@ -33,4 +33,4 @@ class CreateQueryRunRpcResult(BaseModel):
 
 
 class CreateQueryRunRpcResponse(RpcResponse):
-    result: CreateQueryRunRpcResult | None
+    result: Union[CreateQueryRunRpcResult, None]

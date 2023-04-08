@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -35,8 +35,8 @@ class SortBy(BaseModel):
 class GetQueryRunResultsRpcParams(BaseModel):
     queryRunId: str
     format: ResultFormat
-    filters: Optional[List[Filter | None]] = []
-    sortBy: Optional[List[SortBy] | None] = []
+    filters: Optional[Union[List[Filter], None]] = []
+    sortBy: Optional[Union[List[SortBy], None]] = []
     page: Page
 
 
@@ -54,8 +54,8 @@ class GetQueryRunResultsRpcResult(BaseModel):
     sql: str
     format: ResultFormat
     originalQueryRun: QueryRun
-    redirectedToQueryRun: QueryRun | None
+    redirectedToQueryRun: Union[QueryRun, None]
 
 
 class GetQueryRunResultsRpcResponse(RpcResponse):
-    result: GetQueryRunResultsRpcResult | None
+    result: Union[GetQueryRunResultsRpcResult, None]

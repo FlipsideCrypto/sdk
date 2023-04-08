@@ -1,9 +1,11 @@
+from typing import Union
+
 from shroomdk.models.compass.core.rpc_error import RpcError
 from shroomdk.models.query_status import QueryStatus
 
 
 def get_query_run_response(
-    status: str = QueryStatus.Ready, error: RpcError | None = None
+    status: str = QueryStatus.Ready, error: Union[RpcError, None] = None
 ):
     base = {
         "jsonrpc": "2.0",

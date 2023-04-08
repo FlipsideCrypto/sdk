@@ -1,10 +1,12 @@
+from typing import Union
+
 from shroomdk.models.compass.core.rpc_error import RpcError
 from shroomdk.models.query_status import QueryStatus
 
 
 def create_query_run_response(
     status: str = QueryStatus.Ready,
-    error: RpcError | None = None,
+    error: Union[RpcError, None] = None,
     result_null: bool = False,
 ):
     base = {

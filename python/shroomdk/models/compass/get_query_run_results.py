@@ -26,6 +26,10 @@ class Filter(BaseModel):
     class Config:
         fields = {"in_": "in"}
 
+    def dict(self, *args, **kwargs) -> dict:
+        kwargs.setdefault("exclude_none", True)  # Exclude keys with None values
+        return super().dict(*args, **kwargs)
+
 
 class SortBy(BaseModel):
     column: str
@@ -39,10 +43,18 @@ class GetQueryRunResultsRpcParams(BaseModel):
     sortBy: Optional[Union[List[SortBy], None]] = []
     page: Page
 
+    def dict(self, *args, **kwargs) -> dict:
+        kwargs.setdefault("exclude_none", True)  # Exclude keys with None values
+        return super().dict(*args, **kwargs)
+
 
 class GetQueryRunResultsRpcRequest(RpcRequest):
     method: str = "getQueryRunResults"
     params: List[GetQueryRunResultsRpcParams]
+
+    def dict(self, *args, **kwargs) -> dict:
+        kwargs.setdefault("exclude_none", True)  # Exclude keys with None values
+        return super().dict(*args, **kwargs)
 
 
 # Response

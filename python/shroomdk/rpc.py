@@ -4,6 +4,11 @@ from typing import List
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
+from shroomdk.models.compass.get_sql_statement import (
+    GetSqlStatementParams,
+    GetSqlStatementRequest,
+    GetSqlStatementResponse,
+)
 
 from .errors.server_error import ServerError
 from .errors.user_error import UserError
@@ -81,6 +86,21 @@ class RPC(object):
 
         return get_query_run_resp
 
+    def get_sql_statement(
+        self, params: GetSqlStatementParams
+    ) -> GetSqlStatementResponse:
+        result = self._session.post(
+            self.url,
+            data=json.dumps(GetSqlStatementRequest(params=[params]).dict()),
+            headers=self._headers,
+        )
+
+        data = self._handle_response(result, "getSqlStatement")
+
+        get_sql_statement_resp = GetSqlStatementResponse(**data)
+
+        return get_sql_statement_resp
+
     def get_query_result(
         self, params: GetQueryRunResultsRpcParams
     ) -> GetQueryRunResultsRpcResponse:
@@ -91,7 +111,6 @@ class RPC(object):
         )
 
         data = self._handle_response(result, "getQueryRunResults")
-
         get_query_run_results_resp = GetQueryRunResultsRpcResponse(**data)
         return get_query_run_results_resp
 

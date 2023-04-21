@@ -1,7 +1,8 @@
 import json
-from typing import Union
+from typing import List, Optional, Union
 
 from shroomdk.errors import (
+    NotFoundError,
     QueryRunCancelledError,
     QueryRunExecutionError,
     QueryRunTimeoutError,
@@ -18,13 +19,17 @@ from shroomdk.models import (
 from shroomdk.models.compass.core.page import Page
 from shroomdk.models.compass.core.query_run import QueryRun
 from shroomdk.models.compass.core.result_format import ResultFormat
+from shroomdk.models.compass.core.sql_statement import SqlStatement
 from shroomdk.models.compass.core.tags import Tags
 from shroomdk.models.compass.create_query_run import CreateQueryRunRpcParams
 from shroomdk.models.compass.get_query_run import GetQueryRunRpcRequestParams
 from shroomdk.models.compass.get_query_run_results import (
+    Filter,
     GetQueryRunResultsRpcParams,
     GetQueryRunResultsRpcResult,
+    SortBy,
 )
+from shroomdk.models.compass.get_sql_statement import GetSqlStatementParams
 from shroomdk.rpc import RPC
 from shroomdk.utils.sleep import get_elapsed_linear_seconds, linear_backoff
 
@@ -66,7 +71,7 @@ class CompassQueryIntegration(object):
         if not created_query.result or not created_query.result.queryRun:
             raise SDKError("expected `query_run` from server but got `None`")
 
-        query_run = self._get_query_run(
+        query_run = self._get_query_run_loop(
             created_query.result.queryRun.id,
             page_number=query.page_number,
             page_size=query.page_size,
@@ -87,9 +92,70 @@ class CompassQueryIntegration(object):
             query_result=query_result,
         ).build()
 
+    def get_sql_statement(self, sql_statement_id: str) -> SqlStatement:
+        response = self.rpc.get_sql_statement(
+            GetSqlStatementParams(**{"sqlStatementId": sql_statement_id})
+        )
+
+        if response.error or not response.result:
+            raise NotFoundError(f"SQLStatement<{sql_statement_id}> not found")
+
+        return response.result.sqlStatement
+
+    def get_query_run(self, query_run_id: str) -> QueryRun:
+        response = self.rpc.get_query_run(
+            GetQueryRunRpcRequestParams(queryRunId=query_run_id)
+        )
+
+        if response.error or not response.result:
+            raise NotFoundError(f"QueryRun<{query_run_id}> not found")
+
+        return response.result.queryRun
+
+    def get_query_results(
+        self,
+        query_run_id: str,
+        page_number: int = 1,
+        page_size: int = 100000,
+        filters: Optional[Union[List[Filter], None]] = [],
+        sort_by: Optional[Union[List[SortBy], None]] = [],
+    ) -> QueryResultSet:
+        query_result = self._get_query_results(
+            query_run_id,
+            page_number=page_number if page_number else 1,
+            page_size=page_size if page_size else 10000,
+            filters=filters,
+            sort_by=sort_by,
+        )
+
+        query_run = (
+            query_result.redirectedToQueryRun
+            if query_result.redirectedToQueryRun
+            else query_result.originalQueryRun
+        )
+        return QueryResultSetBuilder(
+            query_run=query_run,
+            query_result=query_result,
+        ).build()
+
     def _get_query_results(
-        self, query_run_id: str, page_number: int = 1, page_size: int = 100000
+        self,
+        query_run_id: str,
+        page_number: int = 1,
+        page_size: int = 100000,
+        filters: Optional[Union[List[Filter], None]] = [],
+        sort_by: Optional[Union[List[SortBy], None]] = [],
     ) -> GetQueryRunResultsRpcResult:
+        # f2 = []
+        # if filters:
+        #     for f in filters:
+        #         d = f.dict()
+        #         d2 = {}
+        #         for k, v in d.items():
+        #             if v is not None:
+        #                 d2[k] = v
+        #         f2.append(Filter(**d2))
+
         query_results_resp = self.rpc.get_query_result(
             GetQueryRunResultsRpcParams(
                 queryRunId=query_run_id,
@@ -98,6 +164,8 @@ class CompassQueryIntegration(object):
                     number=page_number,
                     size=page_size,
                 ),
+                filters=filters,
+                sortBy=sort_by,
             )
         )
 
@@ -121,7 +189,7 @@ class CompassQueryIntegration(object):
         )
         return Query(**query_default_dict)
 
-    def _get_query_run(
+    def _get_query_run_loop(
         self,
         query_run_id: str,
         page_number: int = 1,
@@ -184,7 +252,7 @@ class CompassQueryIntegration(object):
 
             raise QueryRunTimeoutError(elapsed_seconds)
 
-        return self._get_query_run(
+        return self._get_query_run_loop(
             query_run_id,
             page_number,
             page_size,

@@ -1,3 +1,4 @@
+from .not_found_error import NotFoundError  # noqa: F401
 from .query_run_errors import (  # noqa: F401
     QueryRunCancelledError,
     QueryRunExecutionError,

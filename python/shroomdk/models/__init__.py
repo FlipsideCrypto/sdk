@@ -1,3 +1,4 @@
+from .compass import Filter, SortBy  # noqa: F401
 from .query import Query  # noqa: F401
 from .query_defaults import QueryDefaults  # noqa: F401
 from .query_result_set import QueryResultSet  # noqa: F401

@@ -7,6 +7,7 @@ from .query_run_stats import QueryRunStats
 
 class QueryResultSet(BaseModel):
     query_id: Union[str, None] = Field(None, description="The server id of the query")
+
     status: str = Field(
         False, description="The status of the query (`PENDING`, `FINISHED`, `ERROR`)"
     )

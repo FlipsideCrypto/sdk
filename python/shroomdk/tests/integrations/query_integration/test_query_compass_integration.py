@@ -138,7 +138,7 @@ def test_get_query_run_query(requests_mock):
     )
 
     try:
-        result = qi._get_query_run(
+        result = qi._get_query_run_loop(
             "test_query_id",
             page_number=page_number,
             page_size=page_size,
@@ -164,7 +164,7 @@ def test_get_query_run_query(requests_mock):
     )
 
     try:
-        result = qi._get_query_run(
+        result = qi._get_query_run_loop(
             "test_query_id",
             page_number=page_number,
             page_size=page_size,
@@ -188,7 +188,7 @@ def test_get_query_run_query(requests_mock):
         reason="OK",
     )
 
-    result = qi._get_query_run(
+    result = qi._get_query_run_loop(
         "test_query_id",
         page_number=page_number,
         page_size=page_size,
@@ -213,7 +213,7 @@ def test_get_query_run_query(requests_mock):
     )
 
     try:
-        result = qi._get_query_run(
+        result = qi._get_query_run_loop(
             "test_query_id",
             page_number=page_number,
             page_size=page_size,

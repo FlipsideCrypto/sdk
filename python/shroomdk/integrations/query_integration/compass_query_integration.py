@@ -15,7 +15,6 @@ from shroomdk.models import (
     QueryStatus,
     SleepConfig,
 )
-from shroomdk.models.api import QueryResultJson
 from shroomdk.models.compass.core.page import Page
 from shroomdk.models.compass.core.query_run import QueryRun
 from shroomdk.models.compass.core.result_format import ResultFormat
@@ -77,27 +76,15 @@ class CompassQueryIntegration(object):
             else 1,
         )
 
-        query_results = self._get_query_results(
+        query_result = self._get_query_results(
             query_run.id,
             page_number=query.page_number if query.page_number else 1,
             page_size=query.page_size if query.page_size else 100000,
         )
 
         return QueryResultSetBuilder(
-            QueryResultJson(
-                queryId=query_run.id,
-                status=query_run.state,
-                results=query_results.rows,
-                columnLabels=query_results.columnNames,
-                columnTypes=query_results.columnTypes,
-                pageNumber=query_results.page.currentPageNumber,
-                pageSize=query_results.page.currentPageSize,
-                startedAt=query_run.startedAt,
-                endedAt=query_run.endedAt,
-                message=query_run.errorMessage,
-                errors=query_run.errorMessage,
-                recordCount=query_results.page.totalRows,
-            )
+            query_run=query_run,
+            query_result=query_result,
         ).build()
 
     def _get_query_results(

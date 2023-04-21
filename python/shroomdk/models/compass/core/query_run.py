@@ -23,11 +23,11 @@ class QueryRun(BaseModel):
     queryRunningEndedAt: Optional[str]
     queryStreamingEndedAt: Optional[str]
     endedAt: Optional[str]
-    rowCount: Optional[str]
-    totalSize: Optional[str]
+    rowCount: Optional[int]
+    totalSize: Optional[int]
     tags: Tags
     dataSourceId: str
     userId: str
-    createdAt: datetime
+    createdAt: str
     updatedAt: datetime
     archivedAt: Optional[datetime]

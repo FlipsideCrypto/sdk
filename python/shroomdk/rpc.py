@@ -60,12 +60,18 @@ class RPC(object):
             headers=self._headers,
         )
 
+        if result.status_code >= 500:
+            raise ServerError(
+                status_code=result.status_code,
+                message=f"Unknown server error when calling `createQueryRun`, status_code: {result.status_code}, status_text: {result.reason}. Please try again later.",
+            )
+
         try:
             data = result.json()
         except json.decoder.JSONDecodeError:
             raise ServerError(
                 status_code=result.status_code,
-                message="Unable to parse response for RPC response from `createQueryRun`",
+                message=f"Unable to parse response for RPC response from `createQueryRun`, status_code: {result.status_code}, status_text: {result.reason}. Please try again later.",
             )
 
         create_query_resp = CreateQueryRunRpcResponse(**data)
@@ -81,12 +87,18 @@ class RPC(object):
             headers=self._headers,
         )
 
+        if result.status_code >= 500:
+            raise ServerError(
+                status_code=result.status_code,
+                message=f"Unknown server error when calling `getQueryRun` for query run id: {params.queryRunId}, status_code: {result.status_code}, status_text: {result.reason}. Please try again later.",
+            )
+
         try:
             data = result.json()
         except json.decoder.JSONDecodeError:
             raise ServerError(
                 status_code=result.status_code,
-                message="Unable to parse response for RPC response from `getQueryRun`",
+                message=f"Unable to parse response for RPC response from `getQueryRun`. Status_code: {result.status_code}, status_text: {result.reason}. Please try again later.",
             )
 
         get_query_run_resp = GetQueryRunRpcResponse(**data)
@@ -102,12 +114,18 @@ class RPC(object):
             headers=self._headers,
         )
 
+        if result.status_code >= 500:
+            raise ServerError(
+                status_code=result.status_code,
+                message=f"Unknown server error when calling `getQueryRunResults` for query run id: {params.queryRunId}, status_code: {result.status_code}, status_text: {result.reason}. Please try again later.",
+            )
+
         try:
             data = result.json()
         except json.decoder.JSONDecodeError:
             raise ServerError(
                 status_code=result.status_code,
-                message="Unable to parse response for RPC response from `getQueryRunResults`",
+                message=f"Unable to parse response for RPC response from `getQueryRunResults`. status_code: {result.status_code}, status_text: {result.reason}. Please try again later.",
             )
 
         get_query_run_results_resp = GetQueryRunResultsRpcResponse(**data)

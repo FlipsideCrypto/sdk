@@ -3,7 +3,6 @@ import json
 from shroomdk.errors.server_error import ServerError
 from shroomdk.errors.user_error import UserError
 from shroomdk.models import Query, QueryStatus
-from shroomdk.models.api import QueryResultJson
 from shroomdk.models.compass.core.page import Page
 from shroomdk.models.compass.core.result_format import ResultFormat
 from shroomdk.models.compass.core.rpc_error import RpcError
@@ -21,7 +20,7 @@ from .utils.mock_data.get_query_run import get_query_run_response
 Test Defaults
 """
 tags = Tags(sdk_language="python", sdk_package="shroomdk", sdk_version="0.0.1")
-SERVICE_URL = "https://compass.flipsidecrypto.xyz"
+SERVICE_URL = "https://rpc.flipsidecrypto.xyz"
 
 """
 CreateQuery Run tests
@@ -60,42 +59,6 @@ def test_create_query_success(requests_mock):
     assert result.result.sqlStatement is not None
     assert result.result.queryRun.state == QueryStatus.Success
     assert result.error is None
-
-
-# def test_create_query_user_error(requests_mock):
-#     rpc = RPC(SERVICE_URL, "api_key")
-#     result = requests_mock.post(
-#         rpc.url,
-#         text=json.dumps(
-#             create_query_run_response(
-#                 status=QueryStatus.Failed,
-#                 error=RpcError(
-#                     code=-51000,
-#                     message="error at line 10 of sql statement",
-#                     data={"stack": "error at line 10 of sql statement"},
-#                 ),
-#             )
-#         ),
-#         status_code=400,
-#         reason="OK",
-#     )
-
-#     q = CreateQueryRunRpcParams(
-#         resultTTLHours=1,
-#         maxAgeMinutes=5,
-#         sql="SELECT * FROM mytable",
-#         tags=tags,
-#         dataSource="snowflake-default",
-#         dataProvider="flipside",
-#     )
-
-#     try:
-#         rpc.create_query(q)
-#     except Exception as e:
-#         assert type(e) == UserError
-#         return
-
-#     assert "UserError not raised" == False
 
 
 def test_create_query_server_error(requests_mock):
@@ -149,37 +112,6 @@ def test_get_query_run_success(requests_mock):
     assert result.result is not None
     assert result.result.queryRun is not None
     assert result.error is None
-
-
-# def test_get_query_run_user_error(requests_mock):
-#     rpc = RPC(SERVICE_URL, "api_key")
-#     result = requests_mock.post(
-#         rpc.url,
-#         text=json.dumps(
-#             get_query_run_response(
-#                 status=QueryStatus.Failed,
-#                 error=RpcError(
-#                     code=-51000,
-#                     message="error at line 10 of sql statement",
-#                     data={"stack": "error at line 10 of sql statement"},
-#                 ),
-#             )
-#         ),
-#         status_code=400,
-#         reason="OK",
-#     )
-
-#     q = GetQueryRunRpcRequestParams(
-#         queryRunId="randomid",
-#     )
-
-#     try:
-#         rpc.get_query_run(q)
-#     except Exception as e:
-#         assert type(e) == UserError
-#         return
-
-#     assert "UserError not raised" == False
 
 
 def test_get_query_run_server_error(requests_mock):
@@ -240,38 +172,6 @@ def test_get_query_results_success(requests_mock):
     assert len(result.result.columnNames) == len(result.result.columnTypes)
     assert len(result.result.columnNames) == len(result.result.rows[0])
     assert result.error is None
-
-
-# def test_get_query_results_user_error(requests_mock):
-#     rpc = RPC(SERVICE_URL, "api_key")
-
-#     result = requests_mock.post(
-#         rpc.url,
-#         text=json.dumps(
-#             get_query_results_response(
-#                 status=QueryStatus.Failed,
-#                 error=RpcError(
-#                     code=-51000,
-#                     message="error at line 10 of sql statement",
-#                     data={"stack": "error at line 10 of sql statement"},
-#                 ),
-#             )
-#         ),
-#         status_code=200,
-#         reason="OK",
-#     )
-
-#     q = GetQueryRunResultsRpcParams(
-#         queryRunId="randomid", format=ResultFormat.csv, page=Page(size=1, number=1)
-#     )
-
-#     try:
-#         rpc.get_query_result(q)
-#     except Exception as e:
-#         assert type(e) == UserError
-#         return
-
-#     assert "UserError not raised" == False
 
 
 def test_get_query_results_server_error(requests_mock):

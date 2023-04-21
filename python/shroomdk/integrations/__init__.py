@@ -1,4 +1,1 @@
-from .query_integration import (  # noqa: F401
-    CompassQueryIntegration,
-    VelocityQueryIntegration,
-)
+from .query_integration import CompassQueryIntegration  # noqa: F401

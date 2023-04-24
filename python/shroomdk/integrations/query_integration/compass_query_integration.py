@@ -9,6 +9,7 @@ from shroomdk.errors import (
     SDKError,
     UserError,
 )
+from shroomdk.errors.query_run_errors import QueryRunInvalidStateToCancel
 from shroomdk.models import (
     Query,
     QueryDefaults,
@@ -16,6 +17,7 @@ from shroomdk.models import (
     QueryStatus,
     SleepConfig,
 )
+from shroomdk.models.compass.cancel_query_run import CancelQueryRunRpcRequestParams
 from shroomdk.models.compass.core.page import Page
 from shroomdk.models.compass.core.query_run import QueryRun
 from shroomdk.models.compass.core.result_format import ResultFormat
@@ -112,6 +114,19 @@ class CompassQueryIntegration(object):
 
         return response.result.queryRun
 
+    def cancel_query_run(self, query_run_id: str) -> QueryRun:
+        response = self.rpc.cancel_query_run(
+            CancelQueryRunRpcRequestParams(queryRunId=query_run_id)
+        )
+
+        if response.error or not response.result:
+            if response.error and response.error.code == -32165:
+                raise QueryRunInvalidStateToCancel(response.error.message)
+
+            raise NotFoundError(f"QueryRun<{query_run_id}> not found")
+
+        return response.result.queryRun
+
     def get_query_results(
         self,
         query_run_id: str,
@@ -146,16 +161,6 @@ class CompassQueryIntegration(object):
         filters: Optional[Union[List[Filter], None]] = [],
         sort_by: Optional[Union[List[SortBy], None]] = [],
     ) -> GetQueryRunResultsRpcResult:
-        # f2 = []
-        # if filters:
-        #     for f in filters:
-        #         d = f.dict()
-        #         d2 = {}
-        #         for k, v in d.items():
-        #             if v is not None:
-        #                 d2[k] = v
-        #         f2.append(Filter(**d2))
-
         query_results_resp = self.rpc.get_query_result(
             GetQueryRunResultsRpcParams(
                 queryRunId=query_run_id,

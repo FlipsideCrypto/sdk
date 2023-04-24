@@ -4,6 +4,11 @@ from typing import List
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
+from shroomdk.models.compass.cancel_query_run import (
+    CancelQueryRunRpcRequest,
+    CancelQueryRunRpcRequestParams,
+    CancelQueryRunRpcResponse,
+)
 from shroomdk.models.compass.get_sql_statement import (
     GetSqlStatementParams,
     GetSqlStatementRequest,
@@ -101,6 +106,21 @@ class RPC(object):
 
         return get_sql_statement_resp
 
+    def cancel_query_run(
+        self, params: CancelQueryRunRpcRequestParams
+    ) -> CancelQueryRunRpcResponse:
+        result = self._session.post(
+            self.url,
+            data=json.dumps(CancelQueryRunRpcRequest(params=[params]).dict()),
+            headers=self._headers,
+        )
+
+        data = self._handle_response(result, "cancelQueryRun")
+
+        cancel_query_run_resp = CancelQueryRunRpcResponse(**data)
+
+        return cancel_query_run_resp
+
     def get_query_result(
         self, params: GetQueryRunResultsRpcParams
     ) -> GetQueryRunResultsRpcResponse:
@@ -161,10 +181,10 @@ class RPC(object):
             allowed_methods=self._METHOD_ALLOWLIST,
         )
 
-        adapter = HTTPAdapter(max_retries=retry_strategy)  # type: ignore
-        http = requests.Session()
-        http.mount("https://", adapter)
-        http.mount("http://", adapter)
+        adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=1, pool_maxsize=1)  # type: ignore
+        session = requests.Session()
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
 
-        self.__session = http
+        self.__session = session
         return self.__session

@@ -51,3 +51,16 @@ class QueryRunCancelledError(BaseError):
     ):
         self.message = f"QUERY_RUN_CANCELLED_ERROR: your query has been cancelled. errorName={error_name}, errorMessage={error_message}, errorData={error_data}"
         super().__init__(self.message)
+
+
+class QueryRunInvalidStateToCancel(BaseError):
+    """
+    Base class for all QueryRunInvalidStateToCancel errors.
+    """
+
+    def __init__(
+        self,
+        msg: Optional[str] = None,
+    ):
+        self.message = msg
+        super().__init__(self.message)

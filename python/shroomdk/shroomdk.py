@@ -3,16 +3,14 @@ from typing import List, Optional, Union
 from shroomdk.integrations.query_integration.compass_query_integration import (
     CompassQueryIntegration,
 )
-from shroomdk.models import Query
+from shroomdk.models import Filter, Query, SortBy
 from shroomdk.models.compass.core.query_run import QueryRun
 from shroomdk.models.compass.core.sql_statement import SqlStatement
 from shroomdk.models.compass.get_sql_statement import GetSqlStatementParams
 from shroomdk.models.query_result_set import QueryResultSet
 from shroomdk.rpc import RPC
 
-from .models import Filter, SortBy
-
-API_BASE_URL = "https://rpc-prod.flompass.pizza"
+API_BASE_URL = "https://rpc.flipsidecrypto.com"
 
 SDK_VERSION = "2.0.0"
 SDK_PACKAGE = "python"
@@ -76,3 +74,6 @@ class ShroomDK(object):
 
     def get_sql_statement(self, sql_statement_id: str) -> SqlStatement:
         return self.query_integration.get_sql_statement(sql_statement_id)
+
+    def cancel_query_run(self, query_run_id: str) -> QueryRun:
+        return self.query_integration.cancel_query_run(query_run_id)

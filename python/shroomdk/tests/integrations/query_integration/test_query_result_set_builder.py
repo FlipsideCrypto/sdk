@@ -19,31 +19,6 @@ def getQueryResultSetData(status: str) -> dict:
         "query_run": query_run_resp.result.queryRun if query_run_resp.result else None,
         "query_result": query_result_resp.result if query_result_resp.result else None,
     }
-    # return QueryResultJson(
-    #     queryId="test",
-    #     status=status,
-    #     results=[
-    #         [1, "0x-tx-id-0", "0xfrom-address-0", True, 0.5],
-    #         [2, "0x-tx-id-1", "0xfrom-address-1", False, 0.75],
-    #         [3, "0x-tx-id-2", "0xfrom-address-2", False, 1.75],
-    #         [4, "0x-tx-id-3", "0xfrom-address-3", True, 100.001],
-    #     ],
-    #     startedAt="2022-05-19T00:00:00.00Z",
-    #     endedAt="2022-05-19T00:01:30.00Z",
-    #     columnLabels=[
-    #         "block_id",
-    #         "tx_id",
-    #         "from_address",
-    #         "succeeded",
-    #         "amount",
-    #     ],
-    #     columnTypes=["number", "string", "string", "boolean", "number"],
-    #     message="",
-    #     errors=None,
-    #     pageSize=100,
-    #     pageNumber=0,
-    #     recordCount=4,
-    # )
 
 
 def test_run_stats():

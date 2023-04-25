@@ -1,7 +1,6 @@
 import json
 
 from shroomdk.errors.server_error import ServerError
-from shroomdk.errors.user_error import UserError
 from shroomdk.models import Query, QueryStatus
 from shroomdk.models.compass.core.page import Page
 from shroomdk.models.compass.core.result_format import ResultFormat

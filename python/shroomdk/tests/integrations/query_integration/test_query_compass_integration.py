@@ -1,12 +1,12 @@
 import json
 
 from shroomdk.errors import (
+    ApiError,
+    QueryRunCancelledError,
     QueryRunExecutionError,
     QueryRunTimeoutError,
-    SDKError,
-    ServerError,
-    UserError,
 )
+from shroomdk.errors.api_error import error_codes
 from shroomdk.integrations import CompassQueryIntegration
 from shroomdk.integrations.query_integration.defaults import DEFAULTS
 from shroomdk.models import Query, QueryStatus
@@ -15,13 +15,14 @@ from shroomdk.rpc import RPC
 from shroomdk.tests.utils.mock_data.create_query_run import create_query_run_response
 from shroomdk.tests.utils.mock_data.get_query_results import get_query_results_response
 from shroomdk.tests.utils.mock_data.get_query_run import get_query_run_response
+from shroomdk.tests.utils.mock_data.get_sql_statement import get_sql_statement_response
 
 SDK_VERSION = "1.0.2"
 SDK_PACKAGE = "python"
 
 
 def get_rpc():
-    return RPC("https://compass.flipsidecrypto.xyz", "api_key")
+    return RPC("https://test.com", "api_key")
 
 
 def test_query_defaults():
@@ -52,130 +53,13 @@ def test_query_defaults():
     assert next_q.sdk_version == SDK_VERSION
 
 
-def test_run_failed_to_create_query(requests_mock):
+def test_query_success(requests_mock):
     rpc = get_rpc()
     qi = CompassQueryIntegration(rpc)
 
-    # Test User Error, 400 error
-    q = Query(sql="", ttl_minutes=5, page_number=5, page_size=10, sdk_package=SDK_PACKAGE, sdk_version=SDK_VERSION)  # type: ignore
-    requests_mock.post(
-        rpc.url,
-        text=json.dumps(
-            create_query_run_response(
-                status=QueryStatus.Failed,
-                error=RpcError(
-                    code=-51000,
-                    message="error at line 10 of sql statement",
-                    data={"stack": "error at line 10 of sql statement"},
-                ),
-            )
-        ),
-        status_code=400,
-        reason="User Error",
-    )
-
-    try:
-        qi.run(q)
-    except Exception as e:
-        assert type(e) == UserError
-
-    # Test Server Error: 500 error
-    requests_mock.post(
-        rpc.url,
-        text="{err:",
-        status_code=500,
-        reason="Server Error",
-    )
-
-    try:
-        qi.run(q)
-    except Exception as e:
-        assert type(e) == ServerError
-
-    # Unknown SDK Error
-    requests_mock.post(
-        rpc.url,
-        text=json.dumps(
-            create_query_run_response(
-                status=QueryStatus.Ready,
-                result_null=True,
-            )
-        ),
-        status_code=200,
-        reason="ok",
-    )
-
-    try:
-        qi.run(q)
-    except Exception as e:
-        assert type(e) == SDKError  # pydantic.error_wrappers.ValidationError
-
-
-def test_get_query_run_query(requests_mock):
-    rpc = get_rpc()
-    qi = CompassQueryIntegration(rpc)
-
-    query_id = "test_query_id"
     page_number = 1
     page_size = 10
 
-    # Query Execution Error
-    requests_mock.reset()
-    result = requests_mock.post(
-        rpc.url,
-        text=json.dumps(
-            get_query_run_response(
-                status=QueryStatus.Failed,
-                error=RpcError(
-                    code=-51000,
-                    message="error at line 10 of sql statement",
-                    data={"stack": "error at line 10 of sql statement"},
-                ),
-            )
-        ),
-        status_code=400,
-        reason="not ok",
-    )
-
-    try:
-        result = qi._get_query_run_loop(
-            "test_query_id",
-            page_number=page_number,
-            page_size=page_size,
-            attempts=0,
-            timeout_minutes=1,
-            retry_interval_seconds=0.0001,
-        )
-    except Exception as e:
-        assert type(e) == QueryRunExecutionError
-
-    # Query User Error
-    requests_mock.reset()
-    result = requests_mock.post(
-        rpc.url,
-        text=json.dumps(
-            get_query_run_response(
-                status=QueryStatus.Ready,
-                error=RpcError(code=-52000, message="Query Run Not Found", data={}),
-            )
-        ),
-        status_code=404,
-        reason="not ok",
-    )
-
-    try:
-        result = qi._get_query_run_loop(
-            "test_query_id",
-            page_number=page_number,
-            page_size=page_size,
-            attempts=0,
-            timeout_minutes=1,
-            retry_interval_seconds=0.0001,
-        )
-    except Exception as e:
-        assert type(e) == UserError
-
-    # Query Status: Finished
     requests_mock.reset()
     result = requests_mock.post(
         rpc.url,
@@ -199,7 +83,80 @@ def test_get_query_run_query(requests_mock):
     assert result is not None
     assert result.state == QueryStatus.Success
 
-    # Query Timeout
+
+def test_query_failed(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    page_number = 1
+    page_size = 10
+
+    # Query Execution Error
+    requests_mock.reset()
+    result = requests_mock.post(
+        rpc.url,
+        text=json.dumps(
+            get_query_run_response(
+                status=QueryStatus.Failed,
+            )
+        ),
+        status_code=200,
+        reason="OK",
+    )
+
+    try:
+        result = qi._get_query_run_loop(
+            "test_query_id",
+            page_number=page_number,
+            page_size=page_size,
+            attempts=0,
+            timeout_minutes=1,
+            retry_interval_seconds=0.0001,
+        )
+    except Exception as e:
+        assert type(e) == QueryRunExecutionError
+
+
+def test_query_cancelled(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    page_number = 1
+    page_size = 10
+
+    # Query Execution Error
+    requests_mock.reset()
+    result = requests_mock.post(
+        rpc.url,
+        text=json.dumps(
+            get_query_run_response(
+                status=QueryStatus.Canceled,
+            )
+        ),
+        status_code=200,
+        reason="OK",
+    )
+
+    try:
+        qi._get_query_run_loop(
+            "test_query_id",
+            page_number=page_number,
+            page_size=page_size,
+            attempts=0,
+            timeout_minutes=1,
+            retry_interval_seconds=0.0001,
+        )
+    except Exception as e:
+        assert type(e) == QueryRunCancelledError
+
+
+def test_query_timeout(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    page_number = 1
+    page_size = 10
+
     requests_mock.reset()
     result = requests_mock.post(
         rpc.url,
@@ -225,7 +182,42 @@ def test_get_query_run_query(requests_mock):
         assert type(e) == QueryRunTimeoutError
 
 
-def test_get_query_results(requests_mock):
+def test_api_error_codes(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    page_number = 1
+    page_size = 10
+
+    for key, value in error_codes.items():
+
+        requests_mock.reset()
+        result = requests_mock.post(
+            rpc.url,
+            text=json.dumps(
+                get_query_run_response(
+                    status=QueryStatus.Running,
+                    error=RpcError(code=value, message="", data={}),
+                )
+            ),
+            status_code=200,
+            reason="OK",
+        )
+
+        try:
+            qi._get_query_run_loop(
+                f"test_query_{key}",
+                page_number=page_number,
+                page_size=page_size,
+                attempts=0,
+                timeout_minutes=0.1,
+                retry_interval_seconds=0.0001,
+            )
+        except Exception as e:
+            assert type(e) == ApiError
+
+
+def test_get_private_query_results(requests_mock):
     rpc = get_rpc()
     qi = CompassQueryIntegration(rpc)
 
@@ -262,39 +254,92 @@ def test_get_query_results(requests_mock):
                 ),
             )
         ),
-        status_code=404,
-        reason="not ok",
+        status_code=200,
+        reason="ok",
     )
 
     try:
         result = qi._get_query_results("test_query_id")
     except Exception as e:
-        assert type(e) == UserError
+        assert type(e) == ApiError
 
 
-# def getQueryResultSetData(status: str) -> QueryResultJson:
-#     return QueryResultJson(
-#         queryId="test",
-#         status=status,
-#         results=[
-#             [1, "0x-tx-id-0", "0xfrom-address-0", True, 0.5],
-#             [2, "0x-tx-id-1", "0xfrom-address-1", False, 0.75],
-#             [3, "0x-tx-id-2", "0xfrom-address-2", False, 1.75],
-#             [4, "0x-tx-id-3", "0xfrom-address-3", True, 100.001],
-#         ],
-#         startedAt="2022-05-19T00:00:00.00Z",
-#         endedAt="2022-05-19T00:01:30.00Z",
-#         columnLabels=[
-#             "block_id",
-#             "tx_id",
-#             "from_address",
-#             "succeeded",
-#             "amount",
-#         ],
-#         columnTypes=["number", "string", "string", "boolean", "number"],
-#         message="",
-#         errors=None,
-#         pageSize=100,
-#         pageNumber=0,
-#         recordCount=4,
-#     )
+def test_cancel_query_run(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    requests_mock.reset()
+    result = requests_mock.post(
+        rpc.url,
+        text=json.dumps(
+            get_query_run_response(
+                status=QueryStatus.Success,
+            )
+        ),
+        status_code=200,
+        reason="ok",
+    )
+
+    result = qi.cancel_query_run("cancel_query_run_id")
+    assert result is not None
+
+
+def test_get_query_results(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    requests_mock.reset()
+    result = requests_mock.post(
+        rpc.url,
+        text=json.dumps(
+            get_query_results_response(
+                status=QueryStatus.Success,
+            )
+        ),
+        status_code=200,
+        reason="ok",
+    )
+
+    result = qi.get_query_results("get_query_results_id")
+    assert result is not None
+
+
+def test_get_query_run(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    requests_mock.reset()
+    result = requests_mock.post(
+        rpc.url,
+        text=json.dumps(
+            get_query_run_response(
+                status=QueryStatus.Success,
+            )
+        ),
+        status_code=200,
+        reason="ok",
+    )
+
+    result = qi.get_query_run("get_query_run_id")
+    assert result is not None
+
+
+def test_get_sql_statement(requests_mock):
+    rpc = get_rpc()
+    qi = CompassQueryIntegration(rpc)
+
+    sql_id = "get_sql_statement_id"
+    requests_mock.reset()
+    result = requests_mock.post(
+        rpc.url,
+        text=json.dumps(
+            get_sql_statement_response(
+                id=sql_id,
+            )
+        ),
+        status_code=200,
+        reason="ok",
+    )
+
+    result = qi.get_sql_statement(sql_id)
+    assert result.id == sql_id

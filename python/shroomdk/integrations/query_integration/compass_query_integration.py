@@ -2,13 +2,12 @@ import json
 from typing import List, Optional, Union
 
 from shroomdk.errors import (
-    NotFoundError,
     QueryRunCancelledError,
     QueryRunExecutionError,
     QueryRunTimeoutError,
     SDKError,
-    UserError,
 )
+from shroomdk.errors.api_error import get_exception_by_error_code
 from shroomdk.errors.query_run_errors import QueryRunInvalidStateToCancel
 from shroomdk.models import (
     Query,
@@ -65,9 +64,9 @@ class CompassQueryIntegration(object):
         )
         created_query = self.rpc.create_query(create_query_run_params)
         if created_query.error:
-            raise UserError(
-                status_code=created_query.error.code,
-                message=f"{created_query.error.message}: {json.dumps(created_query.error.dict())}",
+            raise get_exception_by_error_code(
+                error_code=created_query.error.code if created_query.error else None,
+                message=created_query.error.message if created_query.error else None,
             )
 
         if not created_query.result or not created_query.result.queryRun:
@@ -100,7 +99,10 @@ class CompassQueryIntegration(object):
         )
 
         if response.error or not response.result:
-            raise NotFoundError(f"SQLStatement<{sql_statement_id}> not found")
+            raise get_exception_by_error_code(
+                error_code=response.error.code if response.error else None,
+                message=response.error.message if response.error else None,
+            )
 
         return response.result.sqlStatement
 
@@ -110,7 +112,10 @@ class CompassQueryIntegration(object):
         )
 
         if response.error or not response.result:
-            raise NotFoundError(f"QueryRun<{query_run_id}> not found")
+            raise get_exception_by_error_code(
+                error_code=response.error.code if response.error else None,
+                message=response.error.message if response.error else None,
+            )
 
         return response.result.queryRun
 
@@ -118,12 +123,11 @@ class CompassQueryIntegration(object):
         response = self.rpc.cancel_query_run(
             CancelQueryRunRpcRequestParams(queryRunId=query_run_id)
         )
-
         if response.error or not response.result:
-            if response.error and response.error.code == -32165:
-                raise QueryRunInvalidStateToCancel(response.error.message)
-
-            raise NotFoundError(f"QueryRun<{query_run_id}> not found")
+            raise get_exception_by_error_code(
+                error_code=response.error.code if response.error else None,
+                message=response.error.message if response.error else None,
+            )
 
         return response.result.queryRun
 
@@ -148,6 +152,7 @@ class CompassQueryIntegration(object):
             if query_result.redirectedToQueryRun
             else query_result.originalQueryRun
         )
+
         return QueryResultSetBuilder(
             query_run=query_run,
             query_result=query_result,
@@ -175,9 +180,13 @@ class CompassQueryIntegration(object):
         )
 
         if query_results_resp.error:
-            raise UserError(
-                status_code=query_results_resp.error.code,
-                message=f"{query_results_resp.error.message}: {json.dumps(query_results_resp.error.dict())}",
+            raise get_exception_by_error_code(
+                error_code=query_results_resp.error.code
+                if query_results_resp.error
+                else None,
+                message=query_results_resp.error.message
+                if query_results_resp.error
+                else None,
             )
 
         if not query_results_resp.result:
@@ -203,10 +212,19 @@ class CompassQueryIntegration(object):
         timeout_minutes: Union[int, float] = 20,
         retry_interval_seconds: Union[int, float] = 1.0,
     ) -> QueryRun:
-
         query_run_rpc_resp = self.rpc.get_query_run(
             GetQueryRunRpcRequestParams(queryRunId=query_run_id)
         )
+
+        if query_run_rpc_resp.error:
+            raise get_exception_by_error_code(
+                error_code=query_run_rpc_resp.error.code
+                if query_run_rpc_resp.error
+                else None,
+                message=query_run_rpc_resp.error.message
+                if query_run_rpc_resp.error
+                else None,
+            )
 
         if not query_run_rpc_resp.result:
             raise SDKError(
@@ -224,11 +242,6 @@ class CompassQueryIntegration(object):
                 error_message=query_run.errorMessage,
                 error_name=query_run.errorName,
                 error_data=query_run.errorData,
-            )
-        elif query_status != QueryStatus.Failed and query_run_rpc_resp.error:
-            raise UserError(
-                status_code=query_run_rpc_resp.error.code,
-                message=f"{query_run_rpc_resp.error.message}: {json.dumps(query_run_rpc_resp.error.dict())}",
             )
 
         if query_status == QueryStatus.Canceled:

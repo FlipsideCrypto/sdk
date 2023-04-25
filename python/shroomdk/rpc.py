@@ -1,5 +1,4 @@
 import json
-from random import randint
 from typing import List
 
 import requests
@@ -16,7 +15,6 @@ from shroomdk.models.compass.get_sql_statement import (
 )
 
 from .errors.server_error import ServerError
-from .errors.user_error import UserError
 from .models.compass.create_query_run import (
     CreateQueryRunRpcParams,
     CreateQueryRunRpcRequest,
@@ -64,75 +62,71 @@ class RPC(object):
     def create_query(
         self, params: CreateQueryRunRpcParams
     ) -> CreateQueryRunRpcResponse:
-        result = self._session.post(
+        with self.session.post(
             self.url,
             data=json.dumps(CreateQueryRunRpcRequest(params=[params]).dict()),
             headers=self._headers,
-        )
+        ) as result:
+            data = self._handle_response(result, "createQueryRun")
 
-        data = self._handle_response(result, "createQueryRun")
+            create_query_resp = CreateQueryRunRpcResponse(**data)
 
-        create_query_resp = CreateQueryRunRpcResponse(**data)
-
-        return create_query_resp
+            return create_query_resp
 
     def get_query_run(
         self, params: GetQueryRunRpcRequestParams
     ) -> GetQueryRunRpcResponse:
-        result = self._session.post(
+        with self.session.post(
             self.url,
             data=json.dumps(GetQueryRunRpcRequest(params=[params]).dict()),
             headers=self._headers,
-        )
+        ) as result:
 
-        data = self._handle_response(result, "getQueryRun")
+            data = self._handle_response(result, "getQueryRun")
 
-        get_query_run_resp = GetQueryRunRpcResponse(**data)
+            get_query_run_resp = GetQueryRunRpcResponse(**data)
 
-        return get_query_run_resp
+            return get_query_run_resp
 
     def get_sql_statement(
         self, params: GetSqlStatementParams
     ) -> GetSqlStatementResponse:
-        result = self._session.post(
+        with self.session.post(
             self.url,
             data=json.dumps(GetSqlStatementRequest(params=[params]).dict()),
             headers=self._headers,
-        )
+        ) as result:
+            data = self._handle_response(result, "getSqlStatement")
 
-        data = self._handle_response(result, "getSqlStatement")
+            get_sql_statement_resp = GetSqlStatementResponse(**data)
 
-        get_sql_statement_resp = GetSqlStatementResponse(**data)
-
-        return get_sql_statement_resp
+            return get_sql_statement_resp
 
     def cancel_query_run(
         self, params: CancelQueryRunRpcRequestParams
     ) -> CancelQueryRunRpcResponse:
-        result = self._session.post(
+        with self.session.post(
             self.url,
             data=json.dumps(CancelQueryRunRpcRequest(params=[params]).dict()),
             headers=self._headers,
-        )
+        ) as result:
+            data = self._handle_response(result, "cancelQueryRun")
 
-        data = self._handle_response(result, "cancelQueryRun")
+            cancel_query_run_resp = CancelQueryRunRpcResponse(**data)
 
-        cancel_query_run_resp = CancelQueryRunRpcResponse(**data)
-
-        return cancel_query_run_resp
+            return cancel_query_run_resp
 
     def get_query_result(
         self, params: GetQueryRunResultsRpcParams
     ) -> GetQueryRunResultsRpcResponse:
-        result = self._session.post(
+        with self.session.post(
             self.url,
             data=json.dumps(GetQueryRunResultsRpcRequest(params=[params]).dict()),
             headers=self._headers,
-        )
-
-        data = self._handle_response(result, "getQueryRunResults")
-        get_query_run_results_resp = GetQueryRunResultsRpcResponse(**data)
-        return get_query_run_results_resp
+        ) as result:
+            data = self._handle_response(result, "getQueryRunResults")
+            get_query_run_results_resp = GetQueryRunResultsRpcResponse(**data)
+            return get_query_run_results_resp
 
     def _handle_response(self, result: requests.Response, method: str) -> dict:
         if result.status_code is None:
@@ -170,10 +164,7 @@ class RPC(object):
         return f"{self._base_url}/json-rpc"
 
     @property
-    def _session(self) -> requests.Session:
-        if hasattr(self, "__session"):
-            return self._session
-
+    def session(self) -> requests.Session:
         retry_strategy = Retry(
             total=self._MAX_RETRIES,
             backoff_factor=self._BACKOFF_FACTOR,  # type: ignore
@@ -181,10 +172,9 @@ class RPC(object):
             allowed_methods=self._METHOD_ALLOWLIST,
         )
 
-        adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=1, pool_maxsize=1)  # type: ignore
+        adapter = HTTPAdapter(max_retries=retry_strategy)  # type: ignore
         session = requests.Session()
         session.mount("https://", adapter)
         session.mount("http://", adapter)
 
-        self.__session = session
-        return self.__session
+        return session

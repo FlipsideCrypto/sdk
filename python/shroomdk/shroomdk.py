@@ -6,11 +6,13 @@ from shroomdk.integrations.query_integration.compass_query_integration import (
 from shroomdk.models import Filter, Query, SortBy
 from shroomdk.models.compass.core.query_run import QueryRun
 from shroomdk.models.compass.core.sql_statement import SqlStatement
-from shroomdk.models.compass.get_sql_statement import GetSqlStatementParams
 from shroomdk.models.query_result_set import QueryResultSet
 from shroomdk.rpc import RPC
 
 API_BASE_URL = "https://rpc.flipsidecrypto.com"
+
+DEFAULT_DATA_SOURCE = "snowflake-default"
+DEFAULT_DATA_PROVIDER = "flipside"
 
 SDK_VERSION = "2.0.0"
 SDK_PACKAGE = "python"
@@ -18,21 +20,23 @@ SDK_PACKAGE = "python"
 
 class ShroomDK(object):
     def __init__(self, api_key: str, api_base_url: str = API_BASE_URL):
+        if "api." in api_base_url.lower():
+            api_base_url = API_BASE_URL
         self.rpc = RPC(api_base_url, api_key)
         self.query_integration = CompassQueryIntegration(self.rpc)
 
     def query(
         self,
         sql,
-        ttl_minutes=60,
-        max_age_minutes=60,
+        ttl_minutes=30,
+        max_age_minutes=0,
         cached=True,
         timeout_minutes=20,
         retry_interval_seconds=1,
         page_size=100000,
         page_number=1,
-        data_source="snowflake-default",
-        data_provider="flipside",
+        data_source=DEFAULT_DATA_SOURCE,
+        data_provider=DEFAULT_DATA_PROVIDER,
     ) -> QueryResultSet:
         query_integration = CompassQueryIntegration(self.rpc)
 
@@ -77,3 +81,7 @@ class ShroomDK(object):
 
     def cancel_query_run(self, query_run_id: str) -> QueryRun:
         return self.query_integration.cancel_query_run(query_run_id)
+
+
+class Flipside(ShroomDK):
+    pass

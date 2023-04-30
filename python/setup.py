@@ -18,7 +18,7 @@ setup(
     version=version,
     author="dev@flipsidecrypto.com",
     author_email="dev@flipsidecrypto.com",
-    description="ShroomDK (SDK) by Flipside Crypto: Query the most comprehensive blockchain data in crypto",
+    description="SDK by Flipside Crypto: Query the most reliable & comprehensive blockchain data in crypto",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/FlipsideCrypto/sdk/python",

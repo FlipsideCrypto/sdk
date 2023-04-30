@@ -3,34 +3,6 @@ class ApiError(Exception):
         super().__init__(f"{name}: message={message}, code={code}")
 
 
-# class MethodValidationError(RpcError):
-#     pass
-
-
-# class QueryRunNotFound(RpcError):
-#     pass
-
-
-# class SqlStatementNotFound(RpcError):
-#     pass
-
-
-# class TemporalError(RpcError):
-#     pass
-
-
-# class QueryRunNotFinished(RpcError):
-#     pass
-
-
-# class ResultTransformError(RpcError):
-#     pass
-
-
-# class RowCountCouldNotBeComputed(RpcError):
-#     pass
-
-
 error_codes = {
     "MethodValidationError": -32000,
     "QueryRunNotFound": -32099,

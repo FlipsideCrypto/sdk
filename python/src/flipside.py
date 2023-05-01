@@ -1,13 +1,13 @@
 from typing import List, Optional, Union
 
-from shroomdk.integrations.query_integration.compass_query_integration import (
+from .integrations.query_integration.compass_query_integration import (
     CompassQueryIntegration,
 )
-from shroomdk.models import Filter, Query, SortBy
-from shroomdk.models.compass.core.query_run import QueryRun
-from shroomdk.models.compass.core.sql_statement import SqlStatement
-from shroomdk.models.query_result_set import QueryResultSet
-from shroomdk.rpc import RPC
+from .models import Filter, Query, SortBy
+from .models.compass.core.query_run import QueryRun
+from .models.compass.core.sql_statement import SqlStatement
+from .models.query_result_set import QueryResultSet
+from .rpc import RPC
 
 API_BASE_URL = "https://rpc.flipsidecrypto.com"
 
@@ -18,7 +18,7 @@ SDK_VERSION = "2.0.0"
 SDK_PACKAGE = "python"
 
 
-class ShroomDK(object):
+class Flipside(object):
     def __init__(self, api_key: str, api_base_url: str = API_BASE_URL):
         if "api." in api_base_url.lower():
             api_base_url = API_BASE_URL
@@ -83,5 +83,5 @@ class ShroomDK(object):
         return self.query_integration.cancel_query_run(query_run_id)
 
 
-class Flipside(ShroomDK):
+class ShroomDK(Flipside):
     pass

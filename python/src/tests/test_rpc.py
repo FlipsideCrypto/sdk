@@ -1,16 +1,15 @@
 import json
 
-from shroomdk.errors.server_error import ServerError
-from shroomdk.models import Query, QueryStatus
-from shroomdk.models.compass.core.page import Page
-from shroomdk.models.compass.core.result_format import ResultFormat
-from shroomdk.models.compass.core.rpc_error import RpcError
-from shroomdk.models.compass.core.tags import Tags
-from shroomdk.models.compass.create_query_run import CreateQueryRunRpcParams
-from shroomdk.models.compass.get_query_run import GetQueryRunRpcRequestParams
-from shroomdk.models.compass.get_query_run_results import GetQueryRunResultsRpcParams
-from shroomdk.rpc import RPC
-
+from ..errors.server_error import ServerError
+from ..models import Query, QueryStatus
+from ..models.compass.core.page import Page
+from ..models.compass.core.result_format import ResultFormat
+from ..models.compass.core.rpc_error import RpcError
+from ..models.compass.core.tags import Tags
+from ..models.compass.create_query_run import CreateQueryRunRpcParams
+from ..models.compass.get_query_run import GetQueryRunRpcRequestParams
+from ..models.compass.get_query_run_results import GetQueryRunResultsRpcParams
+from ..rpc import RPC
 from .utils.mock_data.create_query_run import create_query_run_response
 from .utils.mock_data.get_query_results import get_query_results_response
 from .utils.mock_data.get_query_run import get_query_run_response

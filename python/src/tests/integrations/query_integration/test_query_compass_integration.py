@@ -1,21 +1,21 @@
 import json
 
-from shroomdk.errors import (
+from ....errors import (
     ApiError,
     QueryRunCancelledError,
     QueryRunExecutionError,
     QueryRunTimeoutError,
 )
-from shroomdk.errors.api_error import error_codes
-from shroomdk.integrations import CompassQueryIntegration
-from shroomdk.integrations.query_integration.defaults import DEFAULTS
-from shroomdk.models import Query, QueryStatus
-from shroomdk.models.compass.core.rpc_error import RpcError
-from shroomdk.rpc import RPC
-from shroomdk.tests.utils.mock_data.create_query_run import create_query_run_response
-from shroomdk.tests.utils.mock_data.get_query_results import get_query_results_response
-from shroomdk.tests.utils.mock_data.get_query_run import get_query_run_response
-from shroomdk.tests.utils.mock_data.get_sql_statement import get_sql_statement_response
+from ....errors.api_error import error_codes
+from ....integrations import CompassQueryIntegration
+from ....integrations.query_integration.defaults import DEFAULTS
+from ....models import Query, QueryStatus
+from ....models.compass.core.rpc_error import RpcError
+from ....rpc import RPC
+from ...utils.mock_data.create_query_run import create_query_run_response
+from ...utils.mock_data.get_query_results import get_query_results_response
+from ...utils.mock_data.get_query_run import get_query_run_response
+from ...utils.mock_data.get_sql_statement import get_sql_statement_response
 
 SDK_VERSION = "1.0.2"
 SDK_PACKAGE = "python"

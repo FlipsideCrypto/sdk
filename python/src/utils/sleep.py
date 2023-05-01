@@ -1,7 +1,7 @@
 import time
 from typing import Union
 
-from shroomdk.models.sleep_config import SleepConfig
+from ..models.sleep_config import SleepConfig
 
 
 def sec_to_ms(sec: int):
@@ -12,7 +12,9 @@ def get_exp_backoff_seconds(attempts: Union[int, float]):
     return 2**attempts
 
 
-def get_linear_backoff_seconds(attempts: Union[int, float], interval_seconds: Union[int, float]):
+def get_linear_backoff_seconds(
+    attempts: Union[int, float], interval_seconds: Union[int, float]
+):
     return (attempts + 1) * interval_seconds
 
 

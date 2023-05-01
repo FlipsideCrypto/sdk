@@ -1,4 +1,4 @@
-from shroomdk.models.query_status import (
+from ...models.query_status import (
     QueryStatus,
     QueryStatusCanceled,
     QueryStatusFailed,

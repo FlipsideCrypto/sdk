@@ -1,4 +1,4 @@
-from shroomdk.models import QueryDefaults
+from ...models import QueryDefaults
 
 DEFAULTS: QueryDefaults = QueryDefaults(
     ttl_minutes=60,

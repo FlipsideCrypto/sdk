@@ -1,5 +1,5 @@
-from shroomdk.models.sleep_config import SleepConfig
-from shroomdk.utils.sleep import (
+from ...models.sleep_config import SleepConfig
+from ...utils.sleep import (
     exp_backoff,
     get_elapsed_exp_seconds,
     get_elapsed_linear_seconds,

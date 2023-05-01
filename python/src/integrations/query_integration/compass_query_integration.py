@@ -1,39 +1,32 @@
 import json
 from typing import List, Optional, Union
 
-from shroomdk.errors import (
+from ...errors import (
     QueryRunCancelledError,
     QueryRunExecutionError,
     QueryRunTimeoutError,
     SDKError,
 )
-from shroomdk.errors.api_error import get_exception_by_error_code
-from shroomdk.errors.query_run_errors import QueryRunInvalidStateToCancel
-from shroomdk.models import (
-    Query,
-    QueryDefaults,
-    QueryResultSet,
-    QueryStatus,
-    SleepConfig,
-)
-from shroomdk.models.compass.cancel_query_run import CancelQueryRunRpcRequestParams
-from shroomdk.models.compass.core.page import Page
-from shroomdk.models.compass.core.query_run import QueryRun
-from shroomdk.models.compass.core.result_format import ResultFormat
-from shroomdk.models.compass.core.sql_statement import SqlStatement
-from shroomdk.models.compass.core.tags import Tags
-from shroomdk.models.compass.create_query_run import CreateQueryRunRpcParams
-from shroomdk.models.compass.get_query_run import GetQueryRunRpcRequestParams
-from shroomdk.models.compass.get_query_run_results import (
+from ...errors.api_error import get_exception_by_error_code
+from ...errors.query_run_errors import QueryRunInvalidStateToCancel
+from ...models import Query, QueryDefaults, QueryResultSet, QueryStatus, SleepConfig
+from ...models.compass.cancel_query_run import CancelQueryRunRpcRequestParams
+from ...models.compass.core.page import Page
+from ...models.compass.core.query_run import QueryRun
+from ...models.compass.core.result_format import ResultFormat
+from ...models.compass.core.sql_statement import SqlStatement
+from ...models.compass.core.tags import Tags
+from ...models.compass.create_query_run import CreateQueryRunRpcParams
+from ...models.compass.get_query_run import GetQueryRunRpcRequestParams
+from ...models.compass.get_query_run_results import (
     Filter,
     GetQueryRunResultsRpcParams,
     GetQueryRunResultsRpcResult,
     SortBy,
 )
-from shroomdk.models.compass.get_sql_statement import GetSqlStatementParams
-from shroomdk.rpc import RPC
-from shroomdk.utils.sleep import get_elapsed_linear_seconds, linear_backoff
-
+from ...models.compass.get_sql_statement import GetSqlStatementParams
+from ...rpc import RPC
+from ...utils.sleep import get_elapsed_linear_seconds, linear_backoff
 from .defaults import DEFAULTS
 from .query_result_set_builder import QueryResultSetBuilder
 

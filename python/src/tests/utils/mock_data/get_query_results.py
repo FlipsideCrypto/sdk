@@ -1,7 +1,7 @@
 from typing import Union
 
-from shroomdk.models.compass.core.rpc_error import RpcError
-from shroomdk.models.query_status import QueryStatus
+from ....models.compass.core.rpc_error import RpcError
+from ....models.query_status import QueryStatus
 
 
 def get_query_results_response(

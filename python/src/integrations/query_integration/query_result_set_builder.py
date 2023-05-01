@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List, Union
 
-from shroomdk.models import QueryResultSet, QueryRunStats
-from shroomdk.models.compass.core.query_run import QueryRun
-from shroomdk.models.compass.get_query_run_results import GetQueryRunResultsRpcResult
+from ...models import QueryResultSet, QueryRunStats
+from ...models.compass.core.query_run import QueryRun
+from ...models.compass.get_query_run_results import GetQueryRunResultsRpcResult
 
 
 class QueryResultSetBuilder(object):

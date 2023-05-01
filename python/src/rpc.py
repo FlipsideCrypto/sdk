@@ -3,18 +3,13 @@ from typing import List
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
-from shroomdk.models.compass.cancel_query_run import (
+
+from .errors.server_error import ServerError
+from .models.compass.cancel_query_run import (
     CancelQueryRunRpcRequest,
     CancelQueryRunRpcRequestParams,
     CancelQueryRunRpcResponse,
 )
-from shroomdk.models.compass.get_sql_statement import (
-    GetSqlStatementParams,
-    GetSqlStatementRequest,
-    GetSqlStatementResponse,
-)
-
-from .errors.server_error import ServerError
 from .models.compass.create_query_run import (
     CreateQueryRunRpcParams,
     CreateQueryRunRpcRequest,
@@ -29,6 +24,11 @@ from .models.compass.get_query_run_results import (
     GetQueryRunResultsRpcParams,
     GetQueryRunResultsRpcRequest,
     GetQueryRunResultsRpcResponse,
+)
+from .models.compass.get_sql_statement import (
+    GetSqlStatementParams,
+    GetSqlStatementRequest,
+    GetSqlStatementResponse,
 )
 
 

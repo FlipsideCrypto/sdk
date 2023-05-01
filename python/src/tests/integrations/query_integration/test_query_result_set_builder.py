@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from shroomdk.integrations.query_integration.query_result_set_builder import (
+from ....integrations.query_integration.query_result_set_builder import (
     QueryResultSetBuilder,
 )
-from shroomdk.models.compass.get_query_run import GetQueryRunRpcResponse
-from shroomdk.models.compass.get_query_run_results import GetQueryRunResultsRpcResponse
-from shroomdk.models.query_status import QueryStatus
-from shroomdk.tests.utils.mock_data.get_query_results import get_query_results_response
-from shroomdk.tests.utils.mock_data.get_query_run import get_query_run_response
+from ....models.compass.get_query_run import GetQueryRunRpcResponse
+from ....models.compass.get_query_run_results import GetQueryRunResultsRpcResponse
+from ....models.query_status import QueryStatus
+from ...utils.mock_data.get_query_results import get_query_results_response
+from ...utils.mock_data.get_query_run import get_query_run_response
 
 
 def getQueryResultSetData(status: str) -> dict:

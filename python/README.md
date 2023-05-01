@@ -1,14 +1,14 @@
-# Python SDK for ShroomDK, by Flipside Crypto
+# Python SDK for the Flipside API, by Flipside Crypto
 
 [![Python Continuous Testing](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml)
 
-ShroomDK (SDK), by Flipside Crypto gives you programmatic query access to the most comprehensive blockchain data sets in Web3, for free. More details on ShroomDK [here](https://sdk.flipsidecrypto.xyz).🥳
+SDK, by Flipside Crypto gives you programmatic query access to the most reliable & comprehensive blockchain data sets in Web3, for free. More details on the SDK/API [here](https://data.flipsidecrypto.xyz).🥳
 
 ### Contents:
 
 [📖 Official Docs](https://github.com/FlipsideCrypto/sdk/tree/main/python#-official-docs)
 
-[🧩 The Data](https://github.com/FlipsideCrypto/sdk/tree/main/python#-the-data)
+[🧩 The Data](https://flipsidecrypto.xyz)
 
 [💾 Install the SDK](https://github.com/FlipsideCrypto/sdk/tree/main/python#-install-the-sdk)
 
@@ -30,15 +30,13 @@ ShroomDK (SDK), by Flipside Crypto gives you programmatic query access to the mo
 [https://docs.flipsidecrypto.com/shroomdk-sdk/sdks/python](https://docs.flipsidecrypto.com/shroomdk-sdk/sdks/python)
 
 ## 🧩 The Data
-Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Visual Query Editor/Dashboard Builder](https://flipside.new) product can be queried programmatically using ShroomDK. 
-
-![blockchains available to query](https://sdk.flipsidecrypto.xyz/media/shroomdk/blockchains.png)
+Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Data Studio](https://flipside.new) can be queried programmatically using the SDK. 
 
 
 ## 💾 Install the SDK
-<strong>Python 3.7 and above, is required to use `shroomdk`</strong>
+<strong>Python 3.7 and above, is required to use the Flipside `SDK`</strong>
 
-<em>If you don't already have an API Key mint one [here](https://sdk.flipsidecrypto.xyz).</em>
+<em>If you don't already have an API Key generate one [here](https://sdk.flipsidecrypto.xyz).</em>
 ```bash
 pip install shroomdk
 ```
@@ -109,7 +107,7 @@ Now let's execute the query and retrieve the first 5 rows of the result set. Not
 ```python
 query_result_set = sdk.query(
     sql,
-    ttl_minutes=60,
+    ttl_minutes=30,
     cached=True,
     timeout_minutes=20,
     retry_interval_seconds=1,
@@ -119,24 +117,19 @@ query_result_set = sdk.query(
 ```
 
 #### Caching
-The results of this query will be cached for 60 minutes since the `ttl_minutes` parameter is set to 60. 
+The results of this query will be cached for 30 minutes since the `ttl_minutes` parameter is set to 30. 
 
 #### 📄 Pagination 
 If we wanted to retrieve the next 5 rows of the query result set simply increment the `page_number` to 2 and run:
 ```python
-query_result_set = sdk.query(
-    sql,
-    ttl_minutes=60,
-    cached=True,
-    timeout_minutes=20,
-    retry_interval_seconds=1,
-    page_size=5,
-    page_number=2
+page2_results = sdk.get_query_results(
+    query_result_set.query_id,
+    page_number=2,
+    page_size=5
 )
 ```
-<em>Note! This will not use up your daily query quota since the query results are cached (in accordance with the TTL) and we're not re-running the SQL just retrieving a slice of the overall result set.</em>
 
-All query runs can return a maximum of 1,000,000 rows and a maximum of 100k records can be returned in a single page. 
+All query runs can return a maximum of 1 GB of data. 
 
 More details on pagination can be found [here](https://docs.flipsidecrypto.com/shroomdk-sdk/query-pagination).
 
@@ -185,10 +178,7 @@ print(f"This query took ${elapsed_seconds} seconds to run and returned {record_c
 
 ## 🚦 Rate Limits
 
-Every API key is subject to a rate limit over a moving 5 minute window, as well as an aggregate daily limit.
-<br>
-<br>
-If the limit is reached in a 5 minute period, the sdk will exponentially backoff and retry the query up to the `timeout_minutes` parameter set when calling the `query` method.
+There is no rate limit per API Key, however every query execution second, above the free tier will be billed.
 
 ## 🙈 Error Handling
 The sdk implements the following errors that can be handled when calling the `query` method:
@@ -242,12 +232,12 @@ except ServerError as e:
     print(f"a server-side error has occurred: {e.message}")
 ```
 
-### User Error
-`UserError` - occurs when you, the user, submit a bad request to the API. This often occurs when an invalid API Key is used and the SDK is unable to authenticate.
+### Api Error
+`ApiError` - this typically occurs when you, the user, submit a bad request to the API. This often occurs when an invalid API Key is used, or invalid object IDs are used.
 
 
 ```python
-from shroomdk.errors import UserError
+from shroomdk.errors import ApiError
 
 try:
     sdk.query(sql)

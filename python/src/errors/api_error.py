@@ -27,6 +27,7 @@ error_codes = {
     "DataProviderNotFound": -32167,
     "DataSourceAlreadyExists": -32168,
     "AdminOnly": -32169,
+    "RequestedPageSizeTooLarge": -32170,
 }
 
 

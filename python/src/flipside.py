@@ -9,7 +9,7 @@ from .models.compass.core.sql_statement import SqlStatement
 from .models.query_result_set import QueryResultSet
 from .rpc import RPC
 
-API_BASE_URL = "https://rpc.flipsidecrypto.com"
+API_BASE_URL = "https://api-v2.flipsidecrypto.com"
 
 DEFAULT_DATA_SOURCE = "snowflake-default"
 DEFAULT_DATA_PROVIDER = "flipside"

@@ -14,7 +14,7 @@ API_BASE_URL = "https://api-v2.flipsidecrypto.xyz"
 DEFAULT_DATA_SOURCE = "snowflake-default"
 DEFAULT_DATA_PROVIDER = "flipside"
 
-SDK_VERSION = "2.0.0"
+SDK_VERSION = "2.0.2"
 SDK_PACKAGE = "python"
 
 

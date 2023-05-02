@@ -28,6 +28,7 @@ error_codes = {
     "DataSourceAlreadyExists": -32168,
     "AdminOnly": -32169,
     "RequestedPageSizeTooLarge": -32170,
+    "MaxConcurrentQueries": -32171,
 }
 
 

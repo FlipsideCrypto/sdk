@@ -231,6 +231,9 @@ class CompassQueryIntegration(object):
             return query_run
 
         if query_status == QueryStatus.Failed:
+            if query_run.errorName == "QueryRunTimedOut":
+                raise QueryRunTimeoutError()
+
             raise QueryRunExecutionError(
                 error_message=query_run.errorMessage,
                 error_name=query_run.errorName,

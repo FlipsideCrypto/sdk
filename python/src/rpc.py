@@ -4,6 +4,7 @@ from typing import List
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+from .errors.api_error import ApiError
 from .errors.server_error import ServerError
 from .models.compass.cancel_query_run import (
     CancelQueryRunRpcRequest,
@@ -140,6 +141,9 @@ class RPC(object):
                 status_code=result.status_code,
                 message=f"Unknown server error when calling `{method}`: {result.status_code} - {result.reason}. Please try again later.",
             )
+
+        if result.status_code == 401 or result.status_code == 403:
+            raise ApiError("Unauthorized", result.status_code, "Invalid API Key.")
 
         try:
             data = result.json()

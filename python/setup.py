@@ -12,17 +12,20 @@ with open("requirements.txt", "r") as fh:
     requirements = fh.readlines()
 
 
+with open("package_name.txt", "r") as fh:
+    package_name = fh.read().strip().lower()
+
 setup(
     install_requires=[req for req in requirements if req[:2] != "# "],
-    name="shroomdk",
+    name=package_name,
     version=version,
     author="dev@flipsidecrypto.com",
     author_email="dev@flipsidecrypto.com",
-    description="ShroomDK (SDK) by Flipside Crypto: Query the most comprehensive blockchain data in crypto",
+    description="SDK by Flipside Crypto: Query the most reliable & comprehensive blockchain data in crypto",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/FlipsideCrypto/sdk/python",
-    packages=find_packages(),
+    packages=find_packages(exclude=["src"]),  # Add the exclude parameter here
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",  # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package

@@ -9,7 +9,7 @@ __pycache__
 *.pyc
 *.pem
 *.crt
-
+*.idea
 
 node_modules
 
@@ -29,3 +29,4 @@ run-query-example.py
 examples/python/scratch/*
 .Rproj.user
 r/shroomDK_0.1.0.tar.gz
+python-sdk-example.py

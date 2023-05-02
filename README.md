@@ -5,14 +5,14 @@ Programmatic access to the most reliable & comprehensive blockchain data in Web3
 You've found yourself at the FlipsideCrypto SDK repository, the official SDK to programmatically query all of Flipside Crypto's data.
 
 ## 🧩 The Data
-Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Data Studio](https://flipside.new) can be queried programmatically via our API and library of SDKs.
+Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with more being added each week. All tables available to query in Flipside's [Data Studio](https://flipsidecrypto.xyz) can be queried programmatically via our API and library of SDKs.
 
 ## 📖 Official Docs
-[https://docs.flipsidecrypto.com/api/getting-started](https://docs.flipsidecrypto.com/api/getting-started)
+[https://docs.flipsidecrypto.com/flipside-api/get-started](https://docs.flipsidecrypto.com/flipside-api/get-started)
 
 ## 🗝 Want access? Genrate an API Key for Free
 
-Get your [free API key here](https://flipsidecrypto.xyz/api)
+Get your [free API key here](https://flipsidecrypto.xyz/account/api-keys)
 <br>
 
 ## SDKs

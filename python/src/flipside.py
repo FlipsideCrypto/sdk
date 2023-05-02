@@ -11,11 +11,16 @@ from .rpc import RPC
 
 API_BASE_URL = "https://api-v2.flipsidecrypto.xyz"
 
+SDK_VERSION = "2.0.3"
+SDK_PACKAGE = "python"
+
 DEFAULT_DATA_SOURCE = "snowflake-default"
 DEFAULT_DATA_PROVIDER = "flipside"
-
-SDK_VERSION = "2.0.2"
-SDK_PACKAGE = "python"
+DEFAULT_PAGE_SIZE = 1000
+DEFAULT_PAGE_NUMBER = 1
+DEFAULT_TIMEOUT_MINUTES = 15
+DEFAULT_TTL_MINUTES = 60
+DEFAULT_MAX_AGE_MINUTES = 0
 
 
 class Flipside(object):
@@ -28,12 +33,12 @@ class Flipside(object):
     def query(
         self,
         sql,
-        ttl_minutes=30,
-        max_age_minutes=0,
+        ttl_minutes=DEFAULT_TTL_MINUTES,
+        max_age_minutes=DEFAULT_MAX_AGE_MINUTES,
         cached=True,
-        timeout_minutes=20,
+        timeout_minutes=DEFAULT_TIMEOUT_MINUTES,
         retry_interval_seconds=1,
-        page_size=100000,
+        page_size=DEFAULT_PAGE_SIZE,
         page_number=1,
         data_source=DEFAULT_DATA_SOURCE,
         data_provider=DEFAULT_DATA_PROVIDER,

@@ -16,7 +16,7 @@ SDK_PACKAGE = "python"
 
 DEFAULT_DATA_SOURCE = "snowflake-default"
 DEFAULT_DATA_PROVIDER = "flipside"
-DEFAULT_PAGE_SIZE = 1000
+DEFAULT_PAGE_SIZE = 100000
 DEFAULT_PAGE_NUMBER = 1
 DEFAULT_TIMEOUT_MINUTES = 15
 DEFAULT_TTL_MINUTES = 60
@@ -69,7 +69,7 @@ class Flipside(object):
         self,
         query_run_id: str,
         page_number: int = 1,
-        page_size: int = 10000,
+        page_size: int = DEFAULT_PAGE_SIZE,
         filters: Optional[Union[List[Filter], None]] = [],
         sort_by: Optional[Union[List[SortBy], None]] = [],
     ) -> QueryResultSet:

@@ -59,12 +59,12 @@ class GetQueryRunResultsRpcRequest(RpcRequest):
 
 # Response
 class GetQueryRunResultsRpcResult(BaseModel):
-    columnNames: Optional[List[str]]
-    columnTypes: Optional[List[str]]
-    rows: List[Any]
-    page: PageStats
-    sql: str
-    format: ResultFormat
+    columnNames: Union[Optional[List[str]], None]
+    columnTypes: Union[Optional[List[str]], None]
+    rows: Union[List[Any], None]
+    page: Union[PageStats, None]
+    sql: Union[str, None]
+    format: Union[ResultFormat, None]
     originalQueryRun: QueryRun
     redirectedToQueryRun: Union[QueryRun, None]
 

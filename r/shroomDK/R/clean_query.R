@@ -20,8 +20,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000", api_key)
-#' request = get_query_from_token(query$token, api_key, 1, 10000)
+#' query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
+#' request = get_query_from_token(query$result$queryRequest$queryRunId, api_key)
 #' clean_query(request, try_simplify = FALSE)
 #' }
 clean_query <- function(request, try_simplify = TRUE){
@@ -44,13 +44,13 @@ clean_query <- function(request, try_simplify = TRUE){
 
    # start data reformat
      # this is a matrix/array
-    data <- t(list2DF(request$results))
-    colnames(data) <- request$columnLabels
+    data <- t(list2DF(request$result$rows))
+    colnames(data) <- request$result$columnNames
     rownames(data) <- NULL
 
     # Protects NULL values
-  for(i in 1:ncol(data)){
-    data[, i] <- fill_null(data[, i])
+  for(j in 1:ncol(data)){
+    data[, j] <- fill_null(data[, j])
   }
 
    # data frame of Lists

@@ -7,7 +7,8 @@ library(httr)
 #' @param query_run_id queryRunId from `create_query_token()`, for token stored as `x`, use `x$result$queryRequest$queryRunId`
 #' @param api_key Flipside Crypto ShroomDK API Key
 #' @param api_url default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.
-#' @return returns request content; for content `x`, use `x$result$queryRun$state` and `x$result$queryRun$errorMessage`
+#' @return returns request content; for content `x`, use `x$result$queryRun$state` and `x$result$queryRun$errorMessage`. Expect one of
+#' QUERY_STATE_READY, QUERY_STATE_RUNNING, QUERY_STATE_STREAMING_RESULTS, QUERY_STATE_SUCCESS, QUERY_STATE_FAILED, QUERY_STATE_CANCELED
 #' @import jsonlite httr
 #' @export
 #'

@@ -1,10 +1,10 @@
 Package: shroomDK
 Type: Package
-Title: Accessing the Flipside Crypto ShroomDK REST API
-Version: 0.1.1
+Title: Accessing the Flipside Crypto ShroomDK API
+Version: 0.2.0
 Author: Carlos Mercado
 Maintainer: Carlos Mercado <carlos.mercado@flipsidecrypto.com>
-Description: Programmatic access to Flipside Crypto data via the REST API: <https://sdk.flipsidecrypto.xyz/shroomdk>. As simple as auto_paginate_query() but with core functions as needed for troubleshooting.
+Description: Programmatic access to Flipside Crypto data via the Compass RPC API: <https://api-docs.flipsidecrypto.xyz/>. As simple as auto_paginate_query() but with core functions as needed for troubleshooting.
 Imports: jsonlite, httr
 License: MIT + file LICENSE
 Encoding: UTF-8

@@ -4,16 +4,24 @@
 \alias{create_query_token}
 \title{Create Query Token}
 \usage{
-create_query_token(query, api_key, ttl = 10, cache = TRUE)
+create_query_token(
+  query,
+  api_key,
+  ttl = 1,
+  mam = 10,
+  api_url = "https://api-v2.flipsidecrypto.xyz/json-rpc"
+)
 }
 \arguments{
 \item{query}{Flipside Crypto Snowflake SQL compatible query as a string.}
 
 \item{api_key}{Flipside Crypto ShroomDK API Key}
 
-\item{ttl}{time (in minutes) to keep query in cache.}
+\item{ttl}{time-to-live (in hours) to keep query results available. Default 1 hour.}
 
-\item{cache}{Use cached results; set as FALSE to re-execute.}
+\item{mam}{max-age-minutes, lifespan of cache. set to 0 to always re-execute. Default 10 minutes.}
+
+\item{api_url}{default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.}
 }
 \value{
 list of `token` and `cached` use `token` in `get_query_from_token()`
@@ -28,7 +36,7 @@ allowing for pagination and multiple requests before expending more daily reques
 create_query_token(
 query = "SELECT * FROM ethereum.core.fact_transactions LIMIT 1",
 api_key = readLines("api_key.txt"),
-ttl = 15,
-cache = TRUE)
+ttl = 1,
+mam = 5)
 }
 }

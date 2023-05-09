@@ -4,30 +4,40 @@
 \alias{get_query_from_token}
 \title{Get Query From Token}
 \usage{
-get_query_from_token(query_token, api_key, page_number = 1, page_size = 1e+05)
+get_query_from_token(
+  query_run_id,
+  api_key,
+  page_number = 1,
+  page_size = 1000,
+  result_format = "csv",
+  api_url = "https://api-v2.flipsidecrypto.xyz/json-rpc"
+)
 }
 \arguments{
-\item{query_token}{token from `create_query_token()`}
+\item{query_run_id}{queryRunId from `create_query_token()`, for token stored as `x`, use `x$result$queryRequest$queryRunId`}
 
 \item{api_key}{Flipside Crypto ShroomDK API Key}
 
-\item{page_number}{Query tokens are cached and 100k rows max. Get up to 1M rows by going through pages.}
+\item{page_number}{Results are cached, max 30MB of data per page.}
 
-\item{page_size}{Default 100,000. Paginate via page_number.}
+\item{page_size}{Default 1000. Paginate via page_number.  May return error if page_size causes data to exceed 30MB.}
+
+\item{result_format}{Default to csv. Options: csv and json.}
+
+\item{api_url}{default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.}
 }
 \value{
-returns a request of length 8: `results`, `columnLabels`,
- `columnTypes`, `startedAt`, `endedAt`, `pageNumber`, `pageSize`, `status`
+returns a list of jsonrpc, id, and result. Within result are:
+columnNames, columnTypes, rows, page, sql, format, originalQueryRun, redirectedToQueryRun
+use `clean_query()` to transform this into a data frame.
 }
 \description{
-Uses Flipside ShroomDK to access a Query Token. Query tokens are cached up to `ttl` minutes
-for each `query`. This function is for pagination and multiple requests
-while . Note: To reduce payload it returns
-a list of outputs (separating column names from rows).
+Uses Flipside ShroomDK to access a Query Token (Run ID). This function is for pagination and multiple requests.
+Note: To reduce payload it returns a list of outputs (separating column names from rows). Use `clean_query()` to
 }
 \examples{
 \dontrun{
-query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000", api_key)
-get_query_from_token(query$token, api_key, 1, 10000)
+query <- create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
+fact_transactions <- get_query_from_token(query$result$queryRequest$queryRunId, api_key, 1, 1000)
 }
 }

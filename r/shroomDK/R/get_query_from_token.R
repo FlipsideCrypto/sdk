@@ -3,10 +3,8 @@ library(httr)
 
 #' Get Query From Token
 #'
-#' Uses Flipside ShroomDK to access a Query Token. Query tokens are cached up to `ttl` minutes
-#' for each `query`. This function is for pagination and multiple requests
-#' while . Note: To reduce payload it returns
-#' a list of outputs (separating column names from rows).
+#' Uses Flipside ShroomDK to access a Query Token (Run ID). This function is for pagination and multiple requests.
+#' Note: To reduce payload it returns a list of outputs (separating column names from rows). Use `clean_query()` to
 #'
 #' @param query_run_id queryRunId from `create_query_token()`, for token stored as `x`, use `x$result$queryRequest$queryRunId`
 #' @param api_key Flipside Crypto ShroomDK API Key
@@ -14,15 +12,16 @@ library(httr)
 #' @param page_size Default 1000. Paginate via page_number.  May return error if page_size causes data to exceed 30MB.
 #' @param result_format Default to csv. Options: csv and json.
 #' @param api_url default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.
-#' @return returns a request of length 8: `results`, `columnLabels`,
-#'  `columnTypes`, `startedAt`, `endedAt`, `pageNumber`, `pageSize`, `status`
+#' @return returns a list of jsonrpc, id, and result. Within result are:
+#' columnNames, columnTypes, rows, page, sql, format, originalQueryRun, redirectedToQueryRun
+#' use `clean_query()` to transform this into a data frame.
 #' @import jsonlite httr
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
-#' get_query_from_token(query$result$queryRequest$queryRunId, api_key, 1, 1000)
+#' query <- create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
+#' fact_transactions <- get_query_from_token(query$result$queryRequest$queryRunId, api_key, 1, 1000)
 #' }
 get_query_from_token <- function(query_run_id, api_key,
                                  page_number = 1,

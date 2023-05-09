@@ -9,7 +9,7 @@
 #' @param try_simplify because requests can return JSON and may not have the same length
 #' across values, they may not be data frame compliant (all columns having the same number of rows).
 #' A key example would be TX_JSON in EVM FACT_TRANSACTION tables which include 50+
-#' extra details from transaction logs. But other examples like NULLs TO_ADDRESS can have similar
+#' extra details from transaction logs. But other examples like NULLs in TO_ADDRESS can have similar
 #' issues. Default TRUE.
 #'
 #' @return A data frame. If `try_simplify` is FALSE OR if `try_simplify` TRUE fails:
@@ -20,9 +20,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' query = create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
-#' request = get_query_from_token(query$result$queryRequest$queryRunId, api_key)
-#' clean_query(request, try_simplify = FALSE)
+#' query <- create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
+#' request <- get_query_from_token(query$result$queryRequest$queryRunId, api_key)
+#' df1 <- clean_query(request, try_simplify = TRUE) # warning b/c of tx_json
+#' df2 <- clean_query(request, try_simplify = FALSE) # silently returns columns of lists
 #' }
 clean_query <- function(request, try_simplify = TRUE){
 

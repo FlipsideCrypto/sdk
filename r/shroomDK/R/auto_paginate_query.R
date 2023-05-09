@@ -16,58 +16,40 @@ library(httr)
 #' @examples
 #' \dontrun{
 #' pull_data <- auto_paginate_query("
-#' SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000",
+#' SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10001",
 #' api_key = readLines("api_key.txt"),
 #' page_count = 10)
 #' }
 auto_paginate_query <- function(query, api_key, page_size = 1000,
                                 page_count = 1,
                                 api_url = "https://api-v2.flipsidecrypto.xyz/json-rpc"){
-browser()
+
   qtoken <- create_query_token(query = query,
                                api_key = api_key,
                                ttl = 1,
                                mam = 10,
                                api_url = api_url)
 
-  # read the first page
-  res <- get_query_from_token(qtoken$result$queryRequest$queryRunId,
-                                        api_key = api_key,
-                                        page_number = 1,
-                                        page_size = page_size,
-                                        result_format = "csv",
-                                        api_url = api_url)
-  df <- clean_query(res)
+   res <- lapply(1:page_count, function(i){
+    temp_page <- get_query_from_token(qtoken$result$queryRequest$queryRunId,
+                                api_key = api_key,
+                                page_number = i,
+                                page_size = page_size,
+                                result_format = "csv",
+                                api_url = api_url)
 
-  # Handle Pagination via ShroomDK
-  # if you got a full page immediately, keep going
-  if(nrow(df) == page_size){
-    warning("Checking for additional pages of data...")
-    for(i in 2:page_count){
-      temp_page <- get_query_from_token(qtoken$result$queryRequest$queryRunId,
-                                       api_key = api_key,
-                                       page_number = i,
-                                       page_size = page_size,
-                                       result_format = "csv",
-                                       api_url = api_url)
-
-      if(length(temp_page$result$rows) > 0){
-        temp_page <- clean_query(temp_page)
-      } else {
-        temp_page <- data.frame()
+    if(length(temp_page$result$rows) < 1){
+      df <- data.frame()
+    } else {
+    df <- clean_query(temp_page)
       }
-
-      df <- rbind.data.frame(df, temp_page)
-
-      if(nrow(temp_page) < page_size | i == page_count){
-        # done
-        return(df)
-
-      } else {
-        # continue
-      }
-    }
-  } else {
     return(df)
-  }
+  })
+
+   res <- res[unlist(lapply(res, nrow)) > 0]
+
+   df <- do.call(rbind.data.frame, res)
+
+   return(df)
+
 }

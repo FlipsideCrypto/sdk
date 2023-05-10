@@ -7,3 +7,4 @@ export * from "./query-run-stats.type";
 export * from "./query-result-record.type";
 export * from "./sleep-config.type";
 export * from "./api";
+export * from "./compass";

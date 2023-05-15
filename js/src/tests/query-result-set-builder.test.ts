@@ -118,7 +118,7 @@ describe("status", () => {
     assert.equal(queryResultSet?.status, QueryStatusPending);
   });
   it("isPending: QUERY_STATE_STREAMING_RESULTS", async () => {
-    let queryResultSet = new QueryResultSetBuilder({
+    const queryResultSet = new QueryResultSetBuilder({
       getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_STREAMING_RESULTS").result,
       getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_STREAMING_RESULTS").result,
       error: null,
@@ -127,7 +127,7 @@ describe("status", () => {
   });
 
   it("isError: QUERY_STATE_FAILED", async () => {
-    let queryResultSet = new QueryResultSetBuilder({
+    const queryResultSet = new QueryResultSetBuilder({
       getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_FAILED").result,
       getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_FAILED").result,
       error: null,
@@ -135,7 +135,7 @@ describe("status", () => {
     assert.equal(queryResultSet?.status, QueryStatusError);
   });
   it("isError: QUERY_STATE_CANCELLED", async () => {
-    let queryResultSet = new QueryResultSetBuilder({
+    const queryResultSet = new QueryResultSetBuilder({
       getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_CANCELED").result,
       getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_CANCELED").result,
       error: null,
@@ -144,13 +144,21 @@ describe("status", () => {
   });
 });
 
-// describe("queryID", () => {
-//   it("queryId is set", async () => {
-//     const queryResultSet = new QueryResultSetBuilder(getQueryResultSetBuilder(QueryStatusFinished));
-//     assert.notEqual(queryResultSet?.queryId, null);
-//   });
-//   it("queryId is test", async () => {
-//     const queryResultSet = new QueryResultSetBuilder(getQueryResultSetBuilder(QueryStatusFinished));
-//     assert.equal(queryResultSet?.queryId, "test");
-//   });
-// });
+describe("queryID", () => {
+  it("queryId is set", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+      error: null,
+    });
+    assert.notEqual(queryResultSet?.queryId, null);
+  });
+  it("queryId is test", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+      error: null,
+    });
+    assert.equal(queryResultSet?.queryId, "clg44olzq00cbn60tasvob5l2");
+  });
+});

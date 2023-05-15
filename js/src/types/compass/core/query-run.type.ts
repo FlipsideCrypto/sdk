@@ -1,4 +1,4 @@
-import { Tags } from "./tags";
+import { Tags } from "./tags.type";
 
 export interface QueryRun {
   id: string;

@@ -3,3 +3,4 @@ export * from "./server-errors";
 export * from "./sdk-errors";
 export * from "./query-run-errors";
 export * from "./user-errors";
+export * from "./api-error";

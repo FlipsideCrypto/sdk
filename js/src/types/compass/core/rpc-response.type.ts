@@ -1,4 +1,4 @@
-import { RpcError } from "./rpc-error";
+import { RpcError } from "./rpc-error.type";
 
 export interface RpcResponse<T> {
   jsonrpc: string;

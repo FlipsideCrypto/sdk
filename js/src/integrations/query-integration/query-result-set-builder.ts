@@ -5,27 +5,43 @@ import {
   ServerError,
   UserError,
   UnexpectedSDKError,
+  ApiError,
 } from "../../errors";
 import {
-  QueryResultJson,
   QueryResultSet,
-  Row,
   QueryResultRecord,
   QueryRunStats,
   QueryStatus,
+  GetQueryRunResultsRpcResult,
+  GetQueryRunRpcResult,
+  mapApiQueryStateToStatus,
 } from "../../types";
-import { QueryResultSetBuilderInput } from "../../types/query-result-set-input.type";
+
+interface QueryResultSetBuilderData {
+  getQueryRunResultsRpcResult?: GetQueryRunResultsRpcResult | null;
+  getQueryRunRpcResult?: GetQueryRunRpcResult | null;
+  error:
+    | ApiError
+    | QueryRunRateLimitError
+    | QueryRunTimeoutError
+    | QueryRunExecutionError
+    | ServerError
+    | UserError
+    | UnexpectedSDKError
+    | null;
+}
 
 export class QueryResultSetBuilder implements QueryResultSet {
   queryId: string | null;
   status: QueryStatus | null;
   columns: string[] | null;
   columnTypes: string[] | null;
-  rows: Row[] | null;
+  rows: any[] | null;
   runStats: QueryRunStats | null;
   records: QueryResultRecord[] | null;
 
   error:
+    | ApiError
     | QueryRunRateLimitError
     | QueryRunTimeoutError
     | QueryRunExecutionError
@@ -34,10 +50,10 @@ export class QueryResultSetBuilder implements QueryResultSet {
     | UnexpectedSDKError
     | null;
 
-  constructor(data: QueryResultSetBuilderInput) {
-    this.error = data.error;
-    const queryResultJson = data.queryResultJson;
-    if (!queryResultJson) {
+  constructor({ getQueryRunResultsRpcResult, getQueryRunRpcResult, error }: QueryResultSetBuilderData) {
+    this.error = error;
+
+    if (!getQueryRunResultsRpcResult || !getQueryRunRpcResult) {
       this.queryId = null;
       this.status = null;
       this.columns = null;
@@ -48,51 +64,63 @@ export class QueryResultSetBuilder implements QueryResultSet {
       return;
     }
 
-    this.queryId = queryResultJson.queryId;
-    this.status = queryResultJson.status;
-    this.columns = queryResultJson.columnLabels;
-    this.columnTypes = queryResultJson.columnTypes;
-    this.rows = queryResultJson.results;
-    this.runStats = this.#computeRunStats(queryResultJson);
-    this.records = this.#createRecords(queryResultJson);
+    this.queryId = getQueryRunRpcResult.queryRun.id;
+    this.status = mapApiQueryStateToStatus(getQueryRunRpcResult.queryRun.state);
+    this.columns = getQueryRunResultsRpcResult.columnNames;
+    this.columnTypes = getQueryRunResultsRpcResult.columnTypes;
+    this.rows = getQueryRunResultsRpcResult.rows;
+    this.runStats = this.#computeRunStats(getQueryRunRpcResult);
+    this.records = this.#createRecords(getQueryRunResultsRpcResult);
   }
 
-  #computeRunStats(
-    queryResultJson: QueryResultJson | null
-  ): QueryRunStats | null {
-    if (!queryResultJson) {
+  #createRecords(getQueryRunResultsRpcResult: GetQueryRunResultsRpcResult | null): QueryResultRecord[] | null {
+    if (!getQueryRunResultsRpcResult || !getQueryRunResultsRpcResult.columnNames || !getQueryRunResultsRpcResult.rows) {
       return null;
     }
 
-    let startedAt = new Date(queryResultJson.startedAt);
-    let endedAt = new Date(queryResultJson.endedAt);
-    let elapsedSeconds = (endedAt.getTime() - startedAt.getTime()) / 1000;
-    return {
-      startedAt,
-      endedAt,
-      elapsedSeconds,
-      recordCount: queryResultJson.results.length,
-    };
-  }
+    let columnNames = getQueryRunResultsRpcResult.columnNames;
 
-  #createRecords(
-    queryResultJson: QueryResultJson | null
-  ): QueryResultRecord[] | null {
-    if (!queryResultJson) {
-      return null;
-    }
-
-    let columnLabels = queryResultJson.columnLabels;
-    if (!columnLabels) {
-      return null;
-    }
-
-    return queryResultJson.results.map((result) => {
+    return getQueryRunResultsRpcResult.rows.map((row) => {
       let record: QueryResultRecord = {};
-      result.forEach((value, index) => {
-        record[columnLabels[index].toLowerCase()] = value;
+      row.forEach((value: any, index: number) => {
+        record[columnNames[index].toLowerCase()] = value;
       });
       return record;
     });
+  }
+
+  #computeRunStats(getQueryRunRpcResult: GetQueryRunRpcResult): QueryRunStats {
+    const queryRun = getQueryRunRpcResult.queryRun;
+
+    if (
+      !queryRun.startedAt ||
+      !queryRun.endedAt ||
+      !queryRun.createdAt ||
+      !queryRun.queryStreamingEndedAt ||
+      !queryRun.queryRunningEndedAt
+    ) {
+      throw new Error("Query has no data");
+    }
+
+    const createdAt = new Date(queryRun.createdAt);
+    const startTime = new Date(queryRun.startedAt);
+    const endTime = new Date(queryRun.endedAt);
+    const streamingEndTime = new Date(queryRun.queryStreamingEndedAt);
+    const queryExecEndAt = new Date(queryRun.queryRunningEndedAt);
+
+    return {
+      startedAt: startTime,
+      endedAt: endTime,
+      elapsedSeconds: (endTime.getTime() - startTime.getTime()) / 1000,
+      queryExecStartedAt: startTime,
+      queryExecEndedAt: queryExecEndAt,
+      streamingStartedAt: queryExecEndAt,
+      streamingEndedAt: streamingEndTime,
+      queuedSeconds: (startTime.getTime() - createdAt.getTime()) / 1000,
+      streamingSeconds: (streamingEndTime.getTime() - queryExecEndAt.getTime()) / 1000,
+      queryExecSeconds: (queryExecEndAt.getTime() - startTime.getTime()) / 1000,
+      bytes: queryRun.totalSize ? queryRun.totalSize : 0,
+      recordCount: queryRun.rowCount ? queryRun.rowCount : 0,
+    };
   }
 }

@@ -1,4 +1,3 @@
-import { Row } from "./api";
 import {
   QueryRunExecutionError,
   QueryRunRateLimitError,
@@ -6,6 +5,7 @@ import {
   ServerError,
   UserError,
   UnexpectedSDKError,
+  ApiError,
 } from "../errors";
 import { QueryRunStats } from "./query-run-stats.type";
 import { QueryStatus } from "./query-status.type";
@@ -25,7 +25,7 @@ export interface QueryResultSet {
   columnTypes: string[] | null;
 
   // The results of the query
-  rows: Row[] | null;
+  rows: any[] | null;
 
   // Summary stats on the query run (i.e. the number of rows returned, the elapsed time, etc)
   runStats: QueryRunStats | null;
@@ -35,6 +35,7 @@ export interface QueryResultSet {
 
   // If the query failed, this will contain the error
   error:
+    | ApiError
     | QueryRunRateLimitError
     | QueryRunTimeoutError
     | QueryRunExecutionError

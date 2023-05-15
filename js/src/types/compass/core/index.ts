@@ -1,10 +1,10 @@
 // Export classes from core
-export { Page } from "./page";
-export { PageStats } from "./page-stats";
-export { QueryRun } from "./query-run";
-export { QueryRequest } from "./query-request";
-export { ResultFormat } from "./result-format";
-export { RpcRequest, BaseRpcRequest } from "./rpc-request";
-export { RpcResponse, BaseRpcResponse } from "./rpc-response";
-export { SqlStatement } from "./sql-statement";
-export { Tags } from "./tags";
+export { Page } from "./page.type";
+export { PageStats } from "./page-stats.type";
+export { QueryRun } from "./query-run.type";
+export { QueryRequest } from "./query-request.type";
+export { ResultFormat } from "./result-format.type";
+export { RpcRequest, BaseRpcRequest } from "./rpc-request.type";
+export { RpcResponse, BaseRpcResponse } from "./rpc-response.type";
+export { SqlStatement } from "./sql-statement.type";
+export { Tags } from "./tags.type";

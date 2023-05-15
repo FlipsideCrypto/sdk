@@ -25,43 +25,19 @@ import {
 
 const PARSE_ERROR_MSG = "the api returned an error and there was a fatal client side error parsing that error msg";
 
-class Api {
+export class Api {
   url: string;
   #baseUrl: string;
   #headers: Record<string, string>;
-  #sdkVersion: string;
-  #sdkPackage: string;
-  #apiKey: string;
-  #MAX_RETRIES: number;
-  #BACKOFF_FACTOR: number;
-  #STATUS_FORCE_LIST: number[];
-  #METHOD_ALLOWLIST: string[];
 
-  constructor(
-    baseUrl: string,
-    sdkPackage: string,
-    sdkVersion: string,
-    apiKey: string,
-    max_retries: number = 10,
-    backoff_factor: number = 1,
-    status_forcelist: number[] = [429, 500, 502, 503, 504],
-    method_allowlist: string[] = ["HEAD", "GET", "PUT", "POST", "DELETE", "OPTIONS", "TRACE"]
-  ) {
+  constructor(baseUrl: string, apiKey: string) {
     this.#baseUrl = baseUrl;
     this.url = this.getUrl();
-    this.#apiKey = apiKey;
-    this.#sdkPackage = sdkPackage;
-    this.#sdkVersion = sdkVersion;
     this.#headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
       "x-api-key": apiKey,
     };
-    // Session Settings
-    this.#MAX_RETRIES = max_retries;
-    this.#BACKOFF_FACTOR = backoff_factor;
-    this.#STATUS_FORCE_LIST = status_forcelist;
-    this.#METHOD_ALLOWLIST = method_allowlist;
   }
 
   getUrl(): string {

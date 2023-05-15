@@ -1,5 +1,5 @@
-import { ColumnMetadata } from "./column-metadata";
-import { Tags } from "./tags";
+import { ColumnMetadata } from "./column-metadata.type";
+import { Tags } from "./tags.type";
 
 export interface SqlStatement {
   id: string;

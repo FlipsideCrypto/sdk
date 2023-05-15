@@ -12,20 +12,20 @@ import {
 // Request
 export interface Filter {
   column: string;
-  eq?: string | null;
-  neq?: string | null;
-  gt?: string | null;
-  gte?: string | null;
-  lt?: string | null;
-  lte?: string | null;
-  like?: string | null;
-  in_?: string[] | null;
-  notIn?: string[] | null;
+  eq?: string | number | null;
+  neq?: string | number | null;
+  gt?: number | null;
+  gte?: number | null;
+  lt?: number | null;
+  lte?: number | null;
+  like?: string | number | null;
+  in?: any[] | null;
+  notIn?: any[] | null;
 }
 
 export interface SortBy {
   column: string;
-  direction: string;
+  direction: "desc" | "asc";
 }
 
 export interface GetQueryRunResultsRpcParams {

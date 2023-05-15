@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { ServerError, UnexpectedSDKError, UserError } from "./errors";
 import {
+  CompassApiClient,
   CreateQueryRunRpcParams,
   CreateQueryRunRpcRequestImplementation,
   CreateQueryRunRpcResponse,
@@ -25,7 +26,7 @@ import {
 
 const PARSE_ERROR_MSG = "the api returned an error and there was a fatal client side error parsing that error msg";
 
-export class Api {
+export class Api implements CompassApiClient {
   url: string;
   #baseUrl: string;
   #headers: Record<string, string>;

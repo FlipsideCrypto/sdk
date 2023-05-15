@@ -12,6 +12,7 @@ import {
   QueryRun,
   ResultFormat,
   SqlStatement,
+  CompassApiClient,
 } from "../../types";
 import { getElapsedLinearSeconds, linearBackOff } from "../../utils/sleep";
 import {
@@ -27,9 +28,9 @@ import { Api } from "../../api";
 import { DEFAULTS } from "../../defaults";
 
 export class QueryIntegration {
-  #api: Api;
+  #api: CompassApiClient;
 
-  constructor(api: Api) {
+  constructor(api: CompassApiClient) {
     this.#api = api;
   }
 

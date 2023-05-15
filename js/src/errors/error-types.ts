@@ -6,4 +6,5 @@ export const ERROR_TYPES = {
   query_run_timeout_error: "QUERY_RUN_TIMEOUT_ERROR",
   query_run_execution_error: "QUERY_RUN_EXECUTION_ERROR",
   user_error: "USER_ERROR",
+  api_error: "API_ERROR",
 };

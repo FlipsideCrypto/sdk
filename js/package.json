@@ -15,7 +15,7 @@
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:real": "npx ts-node /Users/jim/code/flipside/sdk/js/src/tests/endToEndTest.ts",
+    "test:real": "npx ts-node src/tests/endToEndTest.ts",
     "test:coverage": "vitest --coverage --no-watch",
     "test:run": "vitest run",
     "build": "tsc",

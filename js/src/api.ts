@@ -52,11 +52,12 @@ export class Api implements CompassApiClient {
     try {
       result = await axios.post(this.url, request, { headers: this.#headers });
     } catch (err) {
-      let errData = err as AxiosError;
-      result = errData.response;
-      if (!result) {
-        throw new UnexpectedSDKError(PARSE_ERROR_MSG);
-      }
+      throw err;
+      // let errData = err as AxiosError;
+      // result = errData.response;
+      // if (!result) {
+      //   throw new UnexpectedSDKError(PARSE_ERROR_MSG);
+      // }
     }
 
     const data = this.#handleResponse(result, "createQueryRun");
@@ -70,11 +71,12 @@ export class Api implements CompassApiClient {
     try {
       result = await axios.post(this.url, request, { headers: this.#headers });
     } catch (err) {
-      let errData = err as AxiosError;
-      result = errData.response;
-      if (!result) {
-        throw new UnexpectedSDKError(PARSE_ERROR_MSG);
-      }
+      throw err;
+      // let errData = err as AxiosError;
+      // result = errData.response;
+      // if (!result) {
+      //   throw new UnexpectedSDKError(PARSE_ERROR_MSG);
+      // }
     }
 
     const data = this.#handleResponse(result, "getQueryRun");
@@ -88,11 +90,12 @@ export class Api implements CompassApiClient {
     try {
       result = await axios.post(this.url, request, { headers: this.#headers });
     } catch (err) {
-      let errData = err as AxiosError;
-      result = errData.response;
-      if (!result) {
-        throw new UnexpectedSDKError(PARSE_ERROR_MSG);
-      }
+      throw err;
+      // let errData = err as AxiosError;
+      // result = errData.response;
+      // if (!result) {
+      //   throw new UnexpectedSDKError(PARSE_ERROR_MSG);
+      // }
     }
 
     const data = this.#handleResponse(result, "getQueryRunResults");

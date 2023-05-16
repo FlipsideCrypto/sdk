@@ -12,7 +12,7 @@ export function cancelQueryRunResponse(
   };
 
   const defaultResult = {
-    queryRun: {
+    canceledQueryRun: {
       id: "clg44olzq00cbn60tasvob5l2",
       sqlStatementId: "clg44oly200c9n60tviq17sng",
       state: status,

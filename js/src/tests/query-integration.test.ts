@@ -183,21 +183,21 @@ describe("getSqlStatement", () => {
   });
 });
 
-// describe("cancelQueryRun", () => {
-//   it("success", async () => {
-//     const api = getMockApiClient({
-//       createQueryResp: createQueryRunResponse("QUERY_STATE_CANCELLED"),
-//       getQueryRunResp: getQueryRunResponse("QUERY_STATE_CANCELLED"),
-//       getQueryRunResultsResp: getQueryResultsResponse("QUERY_STATE_CANCELLED"),
-//       getSqlStatementResp: getSqlStatementResponse("123"),
-//       cancelQueryRunResp: cancelQueryRunResponse("QUERY_STATE_CANCELLED"),
-//     });
+describe("cancelQueryRun", () => {
+  it("success", async () => {
+    const api = getMockApiClient({
+      createQueryResp: createQueryRunResponse("QUERY_STATE_CANCELLED"),
+      getQueryRunResp: getQueryRunResponse("QUERY_STATE_CANCELLED"),
+      getQueryRunResultsResp: getQueryResultsResponse("QUERY_STATE_CANCELLED"),
+      getSqlStatementResp: getSqlStatementResponse("123"),
+      cancelQueryRunResp: cancelQueryRunResponse("QUERY_STATE_CANCELLED"),
+    });
 
-//     const queryIntegration = new QueryIntegration(api);
-//     const result = await queryIntegration.cancelQueryRun({ queryRunId: "123" });
-//     assert.equal(result.state, "QUERY_STATE_CANCELLED");
-//   });
-// });
+    const queryIntegration = new QueryIntegration(api);
+    const result = await queryIntegration.cancelQueryRun({ queryRunId: "123" });
+    assert.equal(result.state, "QUERY_STATE_CANCELLED");
+  });
+});
 
 describe("run", () => {
   it("run success", async () => {

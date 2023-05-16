@@ -34,6 +34,7 @@ export class Api implements CompassApiClient {
   constructor(baseUrl: string, apiKey: string) {
     this.#baseUrl = baseUrl;
     this.url = this.getUrl();
+    console.log("apikey: ", apiKey);
     this.#headers = {
       Accept: "application/json",
       "Content-Type": "application/json",

@@ -22,6 +22,8 @@ jobs:
       - name: On Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
       - run: cd js && yarn install && yarn test:run
+        env:
+          FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
       - run: cd js && yarn install && yarn test:real
         env:
           FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}

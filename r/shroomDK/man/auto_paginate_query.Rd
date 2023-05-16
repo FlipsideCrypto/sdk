@@ -4,25 +4,36 @@
 \alias{auto_paginate_query}
 \title{Auto Paginate Queries}
 \usage{
-auto_paginate_query(query, api_key, maxrows = 1e+06)
+auto_paginate_query(
+  query,
+  api_key,
+  page_size = 1000,
+  page_count = 1,
+  api_url = "https://api-v2.flipsidecrypto.xyz/json-rpc"
+)
 }
 \arguments{
 \item{query}{The SQL query to pass to ShroomDK}
 
 \item{api_key}{ShroomDK API key.}
 
-\item{maxrows}{Max rows allowed in ShroomDK, 1M at time of writing.}
+\item{page_size}{Default 1000. May return error if page_size is tool large and data to exceed 30MB.}
+
+\item{page_count}{Default 1. How many pages, of page_size rows each, to read.}
+
+\item{api_url}{default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.}
 }
 \value{
-data frame of up to 1M rows, see ?clean_query for more details on column classes.
+data frame of up to `page_size * page_count` rows, see ?clean_query for more details on column classes.
 }
 \description{
-Grabs up to maxrows in a query by going through each page 100k rows at a time.
+Grabs up to maxrows in a query by going through each page to download one at a time.
 }
 \examples{
 \dontrun{
 pull_data <- auto_paginate_query("
-SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10000",
-api_key = readLines("api_key.txt"))
+SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10001",
+api_key = readLines("api_key.txt"),
+page_count = 10)
 }
 }

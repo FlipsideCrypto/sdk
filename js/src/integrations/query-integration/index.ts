@@ -22,6 +22,7 @@ import {
   UserError,
   UnexpectedSDKError,
   getExceptionByErrorCode,
+  ApiError,
 } from "../../errors";
 import { QueryResultSetBuilder } from "./query-result-set-builder";
 import { Api } from "../../api";
@@ -175,6 +176,32 @@ export class QueryIntegration {
     });
   }
 
+  async createQueryRun(query: Query): Promise<QueryRun> {
+    let createQueryRunParams: CreateQueryRunRpcParams = {
+      resultTTLHours: query.ttlMinutes ? Math.floor(query.ttlMinutes / 60) : DEFAULTS.ttlMinutes,
+      sql: query.sql,
+      maxAgeMinutes: query.maxAgeMinutes ? query.maxAgeMinutes : DEFAULTS.maxAgeMinutes,
+      tags: {
+        sdk_language: "javascript",
+        sdk_package: query.sdkPackage ? query.sdkPackage : DEFAULTS.sdkPackage,
+        sdk_version: query.sdkVersion ? query.sdkVersion : DEFAULTS.sdkVersion,
+      },
+      dataSource: query.dataSource ? query.dataSource : DEFAULTS.dataSource,
+      dataProvider: query.dataProvider ? query.dataProvider : DEFAULTS.dataProvider,
+    };
+
+    const createQueryRunRpcResponse = await this.#createQuery(createQueryRunParams);
+    if (createQueryRunRpcResponse.error) {
+      throw getExceptionByErrorCode(createQueryRunRpcResponse.error.code, createQueryRunRpcResponse.error.message);
+    }
+
+    if (!createQueryRunRpcResponse.result?.queryRun) {
+      throw new UnexpectedSDKError("expected a `createQueryRunRpcResponse.result.queryRun` but got null");
+    }
+
+    return createQueryRunRpcResponse.result.queryRun;
+  }
+
   async getQueryRun({ queryRunId }: { queryRunId: string }): Promise<QueryRun> {
     const resp = await this.#api.getQueryRun({ queryRunId });
     if (resp.error) {
@@ -215,10 +242,10 @@ export class QueryIntegration {
       throw new UnexpectedSDKError("expected an `rpc_response.result` but got null");
     }
 
-    if (!resp.result?.queryRun) {
-      throw new UnexpectedSDKError("expected an `rpc_response.result.queryRun` but got null");
+    if (!resp.result?.canceledQueryRun) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result.canceledQueryRun` but got null");
     }
-    return resp.result.queryRun;
+    return resp.result.canceledQueryRun;
   }
 
   async #createQuery(params: CreateQueryRunRpcParams, attempts: number = 0): Promise<CreateQueryRunRpcResponse> {
@@ -232,14 +259,19 @@ export class QueryIntegration {
     queryRunId: string;
     attempts?: number;
   }): Promise<
-    [GetQueryRunRpcResponse | null, QueryRunTimeoutError | QueryRunExecutionError | ServerError | UserError | null]
+    [
+      GetQueryRunRpcResponse | null,
+      QueryRunTimeoutError | QueryRunExecutionError | ServerError | UserError | ApiError | null
+    ]
   > {
     let resp = await this.#api.getQueryRun({ queryRunId });
     if (resp.error) {
+      return [null, getExceptionByErrorCode(resp.error.code, resp.error.message)];
     }
+
     const queryRun = resp.result?.redirectedToQueryRun ? resp.result.redirectedToQueryRun : resp.result?.queryRun;
     if (!queryRun) {
-      throw new Error("query run not found");
+      return [null, new UnexpectedSDKError("expected an `rpc_response.result.queryRun` but got null")];
     }
 
     const queryRunState = mapApiQueryStateToStatus(queryRun.state);
@@ -248,7 +280,14 @@ export class QueryIntegration {
     }
 
     if (queryRunState === QueryStatusError) {
-      return [null, new QueryRunExecutionError()];
+      return [
+        null,
+        new QueryRunExecutionError({
+          name: queryRun.errorName,
+          message: queryRun.errorMessage,
+          data: queryRun.errorData,
+        }),
+      ];
     }
 
     let shouldContinue = await linearBackOff({

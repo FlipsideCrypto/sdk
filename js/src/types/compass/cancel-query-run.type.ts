@@ -18,7 +18,7 @@ export class CancelQueryRunRpcRequestImplementation
 
 // Response
 export interface CancelQueryRunRpcResult {
-  queryRun: QueryRun;
+  canceledQueryRun: QueryRun;
 }
 
 export interface CancelQueryRunRpcResponse extends RpcResponse<CancelQueryRunRpcResult> {}

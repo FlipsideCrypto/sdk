@@ -15,6 +15,7 @@ import {
   GetQueryRunResultsRpcResult,
   GetQueryRunRpcResult,
   mapApiQueryStateToStatus,
+  PageStats,
 } from "../../types";
 
 interface QueryResultSetBuilderData {
@@ -39,6 +40,7 @@ export class QueryResultSetBuilder implements QueryResultSet {
   rows: any[] | null;
   runStats: QueryRunStats | null;
   records: QueryResultRecord[] | null;
+  page: PageStats | null;
 
   error:
     | ApiError
@@ -61,6 +63,7 @@ export class QueryResultSetBuilder implements QueryResultSet {
       this.rows = null;
       this.runStats = null;
       this.records = null;
+      this.page = null;
       return;
     }
 
@@ -71,6 +74,7 @@ export class QueryResultSetBuilder implements QueryResultSet {
     this.rows = getQueryRunResultsRpcResult.rows;
     this.runStats = this.#computeRunStats(getQueryRunRpcResult);
     this.records = this.#createRecords(getQueryRunResultsRpcResult);
+    this.page = getQueryRunResultsRpcResult.page;
   }
 
   #createRecords(getQueryRunResultsRpcResult: GetQueryRunResultsRpcResult | null): QueryResultRecord[] | null {
@@ -99,7 +103,9 @@ export class QueryResultSetBuilder implements QueryResultSet {
       !queryRun.queryStreamingEndedAt ||
       !queryRun.queryRunningEndedAt
     ) {
-      throw new Error("Query has no data");
+      throw new UnexpectedSDKError(
+        "Query run is missing required fields: `startedAt`, `endedAt`, `createdAt`, `queryStreamingEndedAt`, `queryRunningEndedAt`"
+      );
     }
 
     const createdAt = new Date(queryRun.createdAt);

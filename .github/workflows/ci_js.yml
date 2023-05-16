@@ -23,3 +23,5 @@ jobs:
         uses: actions/setup-node@v2
       - run: cd js && yarn install && yarn test:run
       - run: cd js && yarn install && yarn test:real
+        env:
+          FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}

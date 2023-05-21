@@ -9,6 +9,8 @@ on:
 
 jobs:
   build:
+    env:
+      SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
     runs-on: ubuntu-latest
 
     strategy:

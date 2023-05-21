@@ -10,8 +10,7 @@ on:
 jobs:
   build:
     env:
-      TEST_VAR: "speedwagon"
-      SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
+      SECRET_FLIPSIDE_API_KEY: ${{ secrets.SECRET_FLIPSIDE_API_KEY }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,13 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        env:
-          SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
       - name: On Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
-        env:
-          SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
       - name: End to End Test
-        env:
-          SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
         run: cd js && yarn install && yarn test:real

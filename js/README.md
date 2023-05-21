@@ -1,6 +1,6 @@
 # Flipside Crypto JS SDK
 
-Programmatic access to the most comprehensive blockchain data in Web3, for free. 🥳
+Programmatic access to the most comprehensive blockchain data in Web3 🥳.
 <br>
 <br>
 
@@ -273,7 +273,7 @@ results = await flipside.query.getQueryResults({
 })
 ```
 
-Filters can be applied for, equals, not equals, greater than, greater than or equals to, less than, less than or equals to, like, in, not in.
+Filters can be applied for: equals, not equals, greater than, greater than or equals to, less than, less than or equals to, like, in, not in. All filters are executed server side over the entire result set.
 
 Here is the Filter type:
 ```typescript
@@ -358,4 +358,4 @@ Flipside does NOT charge for the number of bytes/records returned.
 
 ### Client Side Request Requirements
 
-All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding hostname will fail.
+All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding hostname will fail. You may configure hostnames [here](https://flipsidecrypto.xyz/account/api-keys). 

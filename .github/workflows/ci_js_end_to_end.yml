@@ -17,8 +17,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        env:
+          SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
       - name: On Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
+        env:
+          SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}
       - name: End to End Test
         env:
           SECRET_FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}

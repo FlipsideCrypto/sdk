@@ -3,6 +3,11 @@ import { Query, QueryResultSet } from "../types";
 
 // @ts-ignore
 const API_KEY = process.env.FLIPSIDE_API_KEY;
+if (!API_KEY || API_KEY === "" || API_KEY.length === 0) {
+  // @ts-ignore
+  console.log(process.env);
+  throw new Error("No API Key Provided");
+}
 
 const runIt = async (): Promise<void> => {
   const flipside = new Flipside(API_KEY, "https://api-v2.flipsidecrypto.xyz");

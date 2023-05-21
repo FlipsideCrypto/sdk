@@ -1,15 +1,13 @@
 import { Flipside, Query } from "@flipsidecrypto/sdk";
 
-const SHROOMDK_API_KEY = process.env.REACT_APP_SHROOMDK_API_KEY;
-const API_BASE_URL = process.env.REACT_APP_SHROOMDK_API_BASE_URL;
+const FLIPSIDE_API_KEY = process.env.REACT_APP_FLIPSIDE_API_KEY;
+const API_BASE_URL = process.env.REACT_APP_FLIPSIDE_API_BASE_URL;
 
-export async function getEnsAddr(
-  domain: string
-): Promise<[string | null, Error | null]> {
-  if (!SHROOMDK_API_KEY) throw new Error("no api key");
+export async function getEnsAddr(domain: string): Promise<[string | null, Error | null]> {
+  if (!FLIPSIDE_API_KEY) throw new Error("no api key");
 
   // Create an instance of the SDK
-  const flipside = new Flipside(SHROOMDK_API_KEY, API_BASE_URL);
+  const flipside = new Flipside(FLIPSIDE_API_KEY, API_BASE_URL);
 
   // Create the query object
   // sql: use string interpolation to build the query
@@ -25,7 +23,7 @@ export async function getEnsAddr(
         AND event_name = 'NameRegistered'
         AND block_timestamp >= GETDATE() - interval'2 year'
     `,
-    ttlMinutes: 60 * 24,
+    maxAgeMinutes: 60 * 24,
   };
 
   const result = await flipside.query.run(query);

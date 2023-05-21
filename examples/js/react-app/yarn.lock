@@ -1203,11 +1203,12 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@flipsidecrypto/sdk@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@flipsidecrypto/sdk/-/sdk-1.1.0.tgz#a986a02ad4b2cc684b1aeca631ab00f2b3e5f7a1"
-  integrity sha512-vBbcOn0K8+mrFmxhA/4KyzSCkYxBLryszinPJAKjz0prjv6DNLN4K3554PN2l3zVWNPSx9ofyQpv7+Y8/gQhcg==
+"@flipsidecrypto/sdk@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@flipsidecrypto/sdk/-/sdk-2.0.0.tgz#ab816fd94e84309203ecb0aeff6416e4eb5cbb59"
+  integrity sha512-tqxmAvsFVl9rDgouSDYmITMxILDkb/jnRCvqTisko8edDPC/LcZKN1sfkvhh2QnmiA3bPBtUeLV7Vd6pTxCoww==
   dependencies:
+    "@types/eslint" "^8.4.8"
     axios "^0.27.2"
 
 "@headlessui/react@^1.6.6":

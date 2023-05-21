@@ -52,7 +52,7 @@ export function QueryResultTable({
             queryResultSet?.rows?.map((row, i) => {
               return (
                 <tr key={i}>
-                  {row.map((cell, j) => (
+                  {row.map((cell: any, j: number) => (
                     <td key={j} className="text-s p-2">
                       {`${cell}`.indexOf("0x") !== -1 ? (
                         <a
@@ -76,15 +76,8 @@ export function QueryResultTable({
           <tfoot>
             <tr className="flex my-8 flex-row justify-between w-full items-center">
               <td colSpan={3}>
-                <button
-                  onClick={onClickPrevPage}
-                  disabled={pageNumber === 1 ? true : false}
-                >
-                  <FiChevronLeft
-                    className={`font-bold ${
-                      pageNumber === 1 ? "text-gray-400" : ""
-                    }`}
-                  />
+                <button onClick={onClickPrevPage} disabled={pageNumber === 1 ? true : false}>
+                  <FiChevronLeft className={`font-bold ${pageNumber === 1 ? "text-gray-400" : ""}`} />
                 </button>
               </td>
               <td className="font-bold">Page: {pageNumber}</td>

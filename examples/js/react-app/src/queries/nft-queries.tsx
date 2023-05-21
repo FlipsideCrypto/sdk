@@ -1,17 +1,17 @@
 import { Flipside, QueryResultSet, Query } from "@flipsidecrypto/sdk";
 
-const SHROOMDK_API_KEY = process.env.REACT_APP_SHROOMDK_API_KEY;
-const API_BASE_URL = process.env.REACT_APP_SHROOMDK_API_BASE_URL;
+const FLIPSIDE_API_KEY = process.env.REACT_APP_FLIPSIDE_API_KEY;
+const API_BASE_URL = process.env.REACT_APP_FLIPSIDE_API_BASE_URL;
 
 export async function getNFTMints(
   address: string,
   pageSize: number = 100000,
   pageNumber: number = 1
 ): Promise<[QueryResultSet | null, Error | null]> {
-  if (!SHROOMDK_API_KEY) throw new Error("no api key");
+  if (!FLIPSIDE_API_KEY) throw new Error("no api key");
 
   // Create an instance of the SDK
-  const flipside = new Flipside(SHROOMDK_API_KEY, API_BASE_URL);
+  const flipside = new Flipside(FLIPSIDE_API_KEY, API_BASE_URL);
 
   // Create the query object
   // - sql: use string interpolation to build the query
@@ -25,7 +25,7 @@ export async function getNFTMints(
         FROM ethereum.core.ez_nft_mints 
         WHERE 
           nft_to_address = LOWER('${address}')`,
-    ttlMinutes: 120,
+    maxAgeMinutes: 120,
     pageSize,
     pageNumber,
   };

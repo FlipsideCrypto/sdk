@@ -299,9 +299,7 @@ Set `maxAgeMinutes` to 30:
 ```typescript
 const query: Query = {
   sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
-  maxAgeMinutes: 30,
-  pageNumber: 1,
-  pageSize: 1000,
+  maxAgeMinutes: 30
 };
 ```
 
@@ -312,18 +310,14 @@ If you would like to force a cache bust and re-execute the query. You have two o
 ```typescript
 const query: Query = {
   sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
-  maxAgeMinutes: 0,
-  pageNumber: 1,
-  pageSize: 1000,
+  maxAgeMinutes: 0
 };
 
 // or:
 const query: Query = {
   sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   maxAgeMinutes: 30,
-  cache: false,
-  pageNumber: 1,
-  pageSize: 1000,
+  cache: false
 };
 ```
 

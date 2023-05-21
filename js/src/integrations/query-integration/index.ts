@@ -34,6 +34,14 @@ export class QueryIntegration {
     this.#api = api;
   }
 
+  #getTimeoutMinutes(query: Query): number {
+    return query.timeoutMinutes ? query.timeoutMinutes : DEFAULTS.timeoutMinutes;
+  }
+
+  #getRetryIntervalSeconds(query: Query): number {
+    return query.retryIntervalSeconds ? Number(query.retryIntervalSeconds) : DEFAULTS.retryIntervalSeconds;
+  }
+
   async run(query: Query): Promise<QueryResultSet> {
     let createQueryRunParams: CreateQueryRunRpcParams = {
       resultTTLHours: this.#getTTLHours(query),
@@ -64,6 +72,8 @@ export class QueryIntegration {
     // loop to get query state
     const [queryRunRpcResp, queryError] = await this.#getQueryRunInLoop({
       queryRunId: createQueryRunRpcResponse.result?.queryRun.id,
+      timeoutMinutes: this.#getTimeoutMinutes(query),
+      retryIntervalSeconds: this.#getRetryIntervalSeconds(query),
     });
 
     if (queryError) {
@@ -266,9 +276,13 @@ export class QueryIntegration {
 
   async #getQueryRunInLoop({
     queryRunId,
+    timeoutMinutes,
+    retryIntervalSeconds,
     attempts = 0,
   }: {
     queryRunId: string;
+    timeoutMinutes: number;
+    retryIntervalSeconds: number;
     attempts?: number;
   }): Promise<
     [
@@ -304,19 +318,19 @@ export class QueryIntegration {
 
     let shouldContinue = await linearBackOff({
       attempts,
-      timeoutMinutes: DEFAULTS.timeoutMinutes,
-      intervalSeconds: DEFAULTS.retryIntervalSeconds,
+      timeoutMinutes,
+      intervalSeconds: retryIntervalSeconds,
     });
 
     if (!shouldContinue) {
       const elapsedSeconds = getElapsedLinearSeconds({
         attempts,
-        timeoutMinutes: DEFAULTS.timeoutMinutes,
-        intervalSeconds: DEFAULTS.retryIntervalSeconds,
+        timeoutMinutes,
+        intervalSeconds: retryIntervalSeconds,
       });
       return [null, new QueryRunTimeoutError(elapsedSeconds * 60)];
     }
 
-    return this.#getQueryRunInLoop({ queryRunId, attempts: attempts + 1 });
+    return this.#getQueryRunInLoop({ queryRunId, attempts: attempts + 1, timeoutMinutes, retryIntervalSeconds });
   }
 }

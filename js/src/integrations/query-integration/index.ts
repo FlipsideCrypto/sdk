@@ -25,7 +25,6 @@ import {
   ApiError,
 } from "../../errors";
 import { QueryResultSetBuilder } from "./query-result-set-builder";
-import { Api } from "../../api";
 import { DEFAULTS } from "../../defaults";
 
 export class QueryIntegration {
@@ -37,9 +36,9 @@ export class QueryIntegration {
 
   async run(query: Query): Promise<QueryResultSet> {
     let createQueryRunParams: CreateQueryRunRpcParams = {
-      resultTTLHours: query.ttlMinutes ? Math.floor(query.ttlMinutes / 60) : DEFAULTS.ttlMinutes,
+      resultTTLHours: this.#getTTLHours(query),
       sql: query.sql,
-      maxAgeMinutes: query.maxAgeMinutes ? query.maxAgeMinutes : DEFAULTS.maxAgeMinutes,
+      maxAgeMinutes: this.#getMaxAgeMinutes(query),
       tags: {
         sdk_language: "javascript",
         sdk_package: query.sdkPackage ? query.sdkPackage : DEFAULTS.sdkPackage,
@@ -178,9 +177,9 @@ export class QueryIntegration {
 
   async createQueryRun(query: Query): Promise<QueryRun> {
     let createQueryRunParams: CreateQueryRunRpcParams = {
-      resultTTLHours: query.ttlMinutes ? Math.floor(query.ttlMinutes / 60) : DEFAULTS.ttlMinutes,
+      resultTTLHours: this.#getTTLHours(query),
       sql: query.sql,
-      maxAgeMinutes: query.maxAgeMinutes ? query.maxAgeMinutes : DEFAULTS.maxAgeMinutes,
+      maxAgeMinutes: this.#getMaxAgeMinutes(query),
       tags: {
         sdk_language: "javascript",
         sdk_package: query.sdkPackage ? query.sdkPackage : DEFAULTS.sdkPackage,
@@ -246,6 +245,19 @@ export class QueryIntegration {
       throw new UnexpectedSDKError("expected an `rpc_response.result.canceledQueryRun` but got null");
     }
     return resp.result.canceledQueryRun;
+  }
+
+  #getMaxAgeMinutes(query: Query): number {
+    if (query.cached === false) {
+      return 0;
+    }
+    return query.maxAgeMinutes ? query.maxAgeMinutes : DEFAULTS.maxAgeMinutes;
+  }
+
+  #getTTLHours(query: Query): number {
+    const maxAgeMinutes = this.#getMaxAgeMinutes(query);
+    const ttlMinutes = maxAgeMinutes > 60 ? maxAgeMinutes : DEFAULTS.ttlMinutes;
+    return Math.floor(ttlMinutes / 60);
   }
 
   async #createQuery(params: CreateQueryRunRpcParams, attempts: number = 0): Promise<CreateQueryRunRpcResponse> {

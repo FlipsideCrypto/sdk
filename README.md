@@ -20,5 +20,5 @@ Get your [free API key here](https://flipsidecrypto.xyz/account/api-keys)
 | Language                 | Version | Status                                                                             |
 | ------------------------ | ------- | ---------------------------------------------------------------------------------- |
 | ✅ [Python](./python/)   | 2.0.4   | [![tests](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml)                                                                  |
-| ✅ [JS/TypeScript](./js) | Under Construction   |  |
+| ✅ [JS/TypeScript](./js) | 2.0.0   |  | [![tests](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_js.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_js.yml) 
 | ✅ [R](./r/shroomDK/) | Under Construction    |  |

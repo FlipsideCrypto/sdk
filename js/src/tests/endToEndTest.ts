@@ -2,10 +2,8 @@ import { ApiError, Flipside } from "../flipside";
 import { Query, QueryResultSet } from "../types";
 
 // @ts-ignore
-const API_KEY = process.env.SECRET_FLIPSIDE_API_KEY;
+const API_KEY = process.env.FLIPSIDE_API_KEY;
 if (!API_KEY || API_KEY === "" || API_KEY.length === 0) {
-  // @ts-ignore
-  console.log(process.env);
   throw new Error("No API Key Provided");
 }
 

@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     env:
-      SECRET_FLIPSIDE_API_KEY: ${{ secrets.SECRET_FLIPSIDE_API_KEY }}
+      FLIPSIDE_API_KEY: ${{ secrets.SECRET_FLIPSIDE_API_KEY }}
     runs-on: ubuntu-latest
 
     strategy:

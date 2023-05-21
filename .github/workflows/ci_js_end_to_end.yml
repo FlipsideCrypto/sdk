@@ -1,0 +1,24 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: JS/TS Full End to End Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [17.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: On Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+      - run: cd js && yarn install && yarn test:real
+        env:
+          FLIPSIDE_API_KEY: ${{ secrets.FLIPSIDE_API_KEY }}

@@ -1,195 +1,336 @@
 import {
   Query,
-  QueryDefaults,
   QueryStatusFinished,
   QueryStatusError,
-  QueryResultJson,
-  CreateQueryJson,
-  ApiClient,
   QueryResultSet,
+  CreateQueryRunRpcParams,
+  CreateQueryRunRpcResponse,
+  mapApiQueryStateToStatus,
+  GetQueryRunRpcResponse,
+  Filter,
+  SortBy,
+  QueryRun,
+  ResultFormat,
+  SqlStatement,
+  CompassApiClient,
 } from "../../types";
-import {
-  expBackOff,
-  getElapsedLinearSeconds,
-  linearBackOff,
-} from "../../utils/sleep";
+import { getElapsedLinearSeconds, linearBackOff } from "../../utils/sleep";
 import {
   QueryRunExecutionError,
-  QueryRunRateLimitError,
   QueryRunTimeoutError,
   ServerError,
   UserError,
   UnexpectedSDKError,
+  getExceptionByErrorCode,
+  ApiError,
 } from "../../errors";
 import { QueryResultSetBuilder } from "./query-result-set-builder";
-
-const DEFAULTS: QueryDefaults = {
-  ttlMinutes: 60,
-  cached: true,
-  timeoutMinutes: 20,
-  retryIntervalSeconds: 0.5,
-  pageSize: 100000,
-  pageNumber: 1,
-};
+import { DEFAULTS } from "../../defaults";
 
 export class QueryIntegration {
-  #api: ApiClient;
-  #defaults: QueryDefaults;
+  #api: CompassApiClient;
 
-  constructor(api: ApiClient, defaults: QueryDefaults = DEFAULTS) {
+  constructor(api: CompassApiClient) {
     this.#api = api;
-    this.#defaults = defaults;
   }
 
-  #setQueryDefaults(query: Query): Query {
-    return { ...this.#defaults, ...query };
+  #getTimeoutMinutes(query: Query): number {
+    return query.timeoutMinutes ? query.timeoutMinutes : DEFAULTS.timeoutMinutes;
+  }
+
+  #getRetryIntervalSeconds(query: Query): number {
+    return query.retryIntervalSeconds ? Number(query.retryIntervalSeconds) : DEFAULTS.retryIntervalSeconds;
   }
 
   async run(query: Query): Promise<QueryResultSet> {
-    query = this.#setQueryDefaults(query);
+    let createQueryRunParams: CreateQueryRunRpcParams = {
+      resultTTLHours: this.#getTTLHours(query),
+      sql: query.sql,
+      maxAgeMinutes: this.#getMaxAgeMinutes(query),
+      tags: {
+        sdk_language: "javascript",
+        sdk_package: query.sdkPackage ? query.sdkPackage : DEFAULTS.sdkPackage,
+        sdk_version: query.sdkVersion ? query.sdkVersion : DEFAULTS.sdkVersion,
+      },
+      dataSource: query.dataSource ? query.dataSource : DEFAULTS.dataSource,
+      dataProvider: query.dataProvider ? query.dataProvider : DEFAULTS.dataProvider,
+    };
 
-    const [createQueryJson, createQueryErr] = await this.#createQuery(query);
-    if (createQueryErr) {
+    const createQueryRunRpcResponse = await this.#createQuery(createQueryRunParams);
+    if (createQueryRunRpcResponse.error) {
       return new QueryResultSetBuilder({
-        queryResultJson: null,
-        error: createQueryErr,
+        error: getExceptionByErrorCode(createQueryRunRpcResponse.error.code, createQueryRunRpcResponse.error.message),
       });
     }
 
-    if (!createQueryJson) {
+    if (!createQueryRunRpcResponse.result?.queryRun) {
       return new QueryResultSetBuilder({
-        queryResultJson: null,
-        error: new UnexpectedSDKError(
-          "expected a `createQueryJson` but got null"
-        ),
+        error: new UnexpectedSDKError("expected a `createQueryRunRpcResponse.result.queryRun` but got null"),
       });
     }
 
-    const [getQueryResultJson, getQueryErr] = await this.#getQueryResult(
-      createQueryJson.token,
-      query.pageNumber || 1,
-      query.pageSize || 100000,
-    );
+    // loop to get query state
+    const [queryRunRpcResp, queryError] = await this.#getQueryRunInLoop({
+      queryRunId: createQueryRunRpcResponse.result?.queryRun.id,
+      timeoutMinutes: this.#getTimeoutMinutes(query),
+      retryIntervalSeconds: this.#getRetryIntervalSeconds(query),
+    });
 
-    if (getQueryErr) {
+    if (queryError) {
       return new QueryResultSetBuilder({
-        queryResultJson: null,
-        error: getQueryErr,
+        error: queryError,
       });
     }
 
-
-    if (!getQueryResultJson) {
+    if (queryRunRpcResp && queryRunRpcResp.error) {
       return new QueryResultSetBuilder({
-        queryResultJson: null,
-        error: new UnexpectedSDKError(
-          "expected a `getQueryResultJson` but got null"
-        ),
+        error: getExceptionByErrorCode(queryRunRpcResp.error.code, queryRunRpcResp.error.message),
+      });
+    }
+
+    const queryRun = queryRunRpcResp?.result?.queryRun;
+    if (!queryRun) {
+      return new QueryResultSetBuilder({
+        error: new UnexpectedSDKError("expected a `queryRunRpcResp.result.queryRun` but got null"),
+      });
+    }
+
+    // get the query results
+    const queryResultResp = await this.#api.getQueryResult({
+      queryRunId: queryRun.id,
+      format: ResultFormat.csv,
+      page: {
+        number: query.pageNumber || 1,
+        size: query.pageSize || 100000,
+      },
+    });
+
+    if (queryResultResp && queryResultResp.error) {
+      return new QueryResultSetBuilder({
+        error: getExceptionByErrorCode(queryResultResp.error.code, queryResultResp.error.message),
+      });
+    }
+
+    const queryResults = queryResultResp.result;
+    if (!queryResults) {
+      return new QueryResultSetBuilder({
+        error: new UnexpectedSDKError("expected a `queryResultResp.result` but got null"),
       });
     }
 
     return new QueryResultSetBuilder({
-      queryResultJson: getQueryResultJson,
+      getQueryRunResultsRpcResult: queryResults,
+      getQueryRunRpcResult: queryRunRpcResp.result,
       error: null,
     });
   }
 
-  async #createQuery(
-    query: Query,
-    attempts: number = 0
-  ): Promise<
-    [
-      CreateQueryJson | null,
-      QueryRunRateLimitError | ServerError | UserError | null
-    ]
-  > {
-    const resp = await this.#api.createQuery(query);
-    if (resp.statusCode <= 299) {
-      return [resp.data, null];
+  async getQueryResults({
+    queryRunId,
+    pageNumber = DEFAULTS.pageNumber,
+    pageSize = DEFAULTS.pageSize,
+    filters,
+    sortBy,
+  }: {
+    queryRunId: string;
+    pageNumber?: number;
+    pageSize?: number;
+    filters?: Filter[];
+    sortBy?: SortBy[];
+  }): Promise<QueryResultSet> {
+    const queryRunResp = await this.#api.getQueryRun({ queryRunId });
+    if (queryRunResp.error) {
+      return new QueryResultSetBuilder({
+        error: getExceptionByErrorCode(queryRunResp.error.code, queryRunResp.error.message),
+      });
     }
 
-    if (resp.statusCode !== 429) {
-      if (resp.statusCode >= 400 && resp.statusCode <= 499) {
-        let errorMsg = resp.statusMsg || "user error";
-        if (resp.errorMsg) {
-          errorMsg = resp.errorMsg;
-        }
-        return [null, new UserError(resp.statusCode, errorMsg)];
-      }
-      return [
-        null,
-        new ServerError(resp.statusCode, resp.statusMsg || "server error"),
-      ];
+    if (!queryRunResp.result) {
+      return new QueryResultSetBuilder({
+        error: new UnexpectedSDKError("expected an `rpc_response.result` but got null"),
+      });
     }
 
-    let shouldContinue = await expBackOff({
-      attempts,
-      timeoutMinutes: this.#defaults.timeoutMinutes,
-      intervalSeconds: this.#defaults.retryIntervalSeconds,
+    if (!queryRunResp.result?.queryRun) {
+      return new QueryResultSetBuilder({
+        error: new UnexpectedSDKError("expected an `rpc_response.result.queryRun` but got null"),
+      });
+    }
+
+    const queryRun = queryRunResp.result.redirectedToQueryRun
+      ? queryRunResp.result.redirectedToQueryRun
+      : queryRunResp.result.queryRun;
+
+    const queryResultResp = await this.#api.getQueryResult({
+      queryRunId: queryRun.id,
+      format: ResultFormat.csv,
+      page: {
+        number: pageNumber,
+        size: pageSize,
+      },
+      filters,
+      sortBy,
     });
 
-    if (!shouldContinue) {
-      return [null, new QueryRunRateLimitError()];
+    if (queryResultResp.error) {
+      return new QueryResultSetBuilder({
+        error: getExceptionByErrorCode(queryResultResp.error.code, queryResultResp.error.message),
+      });
     }
 
-    return this.#createQuery(query, attempts + 1);
+    return new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: queryResultResp.result,
+      getQueryRunRpcResult: queryRunResp.result,
+      error: null,
+    });
   }
 
-  async #getQueryResult(
-    queryID: string,
-    pageNumber: number,
-    pageSize: number,
-    attempts: number = 0
-  ): Promise<
+  async createQueryRun(query: Query): Promise<QueryRun> {
+    let createQueryRunParams: CreateQueryRunRpcParams = {
+      resultTTLHours: this.#getTTLHours(query),
+      sql: query.sql,
+      maxAgeMinutes: this.#getMaxAgeMinutes(query),
+      tags: {
+        sdk_language: "javascript",
+        sdk_package: query.sdkPackage ? query.sdkPackage : DEFAULTS.sdkPackage,
+        sdk_version: query.sdkVersion ? query.sdkVersion : DEFAULTS.sdkVersion,
+      },
+      dataSource: query.dataSource ? query.dataSource : DEFAULTS.dataSource,
+      dataProvider: query.dataProvider ? query.dataProvider : DEFAULTS.dataProvider,
+    };
+
+    const createQueryRunRpcResponse = await this.#createQuery(createQueryRunParams);
+    if (createQueryRunRpcResponse.error) {
+      throw getExceptionByErrorCode(createQueryRunRpcResponse.error.code, createQueryRunRpcResponse.error.message);
+    }
+
+    if (!createQueryRunRpcResponse.result?.queryRun) {
+      throw new UnexpectedSDKError("expected a `createQueryRunRpcResponse.result.queryRun` but got null");
+    }
+
+    return createQueryRunRpcResponse.result.queryRun;
+  }
+
+  async getQueryRun({ queryRunId }: { queryRunId: string }): Promise<QueryRun> {
+    const resp = await this.#api.getQueryRun({ queryRunId });
+    if (resp.error) {
+      throw getExceptionByErrorCode(resp.error.code, resp.error.message);
+    }
+    if (!resp.result) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result` but got null");
+    }
+
+    if (!resp.result?.queryRun) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result.queryRun` but got null");
+    }
+
+    return resp.result.redirectedToQueryRun ? resp.result.redirectedToQueryRun : resp.result.queryRun;
+  }
+
+  async getSqlStatement({ sqlStatementId }: { sqlStatementId: string }): Promise<SqlStatement> {
+    const resp = await this.#api.getSqlStatement({ sqlStatementId });
+    if (resp.error) {
+      throw getExceptionByErrorCode(resp.error.code, resp.error.message);
+    }
+    if (!resp.result) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result` but got null");
+    }
+
+    if (!resp.result?.sqlStatement) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result.sqlStatement` but got null");
+    }
+    return resp.result.sqlStatement;
+  }
+
+  async cancelQueryRun({ queryRunId }: { queryRunId: string }): Promise<QueryRun> {
+    const resp = await this.#api.cancelQueryRun({ queryRunId });
+    if (resp.error) {
+      throw getExceptionByErrorCode(resp.error.code, resp.error.message);
+    }
+    if (!resp.result) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result` but got null");
+    }
+
+    if (!resp.result?.canceledQueryRun) {
+      throw new UnexpectedSDKError("expected an `rpc_response.result.canceledQueryRun` but got null");
+    }
+    return resp.result.canceledQueryRun;
+  }
+
+  #getMaxAgeMinutes(query: Query): number {
+    if (query.cached === false) {
+      return 0;
+    }
+    return query.maxAgeMinutes ? query.maxAgeMinutes : DEFAULTS.maxAgeMinutes;
+  }
+
+  #getTTLHours(query: Query): number {
+    const maxAgeMinutes = this.#getMaxAgeMinutes(query);
+    const ttlMinutes = maxAgeMinutes > 60 ? maxAgeMinutes : DEFAULTS.ttlMinutes;
+    return Math.floor(ttlMinutes / 60);
+  }
+
+  async #createQuery(params: CreateQueryRunRpcParams, attempts: number = 0): Promise<CreateQueryRunRpcResponse> {
+    return await this.#api.createQuery(params);
+  }
+
+  async #getQueryRunInLoop({
+    queryRunId,
+    timeoutMinutes,
+    retryIntervalSeconds,
+    attempts = 0,
+  }: {
+    queryRunId: string;
+    timeoutMinutes: number;
+    retryIntervalSeconds: number;
+    attempts?: number;
+  }): Promise<
     [
-      QueryResultJson | null,
-      QueryRunTimeoutError | ServerError | UserError | null
+      GetQueryRunRpcResponse | null,
+      QueryRunTimeoutError | QueryRunExecutionError | ServerError | UserError | ApiError | null
     ]
   > {
-    const resp = await this.#api.getQueryResult(queryID, pageNumber, pageSize);
-    if (resp.statusCode > 299) {
-      if (resp.statusCode >= 400 && resp.statusCode <= 499) {
-        let errorMsg = resp.statusMsg || "user input error";
-        if (resp.errorMsg) {
-          errorMsg = resp.errorMsg;
-        }
-        return [null, new UserError(resp.statusCode, errorMsg)];
-      }
+    let resp = await this.#api.getQueryRun({ queryRunId });
+    if (resp.error) {
+      return [null, getExceptionByErrorCode(resp.error.code, resp.error.message)];
+    }
+
+    const queryRun = resp.result?.redirectedToQueryRun ? resp.result.redirectedToQueryRun : resp.result?.queryRun;
+    if (!queryRun) {
+      return [null, new UnexpectedSDKError("expected an `rpc_response.result.queryRun` but got null")];
+    }
+
+    const queryRunState = mapApiQueryStateToStatus(queryRun.state);
+    if (queryRunState === QueryStatusFinished) {
+      return [resp, null];
+    }
+
+    if (queryRunState === QueryStatusError) {
       return [
         null,
-        new ServerError(resp.statusCode, resp.statusMsg || "server error"),
+        new QueryRunExecutionError({
+          name: queryRun.errorName,
+          message: queryRun.errorMessage,
+          data: queryRun.errorData,
+        }),
       ];
-    }
-
-    if (!resp.data) {
-      throw new Error(
-        "valid status msg returned from server but no data exists in the response"
-      );
-    }
-
-    if (resp.data.status === QueryStatusFinished) {
-      return [resp.data, null];
-    }
-
-    if (resp.data.status === QueryStatusError) {
-      return [null, new QueryRunExecutionError()];
     }
 
     let shouldContinue = await linearBackOff({
       attempts,
-      timeoutMinutes: this.#defaults.timeoutMinutes,
-      intervalSeconds: this.#defaults.retryIntervalSeconds,
+      timeoutMinutes,
+      intervalSeconds: retryIntervalSeconds,
     });
 
     if (!shouldContinue) {
       const elapsedSeconds = getElapsedLinearSeconds({
         attempts,
-        timeoutMinutes: this.#defaults.timeoutMinutes,
-        intervalSeconds: this.#defaults.retryIntervalSeconds,
+        timeoutMinutes,
+        intervalSeconds: retryIntervalSeconds,
       });
       return [null, new QueryRunTimeoutError(elapsedSeconds * 60)];
     }
 
-    return this.#getQueryResult(queryID, pageNumber, pageSize, attempts + 1);
+    return this.#getQueryRunInLoop({ queryRunId, attempts: attempts + 1, timeoutMinutes, retryIntervalSeconds });
   }
 }

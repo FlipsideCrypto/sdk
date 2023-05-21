@@ -1,18 +1,14 @@
-import { API } from "./api";
+import { Api } from "./api";
 import { QueryIntegration } from "./integrations";
-import { version } from '../package.json';
-
-
-const API_BASE_URL = "https://api.flipsidecrypto.com";
-const SDK_PACKAGE = "js";
-const SDK_VERSION = version;
+import { QueryResultSet } from "./types";
+import { DEFAULTS } from "./defaults";
 
 export class Flipside {
   query: QueryIntegration;
 
-  constructor(apiKey: string, apiBaseUrl: string = API_BASE_URL) {
+  constructor(apiKey: string, apiBaseUrl: string = DEFAULTS.apiBaseUrl) {
     // Setup API, which will be passed to integrations
-    const api = new API(apiBaseUrl, SDK_PACKAGE, SDK_VERSION, apiKey);
+    const api = new Api(apiBaseUrl, apiKey);
 
     // declare integrations on Flipside client
     this.query = new QueryIntegration(api);
@@ -21,5 +17,5 @@ export class Flipside {
 
 export * from "./types";
 export * from "./errors";
-import { QueryResultSet } from "./types";
+
 export { QueryResultSet };

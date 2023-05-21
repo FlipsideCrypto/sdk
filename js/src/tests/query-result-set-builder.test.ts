@@ -1,49 +1,15 @@
 import { assert, describe, it } from "vitest";
-import { QueryResultSetBuilder } from "../integrations/query-integration/query-result-set-builder";
-import {
-  QueryResultSetBuilderInput,
-  QueryStatus,
-  QueryStatusError,
-  QueryStatusFinished,
-  QueryStatusPending,
-} from "../types";
 
-function getQueryResultSetBuilder(
-  status: QueryStatus
-): QueryResultSetBuilderInput {
-  return {
-    queryResultJson: {
-      queryId: "test",
-      status,
-      results: [
-        [1, "0x-tx-id-0", "0xfrom-address-0", true, 0.5],
-        [2, "0x-tx-id-1", "0xfrom-address-1", false, 0.75],
-        [3, "0x-tx-id-2", "0xfrom-address-2", false, 1.75],
-        [4, "0x-tx-id-3", "0xfrom-address-3", true, 100.001],
-      ],
-      startedAt: "2022-05-19T00:00:00Z",
-      endedAt: "2022-05-19T00:01:30Z",
-      columnLabels: [
-        "block_id",
-        "tx_id",
-        "from_address",
-        "succeeded",
-        "amount",
-      ],
-      columnTypes: ["number", "string", "string", "boolean", "number"],
-      message: "",
-      errors: null,
-      pageSize: 100,
-      pageNumber: 0,
-    },
-    error: null,
-  };
-}
+import { QueryResultSetBuilder } from "../integrations/query-integration/query-result-set-builder";
+import { QueryStatus, QueryStatusError, QueryStatusFinished, QueryStatusPending } from "../types";
+import { getQueryResultsResponse, getQueryRunResponse } from "./mock-data";
 
 describe("runStats", () => {
-  const queryResultSet = new QueryResultSetBuilder(
-    getQueryResultSetBuilder(QueryStatusFinished)
-  );
+  const queryResultSet = new QueryResultSetBuilder({
+    getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+    getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+    error: null,
+  });
   it("runStats startedAt is Date type", async () => {
     assert.typeOf(queryResultSet.runStats?.startedAt, "Date");
   });
@@ -52,19 +18,34 @@ describe("runStats", () => {
     assert.typeOf(queryResultSet.runStats?.startedAt, "Date");
   });
 
-  it("runStats recordCount = 4", async () => {
-    assert.equal(queryResultSet.runStats?.recordCount, 4);
+  it("runStats recordCount = 1", async () => {
+    assert.equal(queryResultSet.runStats?.recordCount, 10000);
   });
 
-  it("runStats elpasedSeconds = 90", async () => {
-    assert.equal(queryResultSet.runStats?.elapsedSeconds, 90);
+  it("runStats elpasedSeconds = 51", async () => {
+    assert.equal(queryResultSet.runStats?.elapsedSeconds, 51);
+  });
+
+  it("runStats queuedSeconds = 0", async () => {
+    assert.equal(queryResultSet.runStats?.queuedSeconds, 0);
+  });
+
+  it("runStats streamingSeconds = 45", async () => {
+    assert.equal(queryResultSet.runStats?.streamingSeconds, 45);
+  });
+
+  it("runStats queryExecSeconds = 5", async () => {
+    assert.equal(queryResultSet.runStats?.queryExecSeconds, 5);
   });
 });
 
 describe("records", () => {
-  const queryResultSet = new QueryResultSetBuilder(
-    getQueryResultSetBuilder(QueryStatusFinished)
-  );
+  const queryResultSet = new QueryResultSetBuilder({
+    getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+    getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+    error: null,
+  });
+
   it("records length = rows length", async () => {
     assert.equal(queryResultSet.records?.length, queryResultSet.rows?.length);
   });
@@ -92,18 +73,14 @@ describe("records", () => {
   it("record values match row values", () => {
     let records = queryResultSet?.records;
     queryResultSet?.rows?.forEach((cells, rowIndex) => {
-      cells.forEach((cellValue, colIndex) => {
+      cells.forEach((cellValue: any, colIndex: number) => {
         let columns = queryResultSet?.columns;
         if (!columns) {
-          throw new Error(
-            "QueryResultSetBuilder columns cannot be null for tests"
-          );
+          throw new Error("QueryResultSetBuilder columns cannot be null for tests");
         }
         let column = columns[colIndex];
         if (records === null) {
-          throw new Error(
-            "QueryResultSetBuilder records cannot be null for tests"
-          );
+          throw new Error("QueryResultSetBuilder records cannot be null for tests");
         }
         let record = records[rowIndex];
         let recordValue = record[column];
@@ -116,36 +93,72 @@ describe("records", () => {
 
 describe("status", () => {
   it("isFinished", async () => {
-    const queryResultSet = new QueryResultSetBuilder(
-      getQueryResultSetBuilder(QueryStatusFinished)
-    );
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+      error: null,
+    });
+
     assert.equal(queryResultSet?.status, QueryStatusFinished);
   });
-  it("isPending", async () => {
-    const queryResultSet = new QueryResultSetBuilder(
-      getQueryResultSetBuilder(QueryStatusPending)
-    );
+  it("isPending: QUERY_STATE_READY", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_READY").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_READY").result,
+      error: null,
+    });
     assert.equal(queryResultSet?.status, QueryStatusPending);
   });
-  it("isError", async () => {
-    const queryResultSet = new QueryResultSetBuilder(
-      getQueryResultSetBuilder(QueryStatusError)
-    );
+  it("isPending: QUERY_STATE_RUNNING", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_RUNNING").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_RUNNING").result,
+      error: null,
+    });
+    assert.equal(queryResultSet?.status, QueryStatusPending);
+  });
+  it("isPending: QUERY_STATE_STREAMING_RESULTS", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_STREAMING_RESULTS").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_STREAMING_RESULTS").result,
+      error: null,
+    });
+    assert.equal(queryResultSet?.status, QueryStatusPending);
+  });
+
+  it("isError: QUERY_STATE_FAILED", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_FAILED").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_FAILED").result,
+      error: null,
+    });
+    assert.equal(queryResultSet?.status, QueryStatusError);
+  });
+  it("isError: QUERY_STATE_CANCELLED", async () => {
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_CANCELED").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_CANCELED").result,
+      error: null,
+    });
     assert.equal(queryResultSet?.status, QueryStatusError);
   });
 });
 
 describe("queryID", () => {
   it("queryId is set", async () => {
-    const queryResultSet = new QueryResultSetBuilder(
-      getQueryResultSetBuilder(QueryStatusFinished)
-    );
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+      error: null,
+    });
     assert.notEqual(queryResultSet?.queryId, null);
   });
   it("queryId is test", async () => {
-    const queryResultSet = new QueryResultSetBuilder(
-      getQueryResultSetBuilder(QueryStatusFinished)
-    );
-    assert.equal(queryResultSet?.queryId, "test");
+    const queryResultSet = new QueryResultSetBuilder({
+      getQueryRunResultsRpcResult: getQueryResultsResponse("QUERY_STATE_SUCCESS").result,
+      getQueryRunRpcResult: getQueryRunResponse("QUERY_STATE_SUCCESS").result,
+      error: null,
+    });
+    assert.equal(queryResultSet?.queryId, "clg44olzq00cbn60tasvob5l2");
   });
 });

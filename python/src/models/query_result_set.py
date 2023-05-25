@@ -2,6 +2,7 @@ from typing import Any, List, Union
 
 from pydantic import BaseModel, Field
 
+from .compass.core.page_stats import PageStats
 from .query_run_stats import QueryRunStats
 
 
@@ -24,5 +25,8 @@ class QueryResultSet(BaseModel):
     )
     records: Union[List[Any], None] = Field(
         None, description="The results of the query transformed as an array of objects"
+    )
+    page: Union[PageStats, None] = Field(
+        None, description="Summary of page stats for this query result set"
     )
     error: Any

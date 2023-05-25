@@ -21,6 +21,7 @@ class QueryResultSetBuilder(object):
         self.errorData = query_run.errorData
         self.dataSourceQueryId = query_run.dataSourceQueryId
         self.dataSourceSessionId = query_run.dataSourceSessionId
+        self.page = query_result.page
         self.path = query_run.path
 
         self.run_stats = self.compute_run_stats(query_run)
@@ -35,6 +36,7 @@ class QueryResultSetBuilder(object):
             rows=self.rows,
             run_stats=self.run_stats,
             records=self.records,
+            page=self.page,
             error=None,
         )
 

@@ -159,18 +159,18 @@ class CompassQueryIntegration(object):
         filters: Optional[Union[List[Filter], None]] = [],
         sort_by: Optional[Union[List[SortBy], None]] = [],
     ) -> GetQueryRunResultsRpcResult:
-        query_results_resp = self.rpc.get_query_result(
-            GetQueryRunResultsRpcParams(
-                queryRunId=query_run_id,
-                format=ResultFormat.csv,
-                page=Page(
-                    number=page_number,
-                    size=page_size,
-                ),
-                filters=filters,
-                sortBy=sort_by,
-            )
+        params = GetQueryRunResultsRpcParams(
+            queryRunId=query_run_id,
+            format=ResultFormat.csv,
+            page=Page(
+                number=page_number,
+                size=page_size,
+            ),
+            filters=filters,
+            sortBy=sort_by,
         )
+
+        query_results_resp = self.rpc.get_query_result(params)
 
         if query_results_resp.error:
             raise get_exception_by_error_code(

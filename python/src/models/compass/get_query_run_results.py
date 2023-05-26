@@ -13,22 +13,25 @@ from .core.rpc_response import RpcResponse
 # Request
 class Filter(BaseModel):
     column: str
-    eq: Optional[str] = None
-    neq: Optional[str] = None
-    gt: Optional[str] = None
-    gte: Optional[str] = None
-    lt: Optional[str] = None
-    lte: Optional[str] = None
-    like: Optional[str] = None
-    in_: Optional[List[str]] = None
-    notIn: Optional[List[str]] = None
+    eq: Optional[Any] = None
+    neq: Optional[Any] = None
+    gt: Optional[Any] = None
+    gte: Optional[Any] = None
+    lt: Optional[Any] = None
+    lte: Optional[Any] = None
+    like: Optional[Any] = None
+    in_: Optional[List[Any]] = None
+    notIn: Optional[List[Any]] = None
 
     class Config:
         fields = {"in_": "in"}
 
     def dict(self, *args, **kwargs) -> dict:
         kwargs.setdefault("exclude_none", True)  # Exclude keys with None values
-        return super().dict(*args, **kwargs)
+        result = super().dict(*args, **kwargs)
+        if "in_" in result:
+            result["in"] = result.pop("in_")  # convert 'in_' back to 'in'
+        return result
 
 
 class SortBy(BaseModel):

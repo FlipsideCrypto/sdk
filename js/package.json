@@ -32,6 +32,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/eslint": "^8.4.8",
+    "abitype": "^0.8.5",
     "axios": "^0.27.2"
   }
 }

@@ -77,6 +77,11 @@
   dependencies:
     sirv "^2.0.2"
 
+abitype@^0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/abitype/-/abitype-0.8.5.tgz#e392496b26c31dab89aa1209b6dd744df3d9eec5"
+  integrity sha512-KvzMF3DTNzhhjxQ7iiwudt+G86gXqLQYxJQD+nUljg2xfI0VZg1gp0vJmoo1xHU1ontZ64NqMursbyHULISitQ==
+
 ansi-regex@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"

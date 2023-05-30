@@ -45,6 +45,15 @@ Documentation can be viewed within RStudio with ```?auto_paginate_query``` for n
 
 Returns a data frame of up to `page_size * page_count` rows, see `?clean_query` for more details on column classes.
 
+```
+api_key = readLines("api_key.txt") # always gitignore your API keys!
+pull_data <- auto_paginate_query("
+SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 10001",
+api_key = api_key,
+page_size = 9000, # ends up ignored because results fit on 1 page!
+page_count = NULL) # NULL automatically calculates required number of pages
+```
+
 ## 5 Component Function
 
 ### create_query_token()

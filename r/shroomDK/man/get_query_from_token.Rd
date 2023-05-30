@@ -33,7 +33,8 @@ use `clean_query()` to transform this into a data frame.
 }
 \description{
 Uses Flipside ShroomDK to access a Query Token (Run ID). This function is for pagination and multiple requests.
-Note: To reduce payload it returns a list of outputs (separating column names from rows). Use `clean_query()` to
+It is best suited for debugging and testing new queries. Consider `auto_paginate_query()` for queries already known to work as expected.
+Note: To reduce payload it returns a list of outputs (separating column names from rows). See `clean_query()` for converting result to a data frame.
 }
 \examples{
 \dontrun{

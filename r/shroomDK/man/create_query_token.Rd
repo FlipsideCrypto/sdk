@@ -9,6 +9,8 @@ create_query_token(
   api_key,
   ttl = 1,
   mam = 10,
+  data_source = "snowflake-default",
+  data_provider = "flipside",
   api_url = "https://api-v2.flipsidecrypto.xyz/json-rpc"
 )
 }
@@ -21,6 +23,10 @@ create_query_token(
 
 \item{mam}{max-age-minutes, lifespan of cache. set to 0 to always re-execute. Default 10 minutes.}
 
+\item{data_source}{Where data is sourced, including specific computation warehouse. Default "snowflake-default". Non default data sources may require registration of api_key to allowlist.}
+
+\item{data_provider}{Who provides data, Default "flipside". Non default data providers may require registration of api_key to allowlist.}
+
 \item{api_url}{default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.}
 }
 \value{
@@ -28,15 +34,16 @@ list of `token` and `cached` use `token` in `get_query_from_token()`
 }
 \description{
 Uses Flipside ShroomDK to create a Query Token to access Flipside Crypto
-data. The query token is cached up to ttl minutes
+data. The query token is kept `ttl` hours and available for no-additional cost reads up to `mam` minutes (i.e., cached to the same exact result).
 allowing for pagination and multiple requests before expending more daily request uses.
 }
 \examples{
 \dontrun{
 create_query_token(
-query = "SELECT * FROM ethereum.core.fact_transactions LIMIT 1",
+query = "SELECT * FROM ethereum.core.fact_transactions LIMIT 33",
 api_key = readLines("api_key.txt"),
 ttl = 1,
-mam = 5)
+mam = 5
+)
 }
 }

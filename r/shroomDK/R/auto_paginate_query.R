@@ -3,14 +3,14 @@ library(httr)
 
 #' Auto Paginate Queries
 #'
-#' @description Grabs up to maxrows in a query by going through each page to download one at a time.
+#' @description Intelligently grab up to 1 Gigabyte of data from a SQL query including automatic pagination and cleaning.
 #'
 #' @param query The SQL query to pass to ShroomDK
 #' @param api_key ShroomDK API key.
-#' @param page_size Default 25,000. May return error if page_size is too large (specifically if data exceeds 30MB or entire query >1GB). Ignored if results fit on 1 page of < 15 Mb of data.
+#' @param page_size Default 25,000. May return error if `page_size` is too large (if page exceeds 30MB or entire query >1GB). Ignored if results fit on 1 page of < 15 Mb of data.
 #' @param page_count How many pages, of page_size rows each, to read. Default NULL calculates the ceiling (# rows in results / page_size). Ignored if results fit on 1 page of < 15 Mb of data.
-#' @param data_source Where data is sourced, including specific computation warehouse. Default "snowflake-default". Non default data sources may require registration of api_key to allowlist.
-#' @param data_provider Who provides data, Default "flipside". Non default data providers may require registration of api_key to allowlist.
+#' @param data_source Where data is sourced, including specific computation warehouse. Default `"snowflake-default"`. Non default data sources may require registration of api_key to allowlist.
+#' @param data_provider Who provides data, Default `"flipside"`. Non default data providers may require registration of api_key to allowlist.
 #' @param api_url default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.
 #' @return data frame of up to `page_size * page_count` rows, see ?clean_query for more details on column classes.
 #' @import jsonlite httr

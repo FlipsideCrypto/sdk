@@ -1,7 +1,7 @@
 Package: shroomDK
 Type: Package
 Title: Accessing the Flipside Crypto ShroomDK API
-Version: 0.2.0
+Version: 0.2.1
 Author: Carlos Mercado
 Maintainer: Carlos Mercado <carlos.mercado@flipsidecrypto.com>
 Description: Programmatic access to Flipside Crypto data via the Compass RPC API: <https://api-docs.flipsidecrypto.xyz/>. As simple as auto_paginate_query() but with core functions as needed for troubleshooting. Note, 0.1.1 support deprecated 2023-05-31.

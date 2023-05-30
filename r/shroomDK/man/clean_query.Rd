@@ -21,14 +21,13 @@ the data frame is comprised of lists, where each column must be coerced
 to a desired class (e.g., with `as.numeric()`).
 }
 \description{
-converts query response to data frame while attempting to coerce classes
+Converts query response to data frame while attempting to coerce classes
 intelligently.
 }
 \examples{
 \dontrun{
 query <- create_query_token("SELECT * FROM ETHEREUM.CORE.FACT_TRANSACTIONS LIMIT 1000", api_key)
 request <- get_query_from_token(query$result$queryRequest$queryRunId, api_key)
-df1 <- clean_query(request, try_simplify = TRUE) # warning b/c of tx_json
-df2 <- clean_query(request, try_simplify = FALSE) # silently returns columns of lists
+df1 <- clean_query(request, try_simplify = TRUE)
 }
 }

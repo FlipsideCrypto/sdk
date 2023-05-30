@@ -4,7 +4,7 @@ library(httr)
 #' Create Query Token
 #'
 #' Uses Flipside ShroomDK to create a Query Token to access Flipside Crypto
-#' data. The query token is cached up to ttl minutes
+#' data. The query token is kept `ttl` hours and available for no-additional cost reads up to `mam` minutes (i.e., cached to the same exact result).
 #' allowing for pagination and multiple requests before expending more daily request uses.
 #'
 #' @param query Flipside Crypto Snowflake SQL compatible query as a string.

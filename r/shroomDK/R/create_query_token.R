@@ -11,6 +11,8 @@ library(httr)
 #' @param api_key Flipside Crypto ShroomDK API Key
 #' @param ttl time-to-live (in hours) to keep query results available. Default 1 hour.
 #' @param mam max-age-minutes, lifespan of cache. set to 0 to always re-execute. Default 10 minutes.
+#' @param data_source Where data is sourced, including specific computation warehouse. Default "snowflake-default". Non default data sources may require registration of api_key to allowlist.
+#' @param data_provider Who provides data, Default "flipside". Non default data providers may require registration of api_key to allowlist.
 #' @param api_url default to https://api-v2.flipsidecrypto.xyz/json-rpc but upgradeable for user.
 #' @return list of `token` and `cached` use `token` in `get_query_from_token()`
 #' @import jsonlite httr
@@ -19,14 +21,17 @@ library(httr)
 #' @examples
 #' \dontrun{
 #' create_query_token(
-#' query = "SELECT * FROM ethereum.core.fact_transactions LIMIT 1",
+#' query = "SELECT * FROM ethereum.core.fact_transactions LIMIT 33",
 #' api_key = readLines("api_key.txt"),
 #' ttl = 1,
-#' mam = 5)
+#' mam = 5
+#' )
 #'}
 create_query_token <- function(query, api_key,
                                ttl = 1,
                                mam = 10,
+                               data_source = "snowflake-default",
+                               data_provider = "flipside",
                                api_url = "https://api-v2.flipsidecrypto.xyz/json-rpc"){
 
   headers = c(
@@ -58,11 +63,11 @@ create_query_token <- function(query, api_key,
                                        "sql" = query,
                                        "tags" = list(
                                          "sdk_package" = "R",
-                                         "sdk_version" = "0.2.0",
+                                         "sdk_version" = "0.2.1",
                                          "sdk_language" = "R"
                                        ),
-                                       "dataSource" = "snowflake-default",
-                                       "dataProvider" = "flipside"
+                                       "dataSource" = data_source,
+                                       "dataProvider" = data_provider
                          )
                        ),
                        "id" = 1

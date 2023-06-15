@@ -46,7 +46,7 @@ get_query_from_token <- function(query_run_id, api_key,
     } else if(query_state == "QUERY_STATE_CANCELED"){
       status_check_done <- TRUE
       stop("This query was canceled, typically by cancel_query()")
-    } else if(query_state != "QUERY_STATE_SUCCESS" | length(query_state) == 0){
+    } else if(query_state != "QUERY_STATE_SUCCESS"){
       warning("Query in process, checking again in 5 seconds, use cancel_query() if needed.")
       Sys.sleep(5)
     }

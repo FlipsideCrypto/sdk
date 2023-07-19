@@ -58,8 +58,11 @@ auto_paginate_query <- function(query, api_key,
      status_check_done <- TRUE
      stop("This query was canceled, typically by cancel_query()")
    } else if(query_state != "QUERY_STATE_SUCCESS"){
-     warning("Query in process, checking again in 5 seconds, use cancel_query() if needed.")
-     Sys.sleep(5)
+     warning(
+     paste0("Query in process, checking again in 10 seconds.",
+     "To cancel use: cancel_query() with your ID: \n", query_run_id)
+     )
+     Sys.sleep(10)
    }
  }
 

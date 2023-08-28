@@ -59,12 +59,12 @@ test:
 	pytest
 
 build:
-	python setup.py sdist bdist_wheel
+	python3 setup.py sdist bdist_wheel
 
 setup-shroomdk:
 	mkdir shroomdk
 	cp -R ./src/* ./shroomdk
-	echo "shroomdk" > package_name.txt
+	echo "shroomdk-chaos" > package_name.txt
 
 setup-flipside:
 	mkdir flipside

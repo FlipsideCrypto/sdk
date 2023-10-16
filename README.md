@@ -21,4 +21,4 @@ Get your [free API key here](https://flipsidecrypto.xyz/account/api-keys)
 | ------------------------ | ------- | ---------------------------------------------------------------------------------- |
 | ✅ [Python](./python/)   | 2.0.8   | [![tests](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_python.yml)                                                                  |
 | ✅ [JS/TypeScript](./js) | 2.0.0   | [![tests](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_js.yml/badge.svg)](https://github.com/FlipsideCrypto/sdk/actions/workflows/ci_js.yml)
-| ✅ [R](./r/shroomDK/) | 0.2.2    |  Available on CRAN |
+| ✅ [R](./r/shroomDK/) | 0.2.2    |  [Available on CRAN](https://cran.r-project.org/web/packages/shroomDK/shroomDK.pdf) |

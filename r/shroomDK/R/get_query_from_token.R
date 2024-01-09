@@ -36,8 +36,19 @@ get_query_from_token <- function(query_run_id, api_key,
   while (!status_check_done) {
     query_status <- get_query_status(query_run_id = query_run_id, api_key = api_key, api_url = api_url)
     query_state <- query_status$result$queryRun$state
+    failed_to_get_a_state = 0
 
-    if(query_state == "QUERY_STATE_SUCCESS"){
+    if(failed_to_get_a_state > 2){
+      warning("Query has failed state more than twice, consider cancel_query(), exiting now")
+      stop("Exited due to 3+ Failed States")
+    }
+
+    if(length(query_state) == 0){
+      warning("Query failed to return a state, trying again")
+      Sys.sleep(5)
+      failed_to_get_a_state = failed_to_get_a_state + 1
+    } else {
+      if(query_state == "QUERY_STATE_SUCCESS"){
       status_check_done <- TRUE
       next()
     } else if(query_state == "QUERY_STATE_FAILED"){
@@ -47,10 +58,20 @@ get_query_from_token <- function(query_run_id, api_key,
       status_check_done <- TRUE
       stop("This query was canceled, typically by cancel_query()")
     } else if(query_state != "QUERY_STATE_SUCCESS"){
-      warning("Query in process, checking again in 5 seconds, use cancel_query() if needed.")
+      warning(
+     paste0("Query in process, checking again in 10 seconds.",
+     "To cancel use: cancel_query() with your ID: \n", query_run_id)
+     )
       Sys.sleep(5)
+    } else if(query_state != "QUERY_STATE_SUCCESS"){
+      warning(
+        paste0("Query in process, checking again in 10 seconds.",
+               "To cancel use: cancel_query() with your ID: \n", query_run_id)
+      )
+      Sys.sleep(10)
     }
   }
+    }
 
   headers = c(
       "Content-Type" = 'application/json',

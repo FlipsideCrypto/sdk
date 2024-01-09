@@ -63,7 +63,7 @@ create_query_token <- function(query, api_key,
                                        "sql" = query,
                                        "tags" = list(
                                          "sdk_package" = "R",
-                                         "sdk_version" = "0.2.1",
+                                         "sdk_version" = "0.3.0",
                                          "sdk_language" = "R"
                                        ),
                                        "dataSource" = data_source,

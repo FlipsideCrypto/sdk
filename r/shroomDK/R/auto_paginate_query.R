@@ -46,7 +46,19 @@ auto_paginate_query <- function(query, api_key,
    query_status <- get_query_status(query_run_id = query_run_id, api_key = api_key, api_url = api_url)
    query_state <- query_status$result$queryRun$state
 
-   if(query_state == "QUERY_STATE_SUCCESS"){
+   failed_to_get_a_state = 0
+
+   if(failed_to_get_a_state > 2){
+     warning("Query has failed state more than twice, consider cancel_query(), exiting now")
+     stop("Exited due to 3+ Failed States")
+   }
+
+   if(length(query_state) == 0){
+     warning("Query failed to return a state, trying again")
+     Sys.sleep(5)
+     failed_to_get_a_state = failed_to_get_a_state + 1
+   } else {
+     if(query_state == "QUERY_STATE_SUCCESS"){
      status_check_done <- TRUE
      result_num_rows <- query_status$result$queryRun$rowCount
      result_file_size <- as.numeric(query_status$result$queryRun$totalSize)
@@ -63,6 +75,7 @@ auto_paginate_query <- function(query, api_key,
      "To cancel use: cancel_query() with your ID: \n", query_run_id)
      )
      Sys.sleep(10)
+   }
    }
  }
 

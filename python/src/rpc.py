@@ -145,6 +145,21 @@ class RPC(object):
         if result.status_code == 401 or result.status_code == 403:
             raise ApiError("Unauthorized", result.status_code, "Invalid API Key.")
 
+        if result.status_code == 402:
+            try:
+                data = result.json()
+                message = data["error"]["msg"]
+            except json.decoder.JSONDecodeError:
+                message = (
+                    "Unknown Billing Error. "
+                    "Please check the status of your account at https://flipsidecrypto.xyz/api to continue using the Flipside SDK/API."
+                )
+            raise ApiError(
+                result.reason,
+                result.status_code,
+                message,
+            )
+
         try:
             data = result.json()
         except json.decoder.JSONDecodeError:

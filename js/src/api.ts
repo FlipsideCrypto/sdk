@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import xior, { XiorError as AxiosError, XiorResponse as AxiosResponse } from "xior";
 import { ServerError, UnexpectedSDKError, UserError } from "./errors";
 import {
   CompassApiClient,
@@ -26,6 +26,7 @@ import {
 
 const PARSE_ERROR_MSG = "the api returned an error and there was a fatal client side error parsing that error msg";
 
+const axios = xior.create();
 export class Api implements CompassApiClient {
   url: string;
   #baseUrl: string;

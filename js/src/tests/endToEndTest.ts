@@ -21,7 +21,7 @@ const runIt = async (): Promise<void> => {
 async function runWithSuccess(flipside: Flipside) {
   // Create a query object for the `query.run` function to execute
   const query: Query = {
-    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.core.ez_nft_mints limit 100",
+    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints limit 100",
     ttlMinutes: 10,
     pageSize: 5,
     pageNumber: 1,
@@ -41,7 +41,7 @@ async function runWithSuccess(flipside: Flipside) {
 async function runWithError(flipside: Flipside) {
   // Create a query object for the `query.run` function to execute
   const query: Query = {
-    sql: "select nft_address mint_price_eth mint_price_usd from ethereum.core.ez_nft_mints limit 100",
+    sql: "select nft_address mint_price_eth mint_price_usd from ethereum.nft.ez_nft_mints limit 100",
     ttlMinutes: 10,
     pageSize: 5,
     pageNumber: 1,
@@ -58,7 +58,7 @@ async function runWithError(flipside: Flipside) {
 async function pageThruResults(flipside: Flipside) {
   // Create a query object for the `query.run` function to execute
   const query: Query = {
-    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.core.ez_nft_mints limit 100",
+    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints limit 100",
     ttlMinutes: 10,
     pageSize: 25,
     pageNumber: 1,
@@ -93,7 +93,7 @@ async function pageThruResults(flipside: Flipside) {
 async function getQueryRunSuccess(flipside: Flipside) {
   // Create a query object for the `query.run` function to execute
   const query: Query = {
-    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.core.ez_nft_mints limit 100",
+    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints limit 100",
     ttlMinutes: 10,
     pageSize: 5,
     pageNumber: 1,
@@ -124,11 +124,11 @@ async function getQueryRunError(flipside: Flipside) {
 async function cancelQueryRun(flipside: Flipside) {
   // Create a query object for the `query.run` function to execute
   const query: Query = {
-    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.core.ez_nft_mints limit 100",
+    sql: "select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints limit 999",
     ttlMinutes: 10,
     pageSize: 5,
     pageNumber: 1,
-    maxAgeMinutes: 10,
+    maxAgeMinutes: 0,
   };
 
   const queryRun = await flipside.query.createQueryRun(query);

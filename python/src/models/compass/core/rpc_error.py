@@ -6,4 +6,4 @@ from pydantic import BaseModel
 class RpcError(BaseModel):
     code: int
     message: str
-    data: Optional[Any]
+    data: Optional[Any] = None

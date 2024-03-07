@@ -1,5 +1,4 @@
-from typing import Any, Dict, List, Union
-
+from typing import List, Optional, Any
 from pydantic import BaseModel
 
 from .core.query_request import QueryRequest
@@ -19,11 +18,9 @@ class CreateQueryRunRpcParams(BaseModel):
     dataSource: str
     dataProvider: str
 
-
 class CreateQueryRunRpcRequest(RpcRequest):
     method: str = "createQueryRun"
     params: List[CreateQueryRunRpcParams]
-
 
 # Response
 class CreateQueryRunRpcResult(BaseModel):
@@ -31,6 +28,7 @@ class CreateQueryRunRpcResult(BaseModel):
     queryRun: QueryRun
     sqlStatement: SqlStatement
 
-
 class CreateQueryRunRpcResponse(RpcResponse):
-    result: Union[CreateQueryRunRpcResult, None]
+    id: Optional[Any]
+    jsonrpc: Optional[str]
+    result: Optional[CreateQueryRunRpcResult]

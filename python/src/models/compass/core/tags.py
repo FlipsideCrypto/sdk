@@ -5,6 +5,6 @@ from pydantic import BaseModel
 
 
 class Tags(BaseModel):
-    sdk_package: Optional[str]
-    sdk_version: Optional[str]
-    sdk_language: Optional[str]
+    sdk_package: Optional[str] = None
+    sdk_version: Optional[str] = None
+    sdk_language: Optional[str] = None

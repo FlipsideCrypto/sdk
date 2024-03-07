@@ -1,5 +1,4 @@
-from typing import List, Union
-
+from typing import List, Optional, Union
 from pydantic import BaseModel
 
 from .core.query_run import QueryRun
@@ -11,16 +10,13 @@ from .core.rpc_response import RpcResponse
 class CancelQueryRunRpcRequestParams(BaseModel):
     queryRunId: str
 
-
 class CancelQueryRunRpcRequest(RpcRequest):
     method: str = "cancelQueryRun"
     params: List[CancelQueryRunRpcRequestParams]
-
 
 # Response
 class CancelQueryRunRpcResult(BaseModel):
     queryRun: QueryRun
 
-
 class CancelQueryRunRpcResponse(RpcResponse):
-    result: Union[CancelQueryRunRpcResult, None]
+    result: Optional[CancelQueryRunRpcResult]

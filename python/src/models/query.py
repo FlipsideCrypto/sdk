@@ -1,10 +1,11 @@
 from typing import Optional, Union
-
 from pydantic import BaseModel, Field
 
 
 class Query(BaseModel):
-    sql: str = Field(None, description="SQL query to execute")
+    sql: Optional[str] = Field(
+        None, description="SQL query to execute"
+    )
     ttl_minutes: Optional[int] = Field(
         None, description="The number of minutes to cache the query results"
     )
@@ -21,8 +22,12 @@ class Query(BaseModel):
         None,
         description="An override on the cache. A value of true will Re-Execute the query.",
     )
-    page_size: int = Field(None, description="The number of results to return per page")
-    page_number: int = Field(None, description="The page number to return")
+    page_size: Optional[int] = Field(
+        None, description="The number of results to return per page"
+    )
+    page_number: Optional[int] = Field(
+        None, description="The page number to return"
+    )
     sdk_package: Optional[str] = Field(
         None, description="The SDK package used for the query"
     )

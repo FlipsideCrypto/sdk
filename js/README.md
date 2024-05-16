@@ -7,7 +7,7 @@ Programmatic access to the most comprehensive blockchain data in Web3 🥳.
 ![tests](https://github.com/flipsidecrypto/sdk/actions/workflows/ci_js.yml/badge.svg)
 <br>
 <br>
-You've found yourself at the Flipside Crypto JS/typescript sdk.
+You've found yourself at the Flipside Crypto JS/typescript SDK.
 <br>
 <br>
 
@@ -22,6 +22,10 @@ or if using npm
 ```bash
 npm install @flipsidecrypto/sdk
 ```
+
+## 🗝 Genrate an API Key for Free
+
+Get your [free API key here](https://flipsidecrypto.xyz/api-keys)
 
 ## 🦾 Getting Started
 
@@ -39,7 +43,7 @@ const myAddress = "0x....";
 
 // Create a query object for the `query.run` function to execute
 const query: Query = {
-  sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
+  sql: `select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   maxAgeMinutes: 30,
 };
 
@@ -48,10 +52,10 @@ const result: QueryResultSet = await flipside.query.run(query);
 
 // Iterate over the results
 result.records.map((record) => {
-  const nftAddress = record.nft_address
-  const mintPriceEth = record.mint_price_eth
-  const mintPriceUSD = = record.mint_price_usd
-  console.log(`address ${nftAddress} minted at a price of ${mintPrice} ETH or $${mintPriceUSD} USD`);
+  const nftAddress = record.nft_address;
+  const mintPriceEth = record.mint_price_eth;
+  const mintPriceUSD = = record.mint_price_usd;
+  console.log(`address ${nftAddress} minted at a price of ${mintPriceEth} ETH or $${mintPriceUSD} USD`);
 });
 ```
 
@@ -99,7 +103,7 @@ Let's create a query to retrieve all NFTs minted by an address:
 const yourAddress = "<your_ethereum_address>";
 
 const query: Query = {
-  sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
+  sql: `select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   maxAgeMinutes: 5,
   cached: true,
   timeoutMinutes: 15,
@@ -298,7 +302,7 @@ Set `maxAgeMinutes` to 30:
 
 ```typescript
 const query: Query = {
-  sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
+  sql: `select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   maxAgeMinutes: 30
 };
 ```
@@ -309,13 +313,13 @@ If you would like to force a cache bust and re-execute the query. You have two o
 
 ```typescript
 const query: Query = {
-  sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
+  sql: `select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   maxAgeMinutes: 0
 };
 
 // or:
 const query: Query = {
-  sql: `select nft_address, mint_price_eth, mint_price_usd from flipside_prod_db.ethereum_core.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
+  sql: `select nft_address, mint_price_eth, mint_price_usd from ethereum.nft.ez_nft_mints where nft_to_address = LOWER('${myAddress}')`,
   maxAgeMinutes: 30,
   cache: false
 };
@@ -358,4 +362,4 @@ Flipside does NOT charge for the number of bytes/records returned.
 
 ### Client Side Request Requirements
 
-All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding hostname will fail. You may configure hostnames [here](https://flipsidecrypto.xyz/account/api-keys). 
+All API Keys correspond to a list of hostnames. Client-side requests that do not originate from the corresponding hostname will fail. You may configure hostnames [here](https://flipsidecrypto.xyz/api-keys). 

@@ -12,7 +12,7 @@ Flipside Crypto's Analytics Team has curated dozens of blockchain data sets with
 
 ## 🗝 Want access? Genrate an API Key for Free
 
-Get your [free API key here](https://flipsidecrypto.xyz/account/api-keys)
+Get your [free API key here](https://flipsidecrypto.xyz/api-keys)
 <br>
 
 ## SDKs

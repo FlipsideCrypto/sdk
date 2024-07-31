@@ -11,23 +11,23 @@ class QueryRun(BaseModel):
     sqlStatementId: str
     state: str
     path: str
-    fileCount: Optional[int]
-    lastFileNumber: Optional[int]
-    fileNames: Optional[str]
-    errorName: Optional[str]
-    errorMessage: Optional[str]
-    errorData: Optional[Any]
-    dataSourceQueryId: Optional[str]
-    dataSourceSessionId: Optional[str]
-    startedAt: Optional[str]
-    queryRunningEndedAt: Optional[str]
-    queryStreamingEndedAt: Optional[str]
-    endedAt: Optional[str]
-    rowCount: Optional[int]
-    totalSize: Optional[int]
+    fileCount: Optional[int] = None
+    lastFileNumber: Optional[int] = None
+    fileNames: Optional[str] = None
+    errorName: Optional[str] = None
+    errorMessage: Optional[str] = None
+    errorData: Optional[Any] = None
+    dataSourceQueryId: Optional[str] = None
+    dataSourceSessionId: Optional[str] = None
+    startedAt: Optional[str] = None
+    queryRunningEndedAt: Optional[str] = None
+    queryStreamingEndedAt: Optional[str] = None
+    endedAt: Optional[str] = None
+    rowCount: Optional[int] = None
+    totalSize: Optional[int] = None
     tags: Tags
     dataSourceId: str
     userId: str
     createdAt: str
     updatedAt: datetime
-    archivedAt: Optional[datetime]
+    archivedAt: Optional[datetime] = None

@@ -9,4 +9,4 @@ class RpcResponse(BaseModel):
     jsonrpc: str
     id: int
     result: Union[Optional[Dict[str, Any]], None]
-    error: Optional[RpcError]
+    error: Optional[Union[RpcError, None]] = None

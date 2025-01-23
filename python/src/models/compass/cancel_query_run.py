@@ -23,4 +23,4 @@ class CancelQueryRunRpcResult(BaseModel):
 
 
 class CancelQueryRunRpcResponse(RpcResponse):
-    result: Union[CancelQueryRunRpcResult, None]
+    result: Union[CancelQueryRunRpcResult, None] = None

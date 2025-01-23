@@ -23,4 +23,4 @@ class GetSqlStatemetnResult(BaseModel):
 
 
 class GetSqlStatementResponse(RpcResponse):
-    result: Union[GetSqlStatemetnResult, None]
+    result: Union[GetSqlStatemetnResult, None] = None

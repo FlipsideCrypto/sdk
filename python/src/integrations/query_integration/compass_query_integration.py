@@ -39,21 +39,22 @@ class CompassQueryIntegration(object):
     def run(self, query: Query) -> QueryResultSet:
         query = self._set_query_defaults(query)
 
+        # Use the default values from Query class when None
+        ttl_hours = int((query.ttl_minutes or 0) / 60)
+        max_age_minutes = query.max_age_minutes or 5  # default from Query class
+        retry_interval_seconds = query.retry_interval_seconds or 1  # default from Query class
+        
         create_query_run_params = CreateQueryRunRpcParams(
-            resultTTLHours=int(query.ttl_minutes / 60)
-            if query.ttl_minutes
-            else DEFAULTS.ttl_minutes,
-            sql=query.sql,
-            maxAgeMinutes=query.max_age_minutes
-            if query.max_age_minutes
-            else DEFAULTS.max_age_minutes,
+            resultTTLHours=ttl_hours,
+            sql=query.sql or "",
+            maxAgeMinutes=max_age_minutes,
             tags=Tags(
                 sdk_language="python",
                 sdk_package=query.sdk_package,
                 sdk_version=query.sdk_version,
             ),
-            dataSource=query.data_source if query.data_source else "snowflake-default",
-            dataProvider=query.data_provider if query.data_provider else "flipside",
+            dataSource=query.data_source or "snowflake-default",
+            dataProvider=query.data_provider or "flipside",
         )
         created_query = self.rpc.create_query(create_query_run_params)
         if created_query.error:
@@ -67,18 +68,16 @@ class CompassQueryIntegration(object):
 
         query_run = self._get_query_run_loop(
             created_query.result.queryRun.id,
-            page_number=query.page_number,
-            page_size=query.page_size,
-            timeout_minutes=query.timeout_minutes if query.timeout_minutes else 20,
-            retry_interval_seconds=query.retry_interval_seconds
-            if query.retry_interval_seconds
-            else 1,
+            page_number=query.page_number or 1,
+            page_size=query.page_size or 100000,
+            timeout_minutes=query.timeout_minutes or 20,
+            retry_interval_seconds=retry_interval_seconds,
         )
 
         query_result = self._get_query_results(
             query_run.id,
-            page_number=query.page_number if query.page_number else 1,
-            page_size=query.page_size if query.page_size else 100000,
+            page_number=query.page_number or 1,
+            page_size=query.page_size or 100000,
         )
 
         return QueryResultSetBuilder(

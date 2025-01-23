@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import ConfigDict, BaseModel
 
 from .core.page import Page
 from .core.page_stats import PageStats
@@ -22,9 +22,13 @@ class Filter(BaseModel):
     like: Optional[Any] = None
     in_: Optional[List[Any]] = None
     notIn: Optional[List[Any]] = None
-
-    class Config:
-        fields = {"in_": "in"}
+    # TODO[pydantic]: The following keys were removed: `fields`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(
+        alias_generator=None,
+        populate_by_name=True,
+        json_schema_extra={"fields": {"in_": "in"}}
+    )
 
     def dict(self, *args, **kwargs) -> dict:
         kwargs.setdefault("exclude_none", True)  # Exclude keys with None values
@@ -62,15 +66,15 @@ class GetQueryRunResultsRpcRequest(RpcRequest):
 
 # Response
 class GetQueryRunResultsRpcResult(BaseModel):
-    columnNames: Union[Optional[List[str]], None]
-    columnTypes: Union[Optional[List[str]], None]
-    rows: Union[List[Any], None]
-    page: Union[PageStats, None]
-    sql: Union[str, None]
-    format: Union[ResultFormat, None]
+    columnNames: Union[Optional[List[str]], None] = None
+    columnTypes: Union[Optional[List[str]], None] = None
+    rows: Union[List[Any], None] = None
+    page: Union[PageStats, None] = None
+    sql: Union[str, None] = None
+    format: Union[ResultFormat, None] = None
     originalQueryRun: QueryRun
-    redirectedToQueryRun: Union[QueryRun, None]
+    redirectedToQueryRun: Union[QueryRun, None] = None
 
 
 class GetQueryRunResultsRpcResponse(RpcResponse):
-    result: Union[GetQueryRunResultsRpcResult, None]
+    result: Union[GetQueryRunResultsRpcResult, None] = None

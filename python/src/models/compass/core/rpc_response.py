@@ -8,5 +8,5 @@ from .rpc_error import RpcError
 class RpcResponse(BaseModel):
     jsonrpc: str
     id: int
-    result: Union[Optional[Dict[str, Any]], None]
-    error: Optional[RpcError]
+    result: Union[Optional[Dict[str, Any]], None] = None
+    error: Optional[RpcError] = None

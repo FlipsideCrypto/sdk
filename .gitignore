@@ -19,6 +19,7 @@ node_modules
 .output
 build/
 *.egg-info/
+.history/
 
 /build/
 /public/build

@@ -21,8 +21,8 @@ class GetQueryRunRpcRequest(RpcRequest):
 # Response
 class GetQueryRunRpcResult(BaseModel):
     queryRun: QueryRun
-    redirectedToQueryRun: Optional[QueryRun]
+    redirectedToQueryRun: Optional[QueryRun] = None
 
 
 class GetQueryRunRpcResponse(RpcResponse):
-    result: Union[GetQueryRunRpcResult, None]
+    result: Union[GetQueryRunRpcResult, None] = None

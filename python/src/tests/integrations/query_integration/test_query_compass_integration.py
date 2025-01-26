@@ -1,4 +1,6 @@
 import json
+import pytest
+import requests_mock
 
 from ....errors import (
     ApiError,
@@ -19,6 +21,12 @@ from ...utils.mock_data.get_sql_statement import get_sql_statement_response
 
 SDK_VERSION = "1.0.2"
 SDK_PACKAGE = "python"
+
+# Add the fixture decorator
+@pytest.fixture(autouse=True)
+def requests_mock_fixture():
+    with requests_mock.Mocker() as m:
+        yield m
 
 
 def get_rpc():

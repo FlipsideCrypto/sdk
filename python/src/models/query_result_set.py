@@ -10,7 +10,7 @@ class QueryResultSet(BaseModel):
     query_id: Union[str, None] = Field(None, description="The server id of the query")
 
     status: str = Field(
-        False, description="The status of the query (`PENDING`, `FINISHED`, `ERROR`)"
+        "PENDING", description="The status of the query (`PENDING`, `FINISHED`, `ERROR`)"
     )
     columns: Union[List[str], None] = Field(
         None, description="The names of the columns in the result set"
@@ -29,4 +29,4 @@ class QueryResultSet(BaseModel):
     page: Union[PageStats, None] = Field(
         None, description="Summary of page stats for this query result set"
     )
-    error: Any
+    error: Any = None

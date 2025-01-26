@@ -10,7 +10,7 @@ class SqlStatement(BaseModel):
     id: str
     statementHash: str
     sql: str
-    columnMetadata: Optional[ColumnMetadata]
+    columnMetadata: Optional[ColumnMetadata] = None
     userId: str
     tags: Tags
     createdAt: str

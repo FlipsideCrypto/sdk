@@ -33,4 +33,4 @@ class CreateQueryRunRpcResult(BaseModel):
 
 
 class CreateQueryRunRpcResponse(RpcResponse):
-    result: Union[CreateQueryRunRpcResult, None]
+    result: Union[CreateQueryRunRpcResult, None] = None

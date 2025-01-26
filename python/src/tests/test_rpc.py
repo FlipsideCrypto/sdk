@@ -1,4 +1,6 @@
 import json
+import pytest
+import requests_mock
 
 from ..errors.server_error import ServerError
 from ..models import Query, QueryStatus
@@ -13,6 +15,11 @@ from ..rpc import RPC
 from .utils.mock_data.create_query_run import create_query_run_response
 from .utils.mock_data.get_query_results import get_query_results_response
 from .utils.mock_data.get_query_run import get_query_run_response
+
+@pytest.fixture(autouse=True)
+def requests_mock_fixture():
+    with requests_mock.Mocker() as m:
+        yield m
 
 """
 Test Defaults

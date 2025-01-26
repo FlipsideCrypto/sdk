@@ -6,4 +6,4 @@ from pydantic import BaseModel
 class SleepConfig(BaseModel):
     attempts: int
     timeout_minutes: Union[int, float]
-    interval_seconds: Optional[float]
+    interval_seconds: Optional[float] = None

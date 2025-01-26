@@ -32,11 +32,10 @@ setup(
         "Intended Audience :: Developers",  # Define that your audience are developers
         "License :: OSI Approved :: MIT License",  # Again, pick a license
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
     dependency_links=[],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
 )

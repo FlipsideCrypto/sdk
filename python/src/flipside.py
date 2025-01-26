@@ -11,7 +11,7 @@ from .rpc import RPC
 
 API_BASE_URL = "https://api-v2.flipsidecrypto.xyz"
 
-SDK_VERSION = "2.0.4"
+SDK_VERSION = "2.1.0"
 SDK_PACKAGE = "python"
 
 DEFAULT_DATA_SOURCE = "snowflake-default"

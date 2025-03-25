@@ -150,7 +150,7 @@ class RPC(object):
         except json.decoder.JSONDecodeError:
             raise ServerError(
                 status_code=result.status_code,
-                message=f"Unable to parse response for RPC response from `{method}`: {result.status_code} - {result.reason}. Please try again later.",
+                message=f"Unable to parse response for RPC response from `{method}`: {result.status_code} - {result.reason}. Please check your request and try again later.",
             )
 
         return data
